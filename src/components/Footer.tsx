@@ -45,12 +45,12 @@ export function Footer({ lang }: FooterProps) {
               GitHub
             </a>
             <a
-              href="https://github.com/fivetaku/gptaku_plugins"
+              href="https://github.com/fivetaku/cc101"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors hover:text-orange-500 dark:hover:text-orange-400"
             >
-              ⭐ gptaku_plugins
+              ⭐ {ko ? '이 가이드 GitHub' : 'CC101 GitHub'}
             </a>
             <a
               href="https://github.com/anthropics/claude-plugins-official"
