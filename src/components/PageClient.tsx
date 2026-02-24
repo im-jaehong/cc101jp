@@ -33,7 +33,7 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
 
       <div className="mx-auto flex max-w-screen-xl">
         {/* Sidebar */}
-        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-64 shrink-0 overflow-y-auto border-r border-zinc-800 p-4 lg:block">
+        <aside className="sticky top-14 hidden h-[calc(100vh-3.5rem)] w-64 shrink-0 overflow-y-auto border-r border-zinc-200 p-4 lg:block dark:border-zinc-800">
           <Sidebar sections={sections} lang={lang} />
         </aside>
 

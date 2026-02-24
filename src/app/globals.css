@@ -1,9 +1,24 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Class-based dark mode (html.dark) */
+@variant dark (&:where(.dark, .dark *));
+
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/* Light mode defaults */
+body {
+  background-color: #ffffff;
+  color: #18181b;
+}
+
+/* Dark mode body */
+html.dark body {
+  background-color: #09090b;
+  color: #f4f4f5;
 }
 
 /* Sidebar scrollbar */
@@ -14,8 +29,11 @@ html {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
+  background: #d4d4d8;
   border-radius: 3px;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #27272a;
 }
 
 /* Code block horizontal scrollbar */
@@ -23,6 +41,9 @@ pre::-webkit-scrollbar {
   height: 5px;
 }
 pre::-webkit-scrollbar-thumb {
+  background: #a1a1aa;
+}
+html.dark pre::-webkit-scrollbar-thumb {
   background: #3f3f46;
 }
 
@@ -33,9 +54,16 @@ pre::-webkit-scrollbar-thumb {
 }
 .prose th,
 .prose td {
-  border: 1px solid #27272a;
+  border: 1px solid #e4e4e7;
   padding: 0.5rem 0.75rem;
 }
 .prose th {
+  background-color: #f4f4f5;
+}
+html.dark .prose th,
+html.dark .prose td {
+  border-color: #27272a;
+}
+html.dark .prose th {
   background-color: #18181b;
 }
