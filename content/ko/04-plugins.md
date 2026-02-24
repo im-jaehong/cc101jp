@@ -119,6 +119,46 @@ Claude Code 안에서 다음 명령어를 입력하세요:
 
 ---
 
+## 커뮤니티 플러그인 더 보기
+
+공식 마켓플레이스 외에도 커뮤니티에서 만든 플러그인을 직접 GitHub에서 설치할 수 있습니다. 기능이 다양한 만큼, 설치 전 코드를 확인하고 신뢰할 수 있는 저장소인지 먼저 살펴보세요.
+
+### oh-my-claudecode
+
+Claude Code 커뮤니티에서 가장 많이 쓰이는 서드파티 플러그인입니다. 단순한 확장이 아니라 Claude Code 자체를 **오케스트레이터**로 탈바꿈시켜 줍니다.
+
+주요 기능:
+- **Autopilot**: "만들어줘"라고 하면 계획 → 구현 → 검증까지 자동 수행
+- **33개 전문 에이전트**: 코드 리뷰, 보안 분석, 테스트, 문서화 등 역할별 AI 에이전트
+- **외부 AI 연동**: Codex(OpenAI), Gemini(Google)와 협업해 다각도 분석
+- **Skills 시스템**: 자주 쓰는 워크플로를 재사용 가능한 명령어로 저장
+
+설치: GitHub 저장소([github.com/wshf/oh-my-claudecode](https://github.com/wshf/oh-my-claudecode))의 README 참조
+
+### LSP 플러그인 (코드 인텔리전스)
+
+Language Server Protocol을 통합해 타입 에러 감지, 정의 이동, 참조 찾기를 Claude Code 안에서 직접 사용할 수 있습니다. 코드 탐색 속도가 크게 빨라집니다.
+
+```shell
+# 공식 마켓에서 설치
+/plugin install typescript-lsp@claude-plugins-official
+/plugin install pyright-lsp@claude-plugins-official
+```
+
+### chrome-devtools MCP
+
+크롬 브라우저의 개발자 도구를 Claude Code에서 직접 제어합니다. 콘솔 로그 읽기, DOM 검사, 네트워크 요청 분석을 AI와 함께 처리할 수 있어 프론트엔드 디버깅 흐름이 크게 달라집니다.
+
+MCP 서버 형태로 설치하며, 브라우저를 열어두고 Claude에게 "현재 콘솔 에러 확인해줘"처럼 요청할 수 있습니다.
+
+### supermemory
+
+Claude의 장기 기억을 강화하는 MCP 서버입니다. 대화가 새로 시작되어도 이전 작업 맥락, 프로젝트 결정 사항, 자주 쓰는 패턴을 자동으로 불러옵니다. 같은 프로젝트를 오래 작업할수록 효과가 커집니다.
+
+> **설치 전 확인 사항**: 커뮤니티 플러그인은 Anthropic의 검증을 거치지 않습니다. GitHub 저장소의 코드와 README를 먼저 확인하고, 유지보수가 활발한지, 이슈 대응이 되는지 살펴보세요.
+
+---
+
 ## ⭐ CC101이 도움이 됐다면 Star 부탁드려요!
 
 이 가이드가 도움이 됐다면, GitHub에서 Star를 눌러주세요.
