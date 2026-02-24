@@ -1,0 +1,287 @@
+# 16. 다음 단계 & 리소스
+
+> CC101을 마친 당신에게. 이제 진짜 시작입니다.
+
+---
+
+## 여기까지 오셨군요
+
+Claude Code의 기초부터 고급 자동화까지 전 과정을 완주하셨습니다. 쉽지 않은 여정이었지만, 이제 당신은 AI 기반 개발 도구를 실제로 활용할 수 있는 기반을 갖췄습니다.
+
+잠깐 돌아보면, 이런 것들을 배웠습니다:
+
+- Claude Code가 무엇이고 어떻게 작동하는지
+- 설치와 인증 설정
+- CLAUDE.md로 프로젝트 맞춤 설정
+- 기본 명령어와 워크플로우
+- MCP로 외부 도구 연결
+- Hooks와 Skills로 자동화
+- 플러그인 생태계 탐색
+- 비용 관리와 최적화
+- Headless 모드와 CI/CD 연동
+
+이 지식은 단순히 도구 하나를 배운 것이 아닙니다. AI와 협업하는 새로운 개발 방식을 익힌 것입니다.
+
+---
+
+## 다음 학습 경로
+
+### 입문 완료 (지금 여기)
+
+```
+✅ Claude Code 설치 & 인증
+✅ CLAUDE.md 작성
+✅ 기본 명령어 (/help, /cost, /compact, /model)
+✅ 파일 읽기, 코드 수정, 테스트 실행
+✅ 플러그인 기본 사용
+```
+
+---
+
+### 중급 목표
+
+**MCP(Model Context Protocol) 설정**
+
+MCP를 통해 Claude Code를 외부 서비스와 연결할 수 있습니다.
+
+```bash
+# MCP 서버 추가
+claude mcp add
+```
+
+추천 MCP 연동:
+- **GitHub**: PR, 이슈, 코드 검색
+- **Slack**: 팀 알림 연동
+- **Notion / Linear**: 프로젝트 관리 연동
+- **Figma**: 디자인 스펙 읽기
+
+---
+
+**Hooks 커스터마이징**
+
+매번 실행해야 하는 작업을 자동화합니다.
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [{
+      "matcher": "Edit",
+      "hooks": [{
+        "type": "command",
+        "command": "npm run lint -- $FILE"
+      }]
+    }]
+  }
+}
+```
+
+파일을 수정할 때마다 자동으로 린트가 실행되도록 설정하는 예시입니다.
+
+---
+
+**플러그인 탐색 및 설치**
+
+```bash
+# 플러그인 매니저 열기
+/plugin
+
+# 공식 마켓플레이스에서 설치
+/plugin install commit-commands@claude-plugins-official
+```
+
+추천 플러그인:
+- `commit-commands`: Git 워크플로우 자동화
+- `pr-review-toolkit`: PR 리뷰 전문 에이전트
+- `pyright-lsp` / `typescript-lsp`: 코드 인텔리전스
+
+---
+
+### 고급 목표
+
+**Skills 제작**
+
+자주 쓰는 작업을 재사용 가능한 Skills로 만듭니다.
+
+```markdown
+# .claude/skills/fix-issue/SKILL.md
+---
+name: fix-issue
+description: GitHub 이슈를 분석하고 수정
+---
+다음 GitHub 이슈를 분석하고 수정해줘: $ARGUMENTS
+
+1. gh issue view로 이슈 세부사항 확인
+2. 관련 파일 검색
+3. 수정 사항 구현
+4. 테스트 작성 및 실행
+5. PR 생성
+```
+
+---
+
+**Agent Teams 활용**
+
+여러 Claude 인스턴스를 동시에 실행해 복잡한 작업을 병렬로 처리합니다.
+
+```bash
+# Agent Teams 활성화 (환경변수 설정 필요)
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
+```
+
+> 비용이 많이 들 수 있으므로 신중하게 사용하세요.
+
+---
+
+**CI/CD 완전 자동화**
+
+섹션 15에서 배운 GitHub Actions를 실제 프로젝트에 적용합니다.
+
+```yaml
+# 예시: 모든 PR에 자동 코드 리뷰
+on:
+  pull_request:
+    types: [opened, synchronize]
+```
+
+---
+
+## 공식 리소스
+
+### 공식 문서
+
+| 리소스 | URL |
+|--------|-----|
+| **공식 문서 (영어)** | [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code) |
+| **GitHub 저장소** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
+| **공식 플러그인** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
+| **Anthropic 콘솔** | [platform.claude.com](https://platform.claude.com) |
+
+---
+
+### gptaku_plugins 커뮤니티
+
+CC101 제작팀이 운영하는 플러그인 커뮤니티입니다. 실전에서 검증된 플러그인들을 공유합니다.
+
+| 리소스 | URL |
+|--------|-----|
+| **GitHub** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) |
+
+이 저장소가 도움이 됐다면 **Star** 를 눌러주세요! 커뮤니티 성장에 큰 힘이 됩니다.
+
+---
+
+## 첫 실전 프로젝트 추천
+
+CC101을 마쳤다면 바로 실전에 뛰어들어 보세요. 아래는 입문자에게 추천하는 프로젝트들입니다.
+
+### 1. 포트폴리오 사이트 만들기
+
+가장 동기부여가 되는 프로젝트입니다. Claude Code에게 요구사항을 설명하고 전체 웹사이트를 만들어 보세요.
+
+```
+"HTML/CSS/JS로 개발자 포트폴리오 사이트를 만들어줘.
+섹션: 소개, 기술 스택, 프로젝트, 연락처.
+미니멀하고 다크 테마로 만들어줘."
+```
+
+---
+
+### 2. 기존 코드 리팩토링
+
+이미 있는 코드를 Claude Code와 함께 개선해보세요.
+
+```
+"이 파일의 코드를 리뷰하고 개선해줘.
+가독성, 성능, 에러 처리에 집중해줘.
+@src/utils/dataProcessor.js"
+```
+
+---
+
+### 3. 테스트 코드 자동 생성
+
+테스트가 없는 프로젝트에 테스트를 추가하는 것은 Claude Code가 특히 잘하는 작업입니다.
+
+```
+"auth.ts의 모든 함수에 대한 단위 테스트를 작성해줘.
+Jest를 사용하고, 엣지 케이스도 포함해줘."
+```
+
+---
+
+### 4. 레거시 코드 마이그레이션
+
+오래된 코드를 현대적인 방식으로 변환합니다.
+
+```
+"이 CommonJS 모듈들을 ES Modules로 마이그레이션해줘.
+각 파일을 변환하고 테스트로 검증해줘."
+```
+
+---
+
+## 막히면 어떻게 하나요?
+
+### 1단계: 공식 문서 확인
+
+대부분의 답은 공식 문서에 있습니다.
+
+```
+https://docs.anthropic.com/en/docs/claude-code
+```
+
+Claude Code 안에서도 도움을 받을 수 있습니다:
+
+```
+/help
+```
+
+---
+
+### 2단계: Claude Code에게 직접 물어보기
+
+Claude Code 자체가 가장 강력한 도움말입니다.
+
+```
+"Claude Code에서 MCP 서버를 추가하는 방법을 알려줘"
+"이 에러 메시지의 의미가 뭔지 설명해줘: [에러 내용]"
+```
+
+---
+
+### 3단계: 커뮤니티
+
+- **GitHub Issues**: [github.com/anthropics/claude-code/issues](https://github.com/anthropics/claude-code/issues)
+- **gptaku_plugins**: [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins)
+
+---
+
+### 4단계: Anthropic 지원
+
+계정이나 결제 관련 문제는 [Anthropic 콘솔](https://platform.claude.com)에서 지원을 요청하세요.
+
+---
+
+## 마지막으로
+
+Claude Code는 빠르게 발전하는 도구입니다. 오늘 배운 것이 몇 달 후에는 달라져 있을 수 있습니다. 중요한 것은 기본 원리를 이해하는 것입니다.
+
+**AI와 함께하는 개발**은 단순히 코드를 빠르게 짜는 것이 아닙니다. AI의 강점(넓은 지식, 반복 작업, 패턴 인식)과 사람의 강점(판단력, 창의성, 도메인 지식)을 결합하는 새로운 협업 방식입니다.
+
+CC101을 마친 여러분은 그 첫걸음을 내딛었습니다. 앞으로의 여정이 기대됩니다.
+
+---
+
+## 빠른 참조 카드
+
+```
+공식 문서:    https://docs.anthropic.com/en/docs/claude-code
+GitHub:       https://github.com/anthropics/claude-code
+플러그인:     https://github.com/anthropics/claude-plugins-official
+커뮤니티:     https://github.com/fivetaku/gptaku_plugins
+콘솔:         https://platform.claude.com
+
+다음 목표:
+  중급 → MCP 설정, Hooks 커스터마이징, 플러그인 탐색
+  고급 → Skills 제작, Agent Teams, CI/CD 완전 자동화
+```
