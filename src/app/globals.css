@@ -4,15 +4,18 @@
 /* Class-based dark mode (html.dark) */
 @variant dark (&:where(.dark, .dark *));
 
-/* Smooth scroll */
+/* Smooth scroll + prevent horizontal overflow */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Light mode defaults */
 body {
   background-color: #ffffff;
   color: #18181b;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Dark mode body */
@@ -36,6 +39,13 @@ html.dark ::-webkit-scrollbar-thumb {
   background: #27272a;
 }
 
+/* Code block — contain within viewport, scroll horizontally inside */
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre;
+}
+
 /* Code block horizontal scrollbar */
 pre::-webkit-scrollbar {
   height: 5px;
@@ -47,10 +57,17 @@ html.dark pre::-webkit-scrollbar-thumb {
   background: #3f3f46;
 }
 
-/* Table border */
+/* Table — horizontal scroll on mobile */
+.prose .table-wrapper,
+.prose table {
+  max-width: 100%;
+}
+
 .prose table {
   width: 100%;
   border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
 }
 .prose th,
 .prose td {
