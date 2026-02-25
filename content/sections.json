@@ -205,7 +205,7 @@
       "slug": "skills",
       "title_ko": "Skills & 플러그인 만들기",
       "title_en": "Skills & Building Plugins",
-      "description_ko": "반복 작업을 자동화하는 Skills를 만들고 플러그인으로 공유합니다.",
+      "description_ko": "자주 하는 일을 레시피로 저장하고 /커맨드 하나로 꺼내 씁니다. 팀과 플러그인으로 나눌 수도 있습니다.",
       "description_en": "Create Skills to automate repetitive tasks and share them as plugins.",
       "icon": "code",
       "file_ko": "ko/12-skills.md",
