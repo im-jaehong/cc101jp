@@ -117,21 +117,36 @@
       "file_en": "en/08-workflow.md"
     },
     {
-      "id": "09-troubleshooting",
+      "id": "git-with-teacher",
       "order": 9,
+      "tier": "core",
+      "slug": "git-with-teacher",
+      "title_ko": "GitHub 시작하기",
+      "title_en": "Getting Started with GitHub",
+      "description_ko": "Claude Code에 필수인 Git & GitHub 사용법. 바르다 깃선생으로 저장해줘, 올려줘만 알면 됩니다.",
+      "description_en": "Git & GitHub essentials for Claude Code. Just say 'save this' and 'upload it' with git-teacher.",
+      "icon": "git-branch",
+      "badge": "필수",
+      "badge_en": "Essential",
+      "file_ko": "ko/git-with-teacher.md",
+      "file_en": "en/git-with-teacher.md"
+    },
+    {
+      "id": "09-troubleshooting",
+      "order": 10,
       "tier": "core",
       "slug": "troubleshooting",
       "title_ko": "자주 하는 실수 & 해결법",
       "title_en": "Common Mistakes & Fixes",
-      "description_ko": "초보자가 자주 겪는 10가지 문제와 해결 방법을 알아봅니다.",
-      "description_en": "10 common beginner problems and how to fix them.",
+      "description_ko": "초보자가 자주 겪는 문제와 해결 방법을 알아봅니다.",
+      "description_en": "Common beginner problems and how to fix them.",
       "icon": "help-circle",
       "file_ko": "ko/09-troubleshooting.md",
       "file_en": "en/09-troubleshooting.md"
     },
     {
       "id": "10-mcp",
-      "order": 10,
+      "order": 11,
       "tier": "advanced",
       "slug": "mcp",
       "title_ko": "MCP & 외부 도구 연결",
@@ -144,7 +159,7 @@
     },
     {
       "id": "11-hooks",
-      "order": 11,
+      "order": 12,
       "tier": "advanced",
       "slug": "hooks",
       "title_ko": "Hooks — 자동화의 핵심",
@@ -157,7 +172,7 @@
     },
     {
       "id": "12-skills",
-      "order": 12,
+      "order": 13,
       "tier": "advanced",
       "slug": "skills",
       "title_ko": "Skills & 플러그인 만들기",
@@ -170,7 +185,7 @@
     },
     {
       "id": "13-subagents",
-      "order": 13,
+      "order": 14,
       "tier": "advanced",
       "slug": "subagents",
       "title_ko": "Sub-agents & Agent Teams",
@@ -183,7 +198,7 @@
     },
     {
       "id": "14-cost",
-      "order": 14,
+      "order": 15,
       "tier": "advanced",
       "slug": "cost-management",
       "title_ko": "비용 관리 & 절약 팁",
@@ -196,7 +211,7 @@
     },
     {
       "id": "15-automation",
-      "order": 15,
+      "order": 16,
       "tier": "advanced",
       "slug": "automation",
       "title_ko": "Headless & GitHub Actions",
@@ -209,7 +224,7 @@
     },
     {
       "id": "16-next-steps",
-      "order": 16,
+      "order": 17,
       "tier": "advanced",
       "slug": "next-steps",
       "title_ko": "다음 단계 & 리소스",
@@ -225,9 +240,9 @@
     "core": {
       "label_ko": "기초 필수",
       "label_en": "Core Essentials",
-      "description_ko": "Claude Code를 시작하는 데 반드시 알아야 할 9개 섹션",
-      "description_en": "9 sections you must know to get started with Claude Code",
-      "count": 9
+      "description_ko": "Claude Code를 시작하는 데 반드시 알아야 할 10개 섹션",
+      "description_en": "10 sections you must know to get started with Claude Code",
+      "count": 10
     },
     "advanced": {
       "label_ko": "고급 확장",
