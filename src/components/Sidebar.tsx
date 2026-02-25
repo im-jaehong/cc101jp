@@ -6,9 +6,10 @@ import type { SectionMeta, Lang } from '@/types'
 interface SidebarProps {
   sections: SectionMeta[]
   lang: Lang
+  onLinkClick?: () => void
 }
 
-export function Sidebar({ sections, lang }: SidebarProps) {
+export function Sidebar({ sections, lang, onLinkClick }: SidebarProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [showAdvanced, setShowAdvanced] = useState(true)
 
@@ -43,7 +44,7 @@ export function Sidebar({ sections, lang }: SidebarProps) {
           {lang === 'ko' ? '기초 필수' : 'Core Essentials'}
         </p>
         {coreSections.map((section) => (
-          <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} />
+          <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} />
         ))}
       </div>
 
@@ -58,7 +59,7 @@ export function Sidebar({ sections, lang }: SidebarProps) {
         </button>
         {showAdvanced &&
           advancedSections.map((section) => (
-            <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} />
+            <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} />
           ))}
       </div>
     </nav>
@@ -69,16 +70,19 @@ function SidebarItem({
   section,
   lang,
   isActive,
+  onLinkClick,
 }: {
   section: SectionMeta
   lang: Lang
   isActive: boolean
+  onLinkClick?: () => void
 }) {
   const title = lang === 'ko' ? section.title_ko : section.title_en
 
   return (
     <a
       href={`#${section.id}`}
+      onClick={onLinkClick}
       className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
         isActive
           ? 'bg-orange-500/10 text-orange-500 dark:text-orange-400'

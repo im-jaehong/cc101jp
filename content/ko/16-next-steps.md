@@ -158,13 +158,12 @@ on:
 
 ---
 
-### CC101 커뮤니티
+### CC101 & gptaku_plugins 커뮤니티
 
-이 가이드를 운영하는 CC101 GitHub 저장소입니다. 오타 수정, 내용 추가, 번역 개선 등 기여를 환영합니다.
-
-| 리소스 | URL |
-|--------|-----|
-| **CC101 GitHub** | [github.com/fivetaku/cc101](https://github.com/fivetaku/cc101) |
+| 리소스 | URL | 설명 |
+|--------|-----|------|
+| **CC101 GitHub** | [github.com/fivetaku/cc101](https://github.com/fivetaku/cc101) | 이 가이드 저장소. 오타·내용 추가 기여 환영 |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | docs-guide, 바르다 깃선생, 바선생, deep-research-kit, pumasi 등 플러그인 모음 |
 
 이 가이드가 도움이 됐다면 **Star** 를 눌러주세요! 업데이트와 발전에 큰 힘이 됩니다.
 
