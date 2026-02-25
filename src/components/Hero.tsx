@@ -29,7 +29,7 @@ export function Hero({ lang }: HeroProps) {
             <>
               <span className="text-orange-500 dark:text-orange-400">Claude Code</span>로{' '}
               <br className="hidden sm:block" />
-              AI 코딩 시작하기
+              AI 시작하기
             </>
           ) : (
             <>
@@ -43,8 +43,8 @@ export function Hero({ lang }: HeroProps) {
         {/* Subtitle */}
         <p className="mb-10 text-lg text-zinc-500 sm:text-xl dark:text-zinc-400">
           {ko
-            ? '설치부터 CLAUDE.md, MCP, Skills까지 — 공식 문서 기반으로 쉽게 정리한 한국어 가이드'
-            : 'From installation to CLAUDE.md, MCP, and Skills — a beginner-friendly guide based on official docs'}
+            ? 'AI Native로 가는 첫 걸음 — Claude Code 한국어 실전 가이드'
+            : 'Your first step to going AI Native — a practical guide to Claude Code'}
         </p>
 
         {/* Terminal preview */}

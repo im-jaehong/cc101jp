@@ -76,7 +76,7 @@ export default function Image() {
             maxWidth: 700,
           }}
         >
-          설치부터 CLAUDE.md, MCP, Skills, Hooks까지
+          AI Native로 가는 첫 걸음 — Claude Code 한국어 실전 가이드
         </div>
 
         {/* Stats row */}
