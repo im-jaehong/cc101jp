@@ -27,8 +27,8 @@ export function Hero({ lang }: HeroProps) {
         <h1 className="mb-6 text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl lg:text-6xl dark:text-white">
           {ko ? (
             <>
-              <span className="text-orange-500 dark:text-orange-400">Claude Code</span>로{' '}
-              <br className="hidden sm:block" />
+              <span className="text-orange-500 dark:text-orange-400">Claude Code</span>로
+              <br />
               AI 시작하기
             </>
           ) : (
@@ -42,9 +42,15 @@ export function Hero({ lang }: HeroProps) {
 
         {/* Subtitle */}
         <p className="mb-10 text-lg text-zinc-500 sm:text-xl dark:text-zinc-400">
-          {ko
-            ? 'AI Native로 가는 첫 걸음 — Claude Code 한국어 실전 가이드'
-            : 'Your first step to going AI Native — a practical guide to Claude Code'}
+          {ko ? (
+            <>
+              AI Native로 가는 첫 걸음 —{' '}
+              <br className="sm:hidden" />
+              Claude Code 한국어 실전 가이드
+            </>
+          ) : (
+            'Your first step to going AI Native — a practical guide to Claude Code'
+          )}
         </p>
 
         {/* Terminal preview */}
