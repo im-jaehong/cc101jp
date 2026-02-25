@@ -79,7 +79,7 @@ export function Hero({ lang }: HeroProps) {
             ].join(', '),
             backgroundSize: '300%, 200%',
             animation: 'aurora-move 60s linear infinite',
-            filter: 'blur(10px) opacity(0.55) saturate(200%)',
+            filter: 'blur(10px) opacity(0.22) saturate(180%)',
             WebkitMaskImage:
               'radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%)',
             maskImage:
@@ -97,7 +97,7 @@ export function Hero({ lang }: HeroProps) {
             ].join(', '),
             backgroundSize: '200%, 100%',
             animation: 'aurora-move 60s linear infinite',
-            filter: 'blur(8px) opacity(0.25) saturate(200%)',
+            filter: 'blur(8px) opacity(0.10) saturate(180%)',
             mixBlendMode: 'screen',
             WebkitMaskImage:
               'radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%)',
