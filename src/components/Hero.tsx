@@ -20,7 +20,6 @@ export function Hero({ lang }: HeroProps) {
   // Typewriter loop
   useEffect(() => {
     let t: ReturnType<typeof setTimeout>
-
     if (phase === 'waiting') {
       t = setTimeout(() => setPhase('typing'), 900)
     } else if (phase === 'typing') {
@@ -28,21 +27,13 @@ export function Hero({ lang }: HeroProps) {
       const tick = () => {
         i++
         setTypedPrompt(prompt.slice(0, i))
-        if (i < prompt.length) {
-          t = setTimeout(tick, 55)
-        } else {
-          setPhase('done')
-        }
+        if (i < prompt.length) t = setTimeout(tick, 55)
+        else setPhase('done')
       }
       t = setTimeout(tick, 0)
     } else {
-      // done → restart after pause
-      t = setTimeout(() => {
-        setTypedPrompt('')
-        setPhase('waiting')
-      }, 3500)
+      t = setTimeout(() => { setTypedPrompt(''); setPhase('waiting') }, 3500)
     }
-
     return () => clearTimeout(t)
   }, [phase, prompt])
 
@@ -52,7 +43,7 @@ export function Hero({ lang }: HeroProps) {
     return () => clearInterval(id)
   }, [])
 
-  // Mouse glow tracking
+  // Mouse glow tracking (desktop only)
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!sectionRef.current) return
     const rect = sectionRef.current.getBoundingClientRect()
@@ -69,21 +60,56 @@ export function Hero({ lang }: HeroProps) {
       className="relative overflow-hidden border-b border-zinc-200 bg-white pb-16 pt-32 dark:border-zinc-800 dark:bg-zinc-950"
     >
       <style>{`
-        @keyframes orb-bg-1 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          40% { transform: translate(35px, -25px) scale(1.07); }
-          70% { transform: translate(-20px, 30px) scale(0.95); }
-        }
-        @keyframes orb-bg-2 {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          35% { transform: translate(-45px, 20px) scale(1.10); }
-          70% { transform: translate(25px, -35px) scale(0.92); }
+        @keyframes aurora-move {
+          from { background-position: 50% 50%, 50% 50%; }
+          to   { background-position: 350% 50%, 350% 50%; }
         }
       `}</style>
 
-      {/* Mouse-following glow */}
+      {/* ── Aurora background ── */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        {/* Layer 1: main aurora */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: [
+              'repeating-linear-gradient(100deg, #09090b 0%, #09090b 7%, transparent 10%, transparent 12%, #09090b 16%)',
+              'repeating-linear-gradient(100deg, #f97316 10%, #fb923c 15%, #f59e0b 20%, #ea580c 25%, #f97316 30%)',
+            ].join(', '),
+            backgroundSize: '300%, 200%',
+            animation: 'aurora-move 60s linear infinite',
+            filter: 'blur(10px) opacity(0.55) saturate(200%)',
+            WebkitMaskImage:
+              'radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%)',
+            maskImage:
+              'radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%)',
+          }}
+        />
+        {/* Layer 2: additive shimmer */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: [
+              'repeating-linear-gradient(100deg, #09090b 0%, #09090b 7%, transparent 10%, transparent 12%, #09090b 16%)',
+              'repeating-linear-gradient(100deg, #f97316 10%, #fb923c 15%, #f59e0b 20%, #ea580c 25%, #f97316 30%)',
+            ].join(', '),
+            backgroundSize: '200%, 100%',
+            animation: 'aurora-move 60s linear infinite',
+            filter: 'blur(8px) opacity(0.25) saturate(200%)',
+            mixBlendMode: 'screen',
+            WebkitMaskImage:
+              'radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%)',
+            maskImage:
+              'radial-gradient(ellipse at 50% 0%, black 40%, transparent 80%)',
+          }}
+        />
+      </div>
+
+      {/* ── Mouse-following glow (desktop) ── */}
       <div
-        className="pointer-events-none absolute z-0 h-[500px] w-[500px] rounded-full bg-orange-500 blur-[110px] dark:opacity-[0.12] opacity-[0.08]"
+        className="pointer-events-none absolute z-0 hidden h-[400px] w-[400px] rounded-full bg-orange-500 blur-[100px] opacity-20 md:block"
         style={{
           left: `${mousePos.x}%`,
           top: `${mousePos.y}%`,
@@ -92,26 +118,7 @@ export function Hero({ lang }: HeroProps) {
         }}
       />
 
-      {/* Static ambient orbs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div
-          className="absolute -left-48 -top-48 h-[600px] w-[600px] rounded-full bg-orange-500 opacity-[0.07] blur-[100px] dark:opacity-[0.09]"
-          style={{ animation: 'orb-bg-1 10s ease-in-out infinite' }}
-        />
-        <div
-          className="absolute -bottom-36 -right-28 h-[500px] w-[500px] rounded-full bg-amber-400 opacity-[0.05] blur-[100px] dark:opacity-[0.07]"
-          style={{ animation: 'orb-bg-2 14s ease-in-out infinite' }}
-        />
-        {/* Dot grid */}
-        <div
-          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, rgba(249,115,22,0.9) 1px, transparent 1px)',
-            backgroundSize: '40px 40px',
-          }}
-        />
-      </div>
-
+      {/* ── Content ── */}
       <div className="relative z-10 mx-auto max-w-4xl px-4 text-center lg:px-6">
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-sm text-orange-500 dark:text-orange-400">
@@ -149,7 +156,7 @@ export function Hero({ lang }: HeroProps) {
           )}
         </p>
 
-        {/* Terminal preview */}
+        {/* Terminal */}
         <div className="mx-auto mb-10 max-w-lg rounded-xl border border-zinc-200 bg-zinc-50 text-left shadow-lg dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-2xl">
           <div className="flex items-center gap-1.5 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <div className="h-3 w-3 rounded-full bg-red-500/60" />

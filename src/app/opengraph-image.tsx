@@ -5,7 +5,22 @@ export const alt = 'CC101 — Claude Code 한국어 입문 가이드'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-export default function Image() {
+export default async function Image() {
+  // Fetch Korean font for proper rendering in edge runtime
+  let fontData: ArrayBuffer | null = null
+  try {
+    const css = await fetch(
+      'https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@900&display=swap',
+      { headers: { 'User-Agent': 'Mozilla/5.0 (compatible)' } }
+    ).then((r) => r.text())
+    const match = css.match(/src: url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/)
+    if (match?.[1]) {
+      fontData = await fetch(match[1]).then((r) => r.arrayBuffer())
+    }
+  } catch {
+    // fallback: renders without Korean font
+  }
+
   return new ImageResponse(
     (
       <div
@@ -14,7 +29,7 @@ export default function Image() {
           width: '100%',
           height: '100%',
           display: 'flex',
-          fontFamily: 'monospace',
+          fontFamily: fontData ? 'NotoSansKR, monospace' : 'monospace',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -82,6 +97,7 @@ export default function Image() {
               color: '#f97316',
               fontSize: 17,
               background: 'rgba(249,115,22,0.06)',
+              width: 'fit-content',
             }}
           >
             <span>▸</span>
@@ -214,7 +230,7 @@ export default function Image() {
                 }}
               />
               <span
-                style={{ color: '#52525b', fontSize: 13, marginLeft: 8 }}
+                style={{ color: '#52525b', fontSize: 13, marginLeft: 8, fontFamily: 'monospace' }}
               >
                 ~ terminal
               </span>
@@ -227,6 +243,7 @@ export default function Image() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 10,
+                fontFamily: 'monospace',
               }}
             >
               <div style={{ color: '#52525b', fontSize: 14 }}>
@@ -274,12 +291,27 @@ export default function Image() {
             left: 72,
             color: '#3f3f46',
             fontSize: 16,
+            fontFamily: 'monospace',
           }}
         >
           cc101.axwith.com
         </div>
       </div>
     ),
-    { ...size }
+    {
+      ...size,
+      ...(fontData
+        ? {
+            fonts: [
+              {
+                name: 'NotoSansKR',
+                data: fontData,
+                weight: 900 as const,
+                style: 'normal' as const,
+              },
+            ],
+          }
+        : {}),
+    }
   )
 }
