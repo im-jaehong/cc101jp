@@ -110,13 +110,9 @@ Each session runs independently.
 
 ### When Claude's Answers Suddenly Get Weird
 
-```
-1. Try /compact to compress the conversation
+1. Try `/compact` to compress the conversation
 2. If still odd → start a new session
-3. In the new session, re-provide only the key context:
-   "I'm working on [project], have done [summary] so far,
-    and now need to [next task]."
-```
+3. In the new session, re-provide only the key context: `"I'm working on [project], have done [summary] so far, and now need to [next task]."`
 
 ### When You Need to Stop Mid-Task
 

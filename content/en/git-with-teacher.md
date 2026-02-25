@@ -31,10 +31,8 @@ This is the most common source of confusion for first-time Git users.
 
 Git always requires two steps:
 
-```
 1. Save (Commit) — record your changes locally
 2. Upload (Push) — send your commits to GitHub
-```
 
 > **Why two steps?** You can save without internet, and you can choose exactly what to upload and when.
 
