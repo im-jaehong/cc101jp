@@ -328,4 +328,4 @@ description: review tool
 
 > Skills = 내가 자주 하는 작업을 `/커맨드` 하나로 만들어두는 것. 팀에 배포하려면 플러그인으로 패키징하면 된다.
 
-다음 섹션에서는 Sub-agents로 복잡한 작업을 병렬 처리하는 방법을 배웁니다.
+Skills를 만들어뒀다면, Sub-agents로 그 Skills를 여러 Claude가 동시에 실행하게 할 수 있습니다.
