@@ -1,4 +1,4 @@
-# 05. Understanding Core Concepts
+# 06. Understanding Core Concepts
 
 > Understanding how Claude Code works helps you use it far more effectively.
 

@@ -1,4 +1,4 @@
-# 13. Sub-agents & Agent Teams
+# 16. Sub-agents & Agent Teams
 
 > Claude가 다른 Claude에게 작업을 위임 — 복잡한 작업을 병렬로 처리하는 방법
 

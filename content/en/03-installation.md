@@ -1,4 +1,4 @@
-# 03. Installation & Authentication
+# 04. Installation & Authentication
 
 > One command in the terminal to install, then log in through your browser — that's it.
 

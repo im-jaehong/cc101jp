@@ -1,4 +1,4 @@
-# 14. Cost Management & Saving Tips
+# 18. Cost Management & Saving Tips
 
 > Learn how to use Claude Code smarter and cheaper.
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { SectionMeta, Lang } from '@/types'
 import { trackTocClick } from '@/lib/analytics'
 
@@ -14,6 +14,16 @@ interface SidebarProps {
 export function Sidebar({ sections, lang, onLinkClick, isMobile = false }: SidebarProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [showAdvanced, setShowAdvanced] = useState(true)
+  const navRef = useRef<HTMLElement>(null)
+
+  // Auto-scroll sidebar to keep active item visible
+  useEffect(() => {
+    if (!activeId || !navRef.current) return
+    const activeEl = navRef.current.querySelector(`a[href="#${activeId}"]`)
+    if (activeEl) {
+      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [activeId])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -39,7 +49,7 @@ export function Sidebar({ sections, lang, onLinkClick, isMobile = false }: Sideb
   const advancedSections = sections.filter((s) => s.tier === 'advanced')
 
   return (
-    <nav className="flex flex-col gap-1">
+    <nav ref={navRef} className="flex flex-col gap-1">
       {/* Core sections */}
       <div className="mb-2">
         <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">

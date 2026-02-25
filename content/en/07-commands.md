@@ -1,4 +1,4 @@
-# 07. Command Reference
+# 08. Command Reference
 
 > A complete quick-reference for every command you need when using Claude Code.
 
