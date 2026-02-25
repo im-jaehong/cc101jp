@@ -7,6 +7,7 @@ import { Sidebar } from './Sidebar'
 import { Footer } from './Footer'
 import { Hero } from './Hero'
 import type { SectionMeta, Lang } from '@/types'
+import { trackLanguageToggle } from '@/lib/analytics'
 
 interface PageClientProps {
   lang: Lang
@@ -33,6 +34,7 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
 
   const toggleLang = useCallback(() => {
     const next = lang === 'ko' ? 'en' : 'ko'
+    trackLanguageToggle({ from: lang, to: next })
     const params = new URLSearchParams(searchParams.toString())
     params.set('lang', next)
     router.push(`?${params.toString()}`, { scroll: false })
@@ -60,7 +62,7 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
             <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               {lang === 'ko' ? '목차' : 'Contents'}
             </p>
-            <Sidebar sections={sections} lang={lang} onLinkClick={() => setMobileMenuOpen(false)} />
+            <Sidebar sections={sections} lang={lang} onLinkClick={() => setMobileMenuOpen(false)} isMobile={true} />
           </div>
         </div>
       )}

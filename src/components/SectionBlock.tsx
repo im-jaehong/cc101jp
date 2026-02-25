@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Lang } from '@/types'
+import { trackExternalLinkClick, trackGuideCompletion, trackSectionView } from '@/lib/analytics'
 
 interface SectionBlockProps {
   id: string
@@ -27,10 +28,44 @@ export function SectionBlock({
 }: SectionBlockProps) {
   const isAdvanced = tier === 'advanced'
   const [isOpen, setIsOpen] = useState(true)
+  const sectionRef = useRef<HTMLElement>(null)
+  const viewFired = useRef(false)
+
+  // section_view + guide_completion tracking
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !viewFired.current) {
+          viewFired.current = true
+          trackSectionView({ section_id: id, section_index: order, content_type: tier, lang })
+          if (order === 20) trackGuideCompletion({ lang })
+        }
+      },
+      { threshold: 0.3 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [id, order, tier, lang])
+
+  // external_link_click tracking via event delegation
+  const handleContentClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = (e.target as HTMLElement).closest('a')
+    if (!target) return
+    const href = target.getAttribute('href') ?? ''
+    if (href.startsWith('http')) {
+      try {
+        const domain = new URL(href).hostname
+        trackExternalLinkClick({ link_domain: domain, link_url: href, from_section: id })
+      } catch {}
+    }
+  }
 
   return (
     <section
       id={id}
+      ref={sectionRef}
       className="scroll-mt-20 border-b border-zinc-200 py-12 last:border-0 dark:border-zinc-800/60"
     >
       {/* Section header */}
@@ -71,7 +106,7 @@ export function SectionBlock({
 
       {/* Section content */}
       {isOpen && (
-        <div className="prose prose-zinc max-w-none dark:prose-invert
+        <div onClick={handleContentClick} className="prose prose-zinc max-w-none dark:prose-invert
           prose-headings:font-bold
           prose-h2:text-xl prose-h3:text-lg prose-h4:text-base
           prose-p:leading-relaxed

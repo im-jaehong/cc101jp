@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import type { SectionMeta, Lang } from '@/types'
+import { trackTocClick } from '@/lib/analytics'
 
 interface SidebarProps {
   sections: SectionMeta[]
   lang: Lang
   onLinkClick?: () => void
+  isMobile?: boolean
 }
 
-export function Sidebar({ sections, lang, onLinkClick }: SidebarProps) {
+export function Sidebar({ sections, lang, onLinkClick, isMobile = false }: SidebarProps) {
   const [activeId, setActiveId] = useState<string>('')
   const [showAdvanced, setShowAdvanced] = useState(true)
 
@@ -44,7 +46,7 @@ export function Sidebar({ sections, lang, onLinkClick }: SidebarProps) {
           {lang === 'ko' ? '기초 필수' : 'Core Essentials'}
         </p>
         {coreSections.map((section) => (
-          <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} />
+          <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} isMobile={isMobile} />
         ))}
       </div>
 
@@ -59,7 +61,7 @@ export function Sidebar({ sections, lang, onLinkClick }: SidebarProps) {
         </button>
         {showAdvanced &&
           advancedSections.map((section) => (
-            <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} />
+            <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} isMobile={isMobile} />
           ))}
       </div>
     </nav>
@@ -71,18 +73,25 @@ function SidebarItem({
   lang,
   isActive,
   onLinkClick,
+  isMobile = false,
 }: {
   section: SectionMeta
   lang: Lang
   isActive: boolean
   onLinkClick?: () => void
+  isMobile?: boolean
 }) {
   const title = lang === 'ko' ? section.title_ko : section.title_en
+
+  const handleClick = () => {
+    trackTocClick({ target_section: section.id, is_mobile: isMobile, lang })
+    onLinkClick?.()
+  }
 
   return (
     <a
       href={`#${section.id}`}
-      onClick={onLinkClick}
+      onClick={handleClick}
       className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ${
         isActive
           ? 'bg-orange-500/10 text-orange-500 dark:text-orange-400'

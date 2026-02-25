@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import type { Lang } from '@/types'
+import { trackCtaClick } from '@/lib/analytics'
 
 interface HeroProps {
   lang: Lang
@@ -186,6 +187,7 @@ export function Hero({ lang }: HeroProps) {
         <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
           <a
             href="#01-what-is-cc"
+            onClick={() => trackCtaClick({ cta_id: 'start_guide', destination: '#01-what-is-cc', lang })}
             className="min-w-[10rem] rounded-lg bg-orange-500 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-orange-400"
           >
             {ko ? '가이드 시작 →' : 'Start Guide →'}
@@ -194,6 +196,7 @@ export function Hero({ lang }: HeroProps) {
             href="https://docs.anthropic.com/en/docs/claude-code"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackCtaClick({ cta_id: 'official_docs', destination: 'https://docs.anthropic.com/en/docs/claude-code', lang })}
             className="min-w-[10rem] rounded-lg border border-zinc-300 px-6 py-3 text-center text-sm font-semibold text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-white"
           >
             {ko ? '공식 문서' : 'Official Docs'}
