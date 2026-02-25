@@ -11,9 +11,49 @@ export function Hero({ lang }: HeroProps) {
 
   return (
     <section className="relative overflow-hidden border-b border-zinc-200 bg-white pb-16 pt-32 dark:border-zinc-800 dark:bg-zinc-950">
-      {/* Background glow */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-        <div className="h-[400px] w-[800px] rounded-full bg-orange-500/5 blur-3xl" />
+      <style>{`
+        @keyframes orb1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(40px, -30px) scale(1.08); }
+          66% { transform: translate(-25px, 35px) scale(0.94); }
+        }
+        @keyframes orb2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          40% { transform: translate(-50px, 25px) scale(1.12); }
+          75% { transform: translate(30px, -40px) scale(0.9); }
+        }
+        @keyframes orb3 {
+          0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.04; }
+          50% { transform: translateX(-50%) scale(1.2); opacity: 0.07; }
+        }
+      `}</style>
+
+      {/* Animated background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Orb 1 — top left */}
+        <div
+          className="absolute -left-40 -top-40 h-[560px] w-[560px] rounded-full bg-orange-500 blur-[90px] dark:opacity-[0.10] opacity-[0.07]"
+          style={{ animation: 'orb1 9s ease-in-out infinite' }}
+        />
+        {/* Orb 2 — bottom right */}
+        <div
+          className="absolute -bottom-32 -right-24 h-[480px] w-[480px] rounded-full bg-amber-400 blur-[90px] dark:opacity-[0.08] opacity-[0.05]"
+          style={{ animation: 'orb2 13s ease-in-out infinite' }}
+        />
+        {/* Orb 3 — center, breathing */}
+        <div
+          className="absolute left-1/2 top-1/2 h-[200px] w-[800px] -translate-y-1/2 rounded-full bg-orange-600 blur-[100px] opacity-[0.04] dark:opacity-[0.06]"
+          style={{ animation: 'orb3 16s ease-in-out infinite' }}
+        />
+        {/* Subtle dot grid */}
+        <div
+          className="absolute inset-0 opacity-[0.018] dark:opacity-[0.035]"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, rgba(249,115,22,0.8) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-6">
