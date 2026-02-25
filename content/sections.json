@@ -4,8 +4,8 @@
     "url": "cc101.axwith.com",
     "description": "Claude Code 한국어 입문 가이드",
     "description_en": "Claude Code Korean Beginner's Guide",
-    "version": "1.0.0",
-    "lastUpdated": "2026-02-24"
+    "version": "1.1.0",
+    "lastUpdated": "2026-02-25"
   },
   "sections": [
     {
@@ -22,8 +22,21 @@
       "file_en": "en/01-what-is-cc.md"
     },
     {
-      "id": "02-plans-pricing",
+      "id": "use-cases",
       "order": 2,
+      "tier": "core",
+      "slug": "use-cases",
+      "title_ko": "Claude Code로 할 수 있는 것들",
+      "title_en": "What You Can Do with Claude Code",
+      "description_ko": "개발 너머의 Claude Code. 비개발자도 할 수 있는 리서치, 문서, 데이터 처리, 개인 워크스페이스까지.",
+      "description_en": "Claude Code beyond coding — research, documents, data processing, and personal AI workspaces.",
+      "icon": "sparkles",
+      "file_ko": "ko/use-cases.md",
+      "file_en": "en/use-cases.md"
+    },
+    {
+      "id": "02-plans-pricing",
+      "order": 3,
       "tier": "core",
       "slug": "plans-and-pricing",
       "title_ko": "제품군 & 가격",
@@ -36,7 +49,7 @@
     },
     {
       "id": "03-installation",
-      "order": 3,
+      "order": 4,
       "tier": "core",
       "slug": "installation",
       "title_ko": "설치 & 인증",
@@ -49,7 +62,7 @@
     },
     {
       "id": "04-plugins",
-      "order": 4,
+      "order": 5,
       "tier": "core",
       "slug": "plugins",
       "title_ko": "플러그인 설치",
@@ -64,7 +77,7 @@
     },
     {
       "id": "05-core-concepts",
-      "order": 5,
+      "order": 6,
       "tier": "core",
       "slug": "core-concepts",
       "title_ko": "핵심 개념",
@@ -77,7 +90,7 @@
     },
     {
       "id": "06-claude-md",
-      "order": 6,
+      "order": 7,
       "tier": "core",
       "slug": "claude-md",
       "title_ko": "CLAUDE.md 완전 정복",
@@ -92,20 +105,20 @@
     },
     {
       "id": "07-commands",
-      "order": 7,
+      "order": 8,
       "tier": "core",
       "slug": "commands",
       "title_ko": "명령어 모음",
       "title_en": "Commands",
-      "description_ko": "CLI 명령어, 슬래시 명령어, 키보드 단축키를 한눈에 정리합니다.",
-      "description_en": "A complete reference for CLI commands, slash commands, and keyboard shortcuts.",
+      "description_ko": "CLI 명령어, 슬래시 명령어, 키보드 단축키, Alias 설정까지 한눈에 정리합니다.",
+      "description_en": "A complete reference for CLI commands, slash commands, keyboard shortcuts, and alias setup.",
       "icon": "terminal",
       "file_ko": "ko/07-commands.md",
       "file_en": "en/07-commands.md"
     },
     {
       "id": "08-workflow",
-      "order": 8,
+      "order": 9,
       "tier": "core",
       "slug": "workflow",
       "title_ko": "초보자 워크플로우",
@@ -117,8 +130,23 @@
       "file_en": "en/08-workflow.md"
     },
     {
+      "id": "session-management",
+      "order": 10,
+      "tier": "core",
+      "slug": "session-management",
+      "title_ko": "세션 & 컨텍스트 관리",
+      "title_en": "Session & Context Management",
+      "description_ko": "컨텍스트 윈도우 개념부터 /compact, --resume, Plan Mode, 병렬 세션까지 실전 운용법.",
+      "description_en": "From context window basics to /compact, --resume, Plan Mode, and parallel sessions.",
+      "icon": "layers",
+      "badge": "실전 팁",
+      "badge_en": "Pro Tips",
+      "file_ko": "ko/session-management.md",
+      "file_en": "en/session-management.md"
+    },
+    {
       "id": "git-with-teacher",
-      "order": 9,
+      "order": 11,
       "tier": "core",
       "slug": "git-with-teacher",
       "title_ko": "GitHub 시작하기",
@@ -133,7 +161,7 @@
     },
     {
       "id": "09-troubleshooting",
-      "order": 10,
+      "order": 12,
       "tier": "core",
       "slug": "troubleshooting",
       "title_ko": "자주 하는 실수 & 해결법",
@@ -146,7 +174,7 @@
     },
     {
       "id": "10-mcp",
-      "order": 11,
+      "order": 13,
       "tier": "advanced",
       "slug": "mcp",
       "title_ko": "MCP & 외부 도구 연결",
@@ -159,7 +187,7 @@
     },
     {
       "id": "11-hooks",
-      "order": 12,
+      "order": 14,
       "tier": "advanced",
       "slug": "hooks",
       "title_ko": "Hooks — 자동화의 핵심",
@@ -172,7 +200,7 @@
     },
     {
       "id": "12-skills",
-      "order": 13,
+      "order": 15,
       "tier": "advanced",
       "slug": "skills",
       "title_ko": "Skills & 플러그인 만들기",
@@ -185,7 +213,7 @@
     },
     {
       "id": "13-subagents",
-      "order": 14,
+      "order": 16,
       "tier": "advanced",
       "slug": "subagents",
       "title_ko": "Sub-agents & Agent Teams",
@@ -197,8 +225,21 @@
       "file_en": "en/13-subagents.md"
     },
     {
+      "id": "workspace-design",
+      "order": 17,
+      "tier": "advanced",
+      "slug": "workspace-design",
+      "title_ko": "나만의 AI 워크스페이스 설계하기",
+      "title_en": "Designing Your Personal AI Workspace",
+      "description_ko": "CLAUDE.md, Skills, Hooks를 조합해 나만의 자동화 사무실을 만드는 방법.",
+      "description_en": "Combine CLAUDE.md, Skills, and Hooks to build your personal automated AI office.",
+      "icon": "layout",
+      "file_ko": "ko/workspace-design.md",
+      "file_en": "en/workspace-design.md"
+    },
+    {
       "id": "14-cost",
-      "order": 15,
+      "order": 18,
       "tier": "advanced",
       "slug": "cost-management",
       "title_ko": "비용 관리 & 절약 팁",
@@ -211,7 +252,7 @@
     },
     {
       "id": "15-automation",
-      "order": 16,
+      "order": 19,
       "tier": "advanced",
       "slug": "automation",
       "title_ko": "Headless & GitHub Actions",
@@ -224,7 +265,7 @@
     },
     {
       "id": "16-next-steps",
-      "order": 17,
+      "order": 20,
       "tier": "advanced",
       "slug": "next-steps",
       "title_ko": "다음 단계 & 리소스",
@@ -240,16 +281,16 @@
     "core": {
       "label_ko": "기초 필수",
       "label_en": "Core Essentials",
-      "description_ko": "Claude Code를 시작하는 데 반드시 알아야 할 10개 섹션",
-      "description_en": "10 sections you must know to get started with Claude Code",
-      "count": 10
+      "description_ko": "Claude Code를 시작하는 데 반드시 알아야 할 12개 섹션",
+      "description_en": "12 sections you must know to get started with Claude Code",
+      "count": 12
     },
     "advanced": {
       "label_ko": "고급 확장",
       "label_en": "Advanced",
-      "description_ko": "더 강력하게 활용하기 위한 7개 심화 섹션",
-      "description_en": "7 in-depth sections for power users",
-      "count": 7
+      "description_ko": "더 강력하게 활용하기 위한 8개 심화 섹션",
+      "description_en": "8 in-depth sections for power users",
+      "count": 8
     }
   }
 }

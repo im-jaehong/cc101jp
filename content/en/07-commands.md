@@ -185,6 +185,50 @@ Shows how much you have spent in the current session. (For API key users. Subscr
 
 ---
 
+## Terminal Aliases (Shortcut Commands)
+
+Instead of typing long commands every time, add short aliases to save time.
+
+### macOS / Linux (zsh)
+
+Add to `~/.zshrc`:
+
+```bash
+alias cc='claude'
+alias ccd='claude --dangerously-skip-permissions'
+alias ccr='claude --resume --dangerously-skip-permissions'
+```
+
+Then apply:
+
+```bash
+source ~/.zshrc
+```
+
+### Windows (PowerShell)
+
+Add to `$PROFILE`:
+
+```powershell
+function cc { claude @args }
+function ccd { claude --dangerously-skip-permissions @args }
+function ccr { claude --resume --dangerously-skip-permissions @args }
+```
+
+Restart PowerShell to apply.
+
+### What Each Alias Does
+
+| Alias | Meaning | When to Use |
+|-------|---------|-------------|
+| `cc` | Basic start | Always |
+| `ccd` | Auto-approve all permissions | Trusted projects, fast iteration |
+| `ccr` | Resume last session + auto-approve | Picking up where you left off |
+
+> ⚠️ **Warning**: `--dangerously-skip-permissions` auto-approves all file edits, command execution, and other actions without asking. Only use it in projects you trust and environments you control.
+
+---
+
 ## Quick Reference Card
 
 ```
@@ -193,6 +237,12 @@ Terminal (before starting):
   claude -v           → Check version
   claude --help       → Help
   claude -c           → Continue last conversation
+  claude --resume     → Pick session from list
+
+Aliases (after setup):
+  cc                  → claude (basic)
+  ccd                 → auto-approve all permissions
+  ccr                 → resume last session + auto-approve
 
 Inside a session:
   /help               → All commands

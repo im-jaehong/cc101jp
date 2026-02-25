@@ -194,7 +194,112 @@ Claude의 컨텍스트가 가득 차면 자동으로 압축(compaction)됩니다
 }
 ```
 
-### 예시 5: 모든 Bash 명령어 감사 로그
+### 예시 5: 위험한 명령어 자동 차단 (Safety Hook)
+
+`--dangerously-skip-permissions` 모드나 자동화 환경에서도, 실수로 데이터를 날릴 수 있는 명령어를 미리 막을 수 있습니다.
+
+**차단하면 좋은 명령어 목록**:
+- `git reset --hard` — 커밋 안 한 작업이 모두 사라집니다
+- `git push --force` — 원격 저장소 히스토리를 덮어씁니다
+- `git clean -f` — 추적 안 된 파일을 영구 삭제합니다
+- `git checkout .` / `git restore .` — 변경사항 전체 되돌리기
+- `git stash drop` / `git stash clear` — 스태시 삭제
+- `rm -rf /`, `rm -rf ~`, `rm -rf *` — 파일 대량 삭제
+- `DROP DATABASE`, `DROP TABLE`, `TRUNCATE TABLE` — DB 파괴
+
+**Step 1**: 스크립트 파일 생성 (`~/.claude/hooks/block_dangerous.py`):
+
+```python
+#!/usr/bin/env python3
+"""
+Claude Code 훅: 위험한 명령어 차단
+종료 코드:
+  0 = 허용
+  2 = 차단 (stderr 메시지가 Claude에게 전달됨)
+"""
+import json
+import re
+import sys
+
+BLOCKED_PATTERNS = [
+    # Git 히스토리 파괴
+    (r"git\s+reset\s+--hard", "git reset --hard는 커밋되지 않은 작업을 삭제합니다"),
+    (r"git\s+push\s+.*--force", "git push --force는 원격 히스토리를 덮어씁니다"),
+    (r"git\s+push\s+.*-f\b", "git push -f는 원격 히스토리를 덮어씁니다"),
+    # Git 작업 디렉토리 파괴
+    (r"git\s+clean\s+-.*f", "git clean -f는 추적되지 않은 파일을 영구 삭제합니다"),
+    (r"git\s+checkout\s+\.\s*$", "git checkout .은 변경사항을 전부 되돌립니다"),
+    (r"git\s+restore\s+\.\s*$", "git restore .은 변경사항을 전부 되돌립니다"),
+    (r"git\s+stash\s+drop", "git stash drop은 스태시를 영구 삭제합니다"),
+    (r"git\s+stash\s+clear", "git stash clear는 모든 스태시를 삭제합니다"),
+    # 시스템 파괴
+    (r"\brm\s+-rf\s+/", "rm -rf /는 시스템 전체를 삭제합니다"),
+    (r"\brm\s+-rf\s+~", "rm -rf ~는 홈 디렉토리를 삭제합니다"),
+    (r"\brm\s+-rf\s+\.\.", "rm -rf ..은 상위 디렉토리를 삭제할 수 있습니다"),
+    (r"\brm\s+-rf\s+\*", "rm -rf *는 위험합니다"),
+    # 데이터베이스 파괴
+    (r"DROP\s+DATABASE", "DROP DATABASE는 데이터베이스를 삭제합니다"),
+    (r"DROP\s+TABLE", "DROP TABLE은 테이블을 삭제합니다"),
+    (r"TRUNCATE\s+TABLE", "TRUNCATE TABLE은 모든 데이터를 삭제합니다"),
+]
+
+def main():
+    try:
+        data = json.load(sys.stdin)
+    except json.JSONDecodeError:
+        sys.exit(0)
+
+    if data.get("tool_name") != "Bash":
+        sys.exit(0)
+
+    command = data.get("tool_input", {}).get("command", "")
+    if not command:
+        sys.exit(0)
+
+    for pattern, reason in BLOCKED_PATTERNS:
+        if re.search(pattern, command, re.IGNORECASE):
+            print(f"🚫 [Safety Hook] 차단됨: {reason}", file=sys.stderr)
+            print(f"시도된 명령어: {command}", file=sys.stderr)
+            print(f"정말 필요하다면 터미널에서 직접 실행하세요.", file=sys.stderr)
+            sys.exit(2)
+
+    sys.exit(0)
+
+if __name__ == "__main__":
+    main()
+```
+
+**Step 2**: 실행 권한 부여:
+```bash
+chmod +x ~/.claude/hooks/block_dangerous.py
+```
+
+**Step 3**: Hook 등록 (`~/.claude/settings.json` — 모든 프로젝트에 적용):
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block_dangerous.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+> **bypass 모드 사용자에게 특히 중요**: `--dangerously-skip-permissions`나 `ccd` alias로 실행하면 Claude가 권한 확인 없이 명령어를 실행합니다. Hooks는 이 모드에서도 동작하므로, 이 Safety Hook이 마지막 방어선이 됩니다.
+>
+> 차단된 명령어는 Claude가 다른 방법을 찾거나 사용자에게 확인을 요청합니다. 꼭 필요하다면 터미널에서 직접 실행하면 됩니다.
+
+---
+
+### 예시 6: 모든 Bash 명령어 감사 로그
 
 Claude가 실행하는 모든 Bash 명령어를 파일에 기록합니다.
 

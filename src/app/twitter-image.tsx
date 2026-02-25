@@ -89,7 +89,7 @@ export default function Image() {
           }}
         >
           <span>
-            <span style={{ color: '#f97316', fontWeight: 700 }}>17</span> 섹션
+            <span style={{ color: '#f97316', fontWeight: 700 }}>20</span> 섹션
           </span>
           <span style={{ color: '#3f3f46' }}>·</span>
           <span>
