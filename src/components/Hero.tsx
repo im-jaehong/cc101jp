@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect, useRef } from 'react'
 import type { Lang } from '@/types'
 
 interface HeroProps {
@@ -8,55 +9,110 @@ interface HeroProps {
 
 export function Hero({ lang }: HeroProps) {
   const ko = lang === 'ko'
+  const sectionRef = useRef<HTMLElement>(null)
+  const [mousePos, setMousePos] = useState({ x: 50, y: 30 })
+  const [typedPrompt, setTypedPrompt] = useState('')
+  const [cursorOn, setCursorOn] = useState(true)
+  const [phase, setPhase] = useState<'waiting' | 'typing' | 'done'>('waiting')
+
+  const prompt = ko ? '> 무엇을 만들어 드릴까요?' : '> What would you like to build?'
+
+  // Typewriter loop
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>
+
+    if (phase === 'waiting') {
+      t = setTimeout(() => setPhase('typing'), 900)
+    } else if (phase === 'typing') {
+      let i = 0
+      const tick = () => {
+        i++
+        setTypedPrompt(prompt.slice(0, i))
+        if (i < prompt.length) {
+          t = setTimeout(tick, 55)
+        } else {
+          setPhase('done')
+        }
+      }
+      t = setTimeout(tick, 0)
+    } else {
+      // done → restart after pause
+      t = setTimeout(() => {
+        setTypedPrompt('')
+        setPhase('waiting')
+      }, 3500)
+    }
+
+    return () => clearTimeout(t)
+  }, [phase, prompt])
+
+  // Cursor blink
+  useEffect(() => {
+    const id = setInterval(() => setCursorOn((v) => !v), 520)
+    return () => clearInterval(id)
+  }, [])
+
+  // Mouse glow tracking
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!sectionRef.current) return
+    const rect = sectionRef.current.getBoundingClientRect()
+    setMousePos({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    })
+  }
 
   return (
-    <section className="relative overflow-hidden border-b border-zinc-200 bg-white pb-16 pt-32 dark:border-zinc-800 dark:bg-zinc-950">
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      className="relative overflow-hidden border-b border-zinc-200 bg-white pb-16 pt-32 dark:border-zinc-800 dark:bg-zinc-950"
+    >
       <style>{`
-        @keyframes orb1 {
+        @keyframes orb-bg-1 {
           0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(40px, -30px) scale(1.08); }
-          66% { transform: translate(-25px, 35px) scale(0.94); }
+          40% { transform: translate(35px, -25px) scale(1.07); }
+          70% { transform: translate(-20px, 30px) scale(0.95); }
         }
-        @keyframes orb2 {
+        @keyframes orb-bg-2 {
           0%, 100% { transform: translate(0, 0) scale(1); }
-          40% { transform: translate(-50px, 25px) scale(1.12); }
-          75% { transform: translate(30px, -40px) scale(0.9); }
-        }
-        @keyframes orb3 {
-          0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.04; }
-          50% { transform: translateX(-50%) scale(1.2); opacity: 0.07; }
+          35% { transform: translate(-45px, 20px) scale(1.10); }
+          70% { transform: translate(25px, -35px) scale(0.92); }
         }
       `}</style>
 
-      {/* Animated background */}
+      {/* Mouse-following glow */}
+      <div
+        className="pointer-events-none absolute z-0 h-[500px] w-[500px] rounded-full bg-orange-500 blur-[110px] dark:opacity-[0.12] opacity-[0.08]"
+        style={{
+          left: `${mousePos.x}%`,
+          top: `${mousePos.y}%`,
+          transform: 'translate(-50%, -50%)',
+          transition: 'left 1s cubic-bezier(0.25,0.46,0.45,0.94), top 1s cubic-bezier(0.25,0.46,0.45,0.94)',
+        }}
+      />
+
+      {/* Static ambient orbs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Orb 1 — top left */}
         <div
-          className="absolute -left-40 -top-40 h-[560px] w-[560px] rounded-full bg-orange-500 blur-[90px] dark:opacity-[0.10] opacity-[0.07]"
-          style={{ animation: 'orb1 9s ease-in-out infinite' }}
+          className="absolute -left-48 -top-48 h-[600px] w-[600px] rounded-full bg-orange-500 opacity-[0.07] blur-[100px] dark:opacity-[0.09]"
+          style={{ animation: 'orb-bg-1 10s ease-in-out infinite' }}
         />
-        {/* Orb 2 — bottom right */}
         <div
-          className="absolute -bottom-32 -right-24 h-[480px] w-[480px] rounded-full bg-amber-400 blur-[90px] dark:opacity-[0.08] opacity-[0.05]"
-          style={{ animation: 'orb2 13s ease-in-out infinite' }}
+          className="absolute -bottom-36 -right-28 h-[500px] w-[500px] rounded-full bg-amber-400 opacity-[0.05] blur-[100px] dark:opacity-[0.07]"
+          style={{ animation: 'orb-bg-2 14s ease-in-out infinite' }}
         />
-        {/* Orb 3 — center, breathing */}
+        {/* Dot grid */}
         <div
-          className="absolute left-1/2 top-1/2 h-[200px] w-[800px] -translate-y-1/2 rounded-full bg-orange-600 blur-[100px] opacity-[0.04] dark:opacity-[0.06]"
-          style={{ animation: 'orb3 16s ease-in-out infinite' }}
-        />
-        {/* Subtle dot grid */}
-        <div
-          className="absolute inset-0 opacity-[0.018] dark:opacity-[0.035]"
+          className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04]"
           style={{
-            backgroundImage:
-              'radial-gradient(circle, rgba(249,115,22,0.8) 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(circle, rgba(249,115,22,0.9) 1px, transparent 1px)',
             backgroundSize: '40px 40px',
           }}
         />
       </div>
 
-      <div className="relative mx-auto max-w-4xl px-4 text-center lg:px-6">
+      <div className="relative z-10 mx-auto max-w-4xl px-4 text-center lg:px-6">
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-sm text-orange-500 dark:text-orange-400">
           <span className="font-mono">▸</span>
@@ -102,14 +158,19 @@ export function Hero({ lang }: HeroProps) {
             <span className="ml-2 font-mono text-xs text-zinc-400 dark:text-zinc-600">Terminal</span>
           </div>
           <div className="p-4 font-mono text-sm">
-            <div className="text-zinc-400 dark:text-zinc-500">$ curl -fsSL https://claude.ai/install.sh | sh</div>
-            <div className="mt-1 text-green-600 dark:text-green-400">✓ Claude Code installed successfully</div>
-            <div className="mt-2 text-zinc-400 dark:text-zinc-500">$ claude</div>
-            <div className="mt-1 text-orange-500 dark:text-orange-400">
-              {ko ? '> 무엇을 만들어 드릴까요?' : '> What would you like to build?'}
+            <div className="text-zinc-400 dark:text-zinc-500">
+              $ curl -fsSL https://claude.ai/install.sh | sh
             </div>
-            <div className="mt-1 flex items-center gap-1 text-zinc-900 dark:text-white">
-              <span className="animate-pulse">█</span>
+            <div className="mt-1 text-green-600 dark:text-green-400">
+              ✓ Claude Code installed successfully
+            </div>
+            <div className="mt-2 text-zinc-400 dark:text-zinc-500">$ claude</div>
+            <div className="mt-1 min-h-[1.5rem] text-orange-500 dark:text-orange-400">
+              {typedPrompt}
+              <span
+                className="ml-px inline-block h-[0.9em] w-[8px] translate-y-[1px] rounded-[1px] bg-orange-500 align-middle dark:bg-orange-400"
+                style={{ opacity: cursorOn ? 0.85 : 0 }}
+              />
             </div>
           </div>
         </div>
