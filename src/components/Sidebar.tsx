@@ -17,11 +17,21 @@ export function Sidebar({ sections, lang, onLinkClick, isMobile = false }: Sideb
   const navRef = useRef<HTMLElement>(null)
 
   // Auto-scroll sidebar to keep active item visible
+  // NOTE: Do NOT use scrollIntoView here — it scrolls the window too, causing page jump feedback loop
   useEffect(() => {
     if (!activeId || !navRef.current) return
-    const activeEl = navRef.current.querySelector(`a[href="#${activeId}"]`)
-    if (activeEl) {
-      activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    const activeEl = navRef.current.querySelector(`a[href="#${activeId}"]`) as HTMLElement | null
+    if (!activeEl) return
+
+    const scrollContainer = navRef.current.parentElement
+    if (!scrollContainer) return
+
+    const containerRect = scrollContainer.getBoundingClientRect()
+    const elRect = activeEl.getBoundingClientRect()
+
+    if (elRect.top < containerRect.top || elRect.bottom > containerRect.bottom) {
+      const offset = elRect.top - containerRect.top - containerRect.height / 2 + elRect.height / 2
+      scrollContainer.scrollBy({ top: offset, behavior: 'smooth' })
     }
   }, [activeId])
 
