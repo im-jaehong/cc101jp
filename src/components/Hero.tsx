@@ -58,7 +58,7 @@ export function Hero({ lang }: HeroProps) {
     <section
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative overflow-hidden border-b border-zinc-200 bg-white pb-16 pt-32 dark:border-zinc-800 dark:bg-zinc-950"
+      className="relative z-[2] overflow-hidden border-b border-zinc-200 bg-white pb-16 pt-32 dark:border-zinc-800 dark:bg-zinc-950"
     >
       <style>{`
         @keyframes aurora-move {
