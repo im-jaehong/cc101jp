@@ -1,72 +1,61 @@
 # 01. What Is Claude Code?
 
-> An AI coding assistant that runs in your terminal — reads your codebase, edits files, and executes commands directly.
+> An AI agent that reads, organizes, and produces results directly from your computer's files. No coding required.
 
 ---
 
 ## One-Line Definition
 
-**Claude Code** is an AI-powered coding tool that runs in your terminal (command line). It reads your code, edits files directly, runs tests, and even creates Git commits. Think of it as "an AI development partner that works inside your computer."
+**Claude Code** is an AI that accesses your computer's folders directly and works there. It reads dozens of files at once, organizes content, and produces the results you need.
+
+Unlike Claude.ai, which you chat with in a browser, Claude Code works **inside your computer**.
 
 ---
 
-## Claude.ai Web vs Claude Code vs Cursor — Key Differences
+## How Is It Different from Claude.ai?
 
-| | Claude.ai Web | Claude Code | Cursor |
-|---|---|---|---|
-| **Where it runs** | Browser | Terminal / Desktop app / IDE | IDE (editor) |
-| **Edits files directly** | No (copy-paste required) | Yes (automatic) | Yes |
-| **Runs commands** | No | Yes (tests, builds, etc.) | Limited |
-| **Understands full codebase** | Manual paste required | Reads automatically | Reads automatically |
-| **Git integration** | No | Yes (commits, PRs) | Limited |
-| **Pricing** | Included in subscription | Subscription or API billing | Separate subscription |
+| | Claude.ai (browser) | Claude Code |
+|---|---|---|
+| **File access** | Upload one at a time | Reads entire folders automatically |
+| **Scope of work** | One conversation at a time | Handles dozens–hundreds of files at once |
+| **Saving results** | Copy and paste manually | Saves to files automatically |
+| **Repetitive tasks** | Manual every time | Say it once, it repeats automatically |
+| **Memory** | Within the conversation only | Permanent rules via CLAUDE.md |
 
-**The core difference**: Claude.ai web shows you code suggestions in a chat window. Claude Code actually opens files, modifies them, saves them, and runs them.
+**The core difference**: Claude.ai shows you answers in a chat window. Claude Code goes into your folder and produces the actual output files.
 
 ---
 
-## Why Running in the CLI Makes It Powerful
+## How Does It Work? Real Examples
 
-Claude Code running in the terminal is not just a design choice. The terminal is the gateway to everything your computer can do.
-
-### What Claude Code Can Do Directly
-
-| Capability | Description |
-|---|---|
-| **Read & write files** | Reads all files in your project and edits them directly |
-| **Execute commands** | Run tests, builds, start servers, and more |
-| **Search** | Find files by name, search code content, explore the codebase with regex |
-| **Git operations** | Stage changes, commit, create branches, open pull requests |
-| **Web search** | Look up error messages, fetch documentation |
-| **Code intelligence** | Detect type errors, jump to definitions, find references |
-
-### How It Actually Works (Examples)
-
-**Example 1: Fixing a bug**
+**Example 1: Batch document processing (Marketer / Planner)**
 
 ```
-User: "My tests are failing, please fix them"
+"Read the 30 meeting notes in my Downloads folder,
+ sort them by date, extract this month's decisions,
+ and save it as monthly_decisions.md"
 
 What Claude Code does:
-1. Runs the test suite → identifies failures
-2. Reads error output
-3. Searches for relevant source files
-4. Reads files to understand the code
-5. Edits files (applies bug fix)
-6. Runs tests again → confirms they pass
+1. Reads all 30 files in the folder
+2. Identifies and sorts by date
+3. Extracts decision items
+4. Saves automatically as a new file
 ```
 
-**Example 2: Adding a new feature**
+**Example 2: Data analysis (Researcher / Analyst)**
 
 ```
-User: "Add input validation to the login form"
+"Analyze the survey results CSV in my data folder
+ and write a summary report with the key metrics"
 
-What Claude Code does:
-1. Understands the project structure
-2. Finds the existing form code
-3. Writes validation logic and inserts it into the file
-4. Writes related tests
-5. Creates a descriptive Git commit
+No Python required. Just describe what you want.
+```
+
+**Example 3: Code development (Developer)**
+
+```
+"My tests are failing — find the cause and fix it"
+→ Runs tests → finds error → fixes code → re-runs
 ```
 
 ---
@@ -75,43 +64,41 @@ What Claude Code does:
 
 ### Great Fit
 
-| User Type | Why |
+| Situation | Example |
 |---|---|
-| **Vibe coders** | Developers who want to focus on direction rather than writing every line |
-| **Non-developer founders** | People who want to turn ideas into real code without deep technical knowledge |
-| **Beginner developers** | Those learning to code while building real projects simultaneously |
-| **Solo developers** | Building full-stack products fast, alone |
-| **Developers with repetitive tasks** | Automating tests, lint fixes, dependency updates, and similar work |
+| **Repetitive file & document work** | Reformatting weekly reports, batch renaming files, unifying folder structures |
+| **Analyzing large amounts of material** | Summarizing 20 research PDFs, collecting and organizing competitor web pages |
+| **Turning ideas into reality** | Building your own website, automation tool, or dashboard — no coding needed |
+| **Development work** | Writing code, fixing bugs, automating tests |
 
-### Also a Good Fit For
+### Also a Great Fit For
 
-- Non-technical people who "know what code is but can't write it"
-- People unfamiliar with the terminal who want to learn (a desktop app is available)
-- Startup team members who need to ship an MVP quickly
+- "I want to organize data without Python or Excel formulas"
+- "I want to process dozens of documents at once without opening each one"
+- Not comfortable with the terminal? No problem — a **desktop app** is available
 
-### May Not Be the Best Fit
+### Claude.ai Web May Be a Better Fit If
 
-- People who only need writing, translation, or analysis → Claude.ai web is sufficient
-- People who prefer working exclusively inside a specific IDE → Consider Cursor or the VS Code extension
+- You only need writing, translation, or Q&A
+- You prefer working exclusively inside a specific IDE → Consider Cursor or the VS Code extension
 
 ---
 
 ## Where Can You Use Claude Code?
 
-Claude Code is not limited to the terminal.
-
 | Environment | Description |
 |---|---|
+| **Desktop app** | GUI interface, no terminal needed — **recommended for beginners** |
 | **Terminal (CLI)** | The most powerful default environment |
-| **Desktop app** | GUI with visual diffs, no terminal required |
 | **VS Code / Cursor extension** | Use directly inside your editor |
-| **JetBrains plugin** | IntelliJ, PyCharm, WebStorm, and more |
 | **Web browser** | Run at claude.ai/code with no local setup |
 
 ---
 
 ## One-Line Summary
 
-> Claude Code = "An AI developer that accesses your project folder directly, writes code, runs tests, and commits changes"
+> Claude Code = "An AI that comes into your computer's folders, reads your files, organizes them, and creates the results you need"
+
+No coding required. No Python required. Just describe what you want to do.
 
 The next section covers which plan to start with.
