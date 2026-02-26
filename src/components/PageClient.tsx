@@ -40,7 +40,7 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
     router.push(`?${params.toString()}`, { scroll: false })
   }, [lang, router, searchParams])
 
-  const watermarkUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Ctext transform='rotate(-45 160 160)' x='160' y='160' text-anchor='middle' dominant-baseline='middle' fill='rgba(120%2C120%2C120%2C0.07)' font-size='15' font-family='system-ui%2Csans-serif' letter-spacing='2'%3ECC101 by fivetaku%3C/text%3E%3C/svg%3E")`
+  const watermarkUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Ctext transform='rotate(-45 160 160)' x='160' y='160' text-anchor='middle' dominant-baseline='middle' fill='rgba(120%2C120%2C120%2C0.12)' font-size='15' font-family='system-ui%2Csans-serif' letter-spacing='2'%3ECC101 by fivetaku%3C/text%3E%3C/svg%3E")`
 
   return (
     <>
