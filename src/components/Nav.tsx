@@ -17,7 +17,7 @@ export function Nav({ lang, onToggle, mobileMenuOpen, onMobileMenuToggle }: NavP
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-200 bg-white/90 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/90">
       <div className="mx-auto flex h-14 max-w-screen-xl items-center justify-between px-4 lg:px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-mono text-lg font-bold text-zinc-900 dark:text-white">
+        <Link href={`/${lang}`} className="flex items-center gap-2 font-mono text-lg font-bold text-zinc-900 dark:text-white">
           <span className="text-orange-500 dark:text-orange-400">▸</span>
           <span>CC101</span>
           <span className="hidden text-xs font-normal text-zinc-400 sm:inline">

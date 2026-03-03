@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { Nav } from './Nav'
 import { Sidebar } from './Sidebar'
@@ -17,7 +17,6 @@ interface PageClientProps {
 
 export function PageClient({ lang, sections, children }: PageClientProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Lock body scroll when mobile menu is open
@@ -35,10 +34,8 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
   const toggleLang = useCallback(() => {
     const next = lang === 'ko' ? 'en' : 'ko'
     trackLanguageToggle({ from: lang, to: next })
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('lang', next)
-    router.push(`?${params.toString()}`, { scroll: false })
-  }, [lang, router, searchParams])
+    router.push(`/${next}`, { scroll: false })
+  }, [lang, router])
 
   const watermarkUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Ctext transform='rotate(-45 160 160)' x='160' y='160' text-anchor='middle' dominant-baseline='middle' fill='rgba(120%2C120%2C120%2C0.22)' font-size='15' font-family='system-ui%2Csans-serif' letter-spacing='2'%3ECC101 by GPTaku%3C/text%3E%3C/svg%3E")`
 

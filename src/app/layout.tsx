@@ -26,11 +26,21 @@ export const metadata: Metadata = {
     siteName: 'CC101',
     locale: 'ko_KR',
     type: 'website',
+    images: [
+      {
+        url: 'https://cc101.axwith.com/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'CC101 — Claude Code 한국어 입문 가이드',
+        type: 'image/png',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'CC101 — Claude Code 한국어 입문 가이드',
     description: 'Claude Code를 가장 쉽게 시작하는 한국어 가이드',
+    images: ['https://cc101.axwith.com/og.png'],
   },
 }
 

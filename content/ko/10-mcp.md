@@ -1,6 +1,6 @@
 # 13. MCP & 외부 도구 연결
 
-> Claude가 GitHub, Slack, DB, 브라우저를 직접 다룰 수 있게 해주는 표준 프로토콜
+> Notion, Slack, Google Sheets, GitHub, DB 등 외부 도구를 Claude가 직접 다룰 수 있게 해주는 표준 프로토콜
 
 ---
 
@@ -8,7 +8,9 @@
 
 **MCP(Model Context Protocol)**는 Claude가 외부 도구와 데이터 소스에 연결할 수 있게 해주는 오픈 표준입니다.
 
-쉽게 말하면: Claude Code는 기본적으로 파일과 터미널만 다룹니다. MCP를 연결하면 Claude가 GitHub PR을 직접 열고, Slack 메시지를 읽고, 데이터베이스를 쿼리하는 등 외부 세계와 상호작용할 수 있게 됩니다.
+쉽게 말하면: Claude Code는 기본적으로 파일과 터미널만 다룹니다. MCP를 연결하면 Claude가 Notion 문서를 직접 읽고, Slack 메시지를 요약하고, Google Sheets를 업데이트하는 등 외부 도구와 상호작용할 수 있게 됩니다.
+
+개발자라면 GitHub PR 리뷰, 데이터베이스 직접 쿼리, Sentry 에러 분석 등도 가능합니다.
 
 > **비유**: MCP는 Claude에게 USB 포트를 달아주는 것과 같습니다. 어떤 도구든 꽂으면 사용할 수 있게 됩니다.
 
@@ -18,13 +20,26 @@
 
 MCP 없이는 이런 일들을 직접 해야 합니다:
 
+**업무/리서치 사용자**
+
+| 기존 노가다 | MCP 연결 후 |
+|------------|------------|
+| Notion 회의록 페이지를 복사해서 Claude에게 붙여넣기 | "오늘 회의 내용 Notion 페이지에 정리해줘" 한 마디로 끝 |
+| Google Sheets에 데이터 일일이 수동 입력 | "이 데이터를 Sheets에 자동으로 정리해줘" |
+| 웹사이트 방문해서 정보 복사-붙여넣기 | "이 웹사이트 5개 분석해서 비교표 만들어줘" |
+| Slack 스레드 내용 복사해서 요약 요청 | "#마케팅 채널 오늘 논의 요약하고 공지 초안 써줘" |
+
+<details>
+<summary>🖥️ 개발자용 노가다 해소 예시</summary>
+
 | 기존 노가다 | MCP 연결 후 |
 |------------|------------|
 | JIRA 티켓 내용을 복사해서 Claude에게 붙여넣기 | "ENG-4521 이슈 구현해줘" 한 마디로 끝 |
 | Sentry 에러 스택트레이스를 수동으로 복사 | "지난 24시간 주요 에러 분석해줘" |
 | DB 스키마를 Claude에게 설명하고 쿼리 요청 | "users 테이블에서 90일 미접속 유저 찾아줘" |
-| Figma 디자인 보고 직접 코딩 | "Figma 최신 디자인대로 이메일 템플릿 업데이트해줘" |
 | PR 내용 복사해서 리뷰 요청 | "PR #456 리뷰해줘" 한 마디로 끝 |
+
+</details>
 
 ---
 
@@ -150,7 +165,42 @@ claude mcp add --transport http hubspot --scope user https://mcp.hubspot.com/ant
 
 실용성 기준으로 처음 써볼 만한 MCP 서버입니다:
 
-### 1. GitHub MCP
+### 1. Notion MCP
+
+```bash
+claude mcp add --transport http notion https://mcp.notion.com/mcp
+```
+
+**없어지는 노가다**: 회의록/리서치 결과 수동 복사, 페이지 내용 붙여넣기, 데이터베이스 일일이 업데이트
+
+**활용 예시**:
+- "Notion의 '회의록' DB에서 지난 7일 항목을 가져와서 결정사항·액션아이템만 모아 weekly.md로 만들어줘"
+- "이 리서치 결과를 Notion '경쟁사 분석' 페이지에 추가해줘"
+
+### 2. Slack MCP
+
+claude.ai 계정 연결 후 [claude.ai/settings/connectors](https://claude.ai/settings/connectors)에서 바로 설정 가능
+
+**없어지는 노가다**: 채널 스레드 수동 읽기, 요약 요청을 위한 복붙, 공지 초안 직접 작성
+
+**활용 예시**:
+- "#마케팅 채널의 오늘 스레드를 읽고, 쟁점 3개와 합의된 다음 액션을 정리해서 슬랙 공지 초안을 만들어줘"
+
+### 3. Google Chrome (웹 리서치)
+
+claude.ai 계정 연결 후 [claude.ai/settings/connectors](https://claude.ai/settings/connectors)에서 바로 설정 가능
+
+**없어지는 노가다**: 웹사이트 방문해서 정보 수동 복사, 여러 사이트 비교를 위한 반복 탭 전환
+
+**활용 예시**:
+- "지정한 5개 경쟁사 사이트를 훑고, 오늘의 주요 변화·새 기능·가격 변경만 표로 정리해줘"
+
+---
+
+<details>
+<summary>🖥️ 개발자 추천 MCP 3가지 (GitHub / PostgreSQL / Sentry)</summary>
+
+### GitHub MCP
 
 ```bash
 claude mcp add --transport http github https://api.githubcopilot.com/mcp/
@@ -158,7 +208,7 @@ claude mcp add --transport http github https://api.githubcopilot.com/mcp/
 
 **없어지는 노가다**: PR 내용 복붙, 이슈 수동 조회, 코드 리뷰 컨텍스트 전달
 
-### 2. PostgreSQL / DB MCP
+### PostgreSQL / DB MCP
 
 ```bash
 claude mcp add --transport stdio db -- npx -y @bytebase/dbhub \
@@ -167,13 +217,15 @@ claude mcp add --transport stdio db -- npx -y @bytebase/dbhub \
 
 **없어지는 노가다**: 스키마 설명, 데이터 조회 결과 복붙, SQL 작성 후 직접 실행
 
-### 3. Sentry MCP
+### Sentry MCP
 
 ```bash
 claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
 ```
 
 **없어지는 노가다**: 에러 스택트레이스 복붙, 에러 발생 시점 수동 조회
+
+</details>
 
 ---
 

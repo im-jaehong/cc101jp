@@ -4,6 +4,12 @@
 
 ---
 
+> 📌 **이 섹션은 두 부분으로 나뉩니다**
+> - **Headless 모드** (기본 사용법): 비개발자도 활용할 수 있는 자동화 — 뉴스 요약, 주간 보고서, 파일 일괄 처리 등
+> - **GitHub Actions 연동** (개발자 심화): 소프트웨어 개발팀 전용 CI/CD 자동화
+
+---
+
 ## Headless 모드란?
 
 보통 Claude Code는 터미널에서 대화형으로 사용합니다. 사람이 직접 질문하고, Claude가 답하고, 다시 사람이 피드백을 주는 방식이죠.
@@ -20,10 +26,22 @@
 
 | 상황 | 예시 |
 |------|------|
+| **일일 브리핑** | 매일 아침 업계 뉴스 요약 파일 자동 생성 |
+| **주간 보고서** | 이번 주 회의록을 읽어서 주간 요약 자동 작성 |
+| **파일 배치 처리** | 폴더 내 PDF·문서를 한꺼번에 요약 |
+| **콘텐츠 초안** | 아이디어 폴더 읽어서 다음 주 콘텐츠 캘린더 생성 |
+
+<details>
+<summary>🖥️ 개발자용 활용 예시</summary>
+
+| 상황 | 예시 |
+|------|------|
 | CI/CD 파이프라인 | PR이 열릴 때마다 자동으로 코드 리뷰 |
 | 자동화 스크립트 | 매일 밤 코드 품질 리포트 생성 |
 | 배치 처리 | 여러 파일을 한꺼번에 마이그레이션 |
 | 반복 작업 | 테스트 실패 시 자동 수정 시도 |
+
+</details>
 
 ---
 
@@ -39,10 +57,10 @@ claude -p "이 프로젝트가 무엇을 하는지 설명해줘"
 
 ### 도구 권한 허용하기
 
-Claude가 파일을 읽고 수정할 수 있도록 도구를 허용합니다:
+Claude가 파일을 읽고 저장할 수 있도록 도구를 허용합니다:
 
 ```bash
-claude -p "auth.py의 버그를 찾아서 수정해줘" --allowedTools "Read,Edit,Bash"
+claude -p "~/Downloads의 PDF를 모두 읽어서 요약집.md로 정리해줘" --allowedTools "Read,Write,Bash"
 ```
 
 ### JSON 출력 받기
@@ -58,24 +76,50 @@ claude -p "이 프로젝트를 요약해줘" --output-format json
 - `json`: JSON 구조체로 결과 반환 (세션 ID, 메타데이터 포함)
 - `stream-json`: 실시간 스트리밍 JSON
 
-### 실용적인 예시: 자동 커밋
+### 실용적인 예시: 비개발자 자동화 3가지
+
+**일일 뉴스·업계 동향 요약**:
+```bash
+claude -p "inputs/links.txt를 읽고 오늘의 업계 뉴스 요약을 daily/brief_오늘날짜.md로 저장해줘" \
+  --allowedTools "Read,Write"
+```
+
+**주간 액션아이템 취합**:
+```bash
+claude -p "meetings/ 폴더의 지난 7일 회의록을 읽고 미완료 액션아이템만 표로 정리해서 weekly/this-week.md로 저장해줘" \
+  --allowedTools "Read,Write"
+```
+
+**콘텐츠 캘린더 초안 생성**:
+```bash
+claude -p "ideas/ 폴더를 읽고 다음 주 평일 5일치 콘텐츠 캘린더를 만들어 drafts/next-week.md로 저장해줘" \
+  --allowedTools "Read,Write"
+```
+
+<details>
+<summary>🖥️ 개발자용 예시: 자동 커밋</summary>
 
 ```bash
 claude -p "스테이징된 변경 사항을 검토하고 적절한 커밋 메시지로 커밋해줘" \
   --allowedTools "Bash(git diff *),Bash(git log *),Bash(git status *),Bash(git commit *)"
 ```
 
+</details>
+
 ### 대화 이어가기
 
 ```bash
 # 첫 번째 요청
-claude -p "이 코드베이스의 성능 문제를 검토해줘"
+claude -p "이 폴더의 문서들을 분석해줘"
 
 # 이전 대화 이어서
-claude -p "이제 데이터베이스 쿼리에 집중해줘" --continue
+claude -p "그 중에서 핵심 결론 부분만 따로 모아줘" --continue
 ```
 
 ---
+
+<details>
+<summary>🖥️ 개발자용: GitHub Actions & GitLab CI/CD 자동화</summary>
 
 ## GitHub Actions 연동
 
@@ -225,6 +269,8 @@ claude:
 ```
 
 GitLab CI/CD 변수에 `ANTHROPIC_API_KEY`를 등록하는 것을 잊지 마세요.
+
+</details>
 
 ---
 
