@@ -1,4 +1,4 @@
-# 14. Hooks — The Core of Automation
+# 15. Hooks — The Core of Automation
 
 > "Format every file Claude edits", "Notify me when the task is done", "Block edits to .env" — all of this runs automatically with Hooks
 

@@ -1,4 +1,4 @@
-# 15. Skills & Building Plugins
+# 16. Skills & Building Plugins
 
 > Turn repetitive workflows into a single `/command` — reusable, shareable, and always consistent
 

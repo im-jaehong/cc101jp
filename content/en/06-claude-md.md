@@ -1,4 +1,4 @@
-# 07. Mastering CLAUDE.md
+# 08. Mastering CLAUDE.md
 
 > CLAUDE.md is the most important file for giving Claude Code long-term memory. Let's master it.
 

@@ -1,4 +1,4 @@
-# 20. 다음 단계 & 리소스
+# 21. 다음 단계 & 리소스
 
 > CC101을 마친 당신에게. 이제 진짜 시작입니다.
 
@@ -38,158 +38,52 @@ Claude Code의 기초부터 고급 자동화까지 전 과정을 완주하셨습
 
 ---
 
-### 중급 목표
+### 중급: 실전 응용
 
-**MCP(Model Context Protocol) 설정**
+CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 
-MCP를 통해 Claude Code를 외부 서비스와 연결할 수 있습니다.
+**나만의 워크플로우 자동화**
+- CLAUDE.md + Hooks + Skills를 조합해 반복 업무를 원커맨드로 줄이기
+- 예: 매주 보고서 자동 생성, 코드 리뷰 자동화, 회의록 정리 파이프라인
 
-```bash
-# MCP 서버 추가
-claude mcp add
-```
+**플러그인 활용 극대화**
+- **show-me-the-prd**로 기획 → **끼리끼리**로 리서치 팀 구성 → Claude Code로 구현 — 아이디어에서 프로토타입까지 하루 만에
+- **deep-research**로 시장 조사 후 **docs-guide**로 기술 검증 — 의사결정에 AI 활용
+- **바선생**의 피드백을 반영해 프롬프트 품질 점진적 개선
 
-추천 MCP 연동:
-- **Notion**: 페이지 읽기/쓰기, 데이터베이스 관리
-- **Slack**: 팀 알림 연동, 메시지 전송
-- **Google Sheets**: 스프레드시트 데이터 연동
-- **GitHub**: PR, 이슈, 코드 검색 (개발자용)
-- **Figma**: 디자인 스펙 읽기 (개발자용)
-
----
-
-**Hooks 커스터마이징**
-
-매번 실행해야 하는 작업을 자동화합니다.
-
-비개발자 활용 예시 — 파일 저장 완료 시 알림:
-```json
-{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "Write",
-      "hooks": [{
-        "type": "command",
-        "command": "osascript -e 'display notification \"파일 저장 완료\" with title \"Claude Code\"'"
-      }]
-    }]
-  }
-}
-```
-
-<details>
-<summary>🖥️ 개발자용 Hooks 예시: 파일 수정 시 자동 린트</summary>
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [{
-      "matcher": "Edit",
-      "hooks": [{
-        "type": "command",
-        "command": "npm run lint -- $FILE"
-      }]
-    }]
-  }
-}
-```
-
-파일을 수정할 때마다 자동으로 린트가 실행되도록 설정하는 예시입니다.
-
-</details>
+**멀티 세션 & 병렬 작업**
+- 여러 터미널에서 Claude Code를 동시에 실행해 작업 분담
+- **품앗이**로 Claude(PM) + Codex(개발자) 병렬 개발 체험
 
 ---
 
-**플러그인 탐색 및 설치**
+### 고급: CC101 너머의 세계
 
-```bash
-# 플러그인 매니저 열기
-/plugin
+이 가이드에서 다루지 않은 심화 주제들입니다.
 
-# 공식 마켓플레이스에서 설치
-/plugin install commit-commands@claude-plugins-official
-```
+**Agent SDK로 나만의 AI 앱 만들기**
+- Anthropic의 [Agent SDK](https://docs.anthropic.com/en/docs/agents)를 사용하면 Claude를 엔진으로 한 독립 AI 애플리케이션을 개발할 수 있습니다
+- Python/TypeScript로 커스텀 에이전트 구축 — Claude Code 없이도 동작하는 자동화 시스템
 
-추천 플러그인:
-- `notion`: Notion 페이지 읽기/쓰기 연동
-- `slack`: Slack 채널 메시지 연동
-- `commit-commands`: Git 워크플로우 자동화 (개발자용)
-- `pr-review-toolkit`: PR 리뷰 전문 에이전트 (개발자용)
+**Model Context Protocol (MCP) 서버 직접 만들기**
+- CC101에서는 MCP 서버를 "사용"하는 법을 배웠지만, 직접 MCP 서버를 "만들"수도 있습니다
+- 회사 내부 API, 사내 DB, 사내 위키를 MCP 서버로 감싸면 Claude Code가 바로 접근 가능
+- [MCP 공식 스펙](https://modelcontextprotocol.io)
 
----
+**Claude Code 플러그인 개발**
+- 자신만의 플러그인을 만들어 커뮤니티에 공유하기
+- Skills, Hooks, Agents, MCP 서버를 하나의 패키지로 묶는 구조
+- **스킬러들의 수다** 플러그인으로 빠르게 프로토타이핑 가능
 
-### 고급 목표
+**팀 단위 도입 & 거버넌스**
+- 팀 전체가 Claude Code를 사용할 때의 권한 관리, 비용 분배, 보안 정책
+- Enterprise 플랜의 관리자 기능 (Admin Controls, Audit Logs)
+- 사내 코딩 표준을 CLAUDE.md로 강제하는 방법
 
-**Skills 제작**
-
-자주 쓰는 작업을 재사용 가능한 Skills로 만듭니다.
-
-비개발자 예시 — 주간 업무 보고서 자동화:
-```markdown
-# .claude/skills/weekly-report/SKILL.md
----
-name: weekly-report
-description: 이번 주 작업 내용을 주간 보고서로 정리합니다. 매주 금요일 보고서 작성 시 사용.
----
-이번 주 작업 폴더와 메모를 읽고 주간 보고서를 작성하세요:
-
-1. 완료한 작업 (결과 위주)
-2. 진행 중인 작업 (현재 상태)
-3. 다음 주 계획
-4. 이슈 및 요청사항
-
-보고서를 reports/weekly-YYYY-MM-DD.md로 저장하세요.
-```
-
-<details>
-<summary>🖥️ 개발자용 Skills 예시: GitHub 이슈 자동 처리</summary>
-
-```markdown
-# .claude/skills/fix-issue/SKILL.md
----
-name: fix-issue
-description: GitHub 이슈를 분석하고 수정
----
-다음 GitHub 이슈를 분석하고 수정해줘: $ARGUMENTS
-
-1. gh issue view로 이슈 세부사항 확인
-2. 관련 파일 검색
-3. 수정 사항 구현
-4. 테스트 작성 및 실행
-5. PR 생성
-```
-
-</details>
-
----
-
-<details>
-<summary>🖥️ 개발자용 고급 목표: Agent Teams 활용</summary>
-
-여러 Claude 인스턴스를 동시에 실행해 복잡한 작업을 병렬로 처리합니다.
-
-```bash
-# Agent Teams 활성화 (환경변수 설정 필요)
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
-```
-
-> 비용이 많이 들 수 있으므로 신중하게 사용하세요.
-
-</details>
-
-<details>
-<summary>🖥️ 개발자용 고급 목표: CI/CD 완전 자동화</summary>
-
-섹션 15에서 배운 GitHub Actions를 실제 프로젝트에 적용합니다.
-
-```yaml
-# 예시: 모든 PR에 자동 코드 리뷰
-on:
-  pull_request:
-    types: [opened, synchronize]
-```
-
-</details>
+**프로덕션 자동화 파이프라인**
+- GitHub Actions + Headless Claude Code로 PR 자동 리뷰, 자동 테스트 생성
+- 야간 배치 작업: 매일 새벽에 데이터 처리, 보고서 생성, 코드 품질 검사
+- 모니터링 + 알림 연동 (Slack, Discord)
 
 ---
 

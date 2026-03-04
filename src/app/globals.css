@@ -7,7 +7,7 @@
 /* Smooth scroll + prevent horizontal overflow */
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Light mode defaults */

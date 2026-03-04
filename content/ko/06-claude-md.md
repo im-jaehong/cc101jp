@@ -1,4 +1,4 @@
-# 07. CLAUDE.md 완전 정복
+# 08. CLAUDE.md 완전 정복
 
 > Claude Code의 장기 기억을 설정하는 가장 중요한 파일, CLAUDE.md를 마스터해봅시다.
 

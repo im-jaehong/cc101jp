@@ -1,4 +1,4 @@
-# 03. Plans & Pricing
+# 04. Plans & Pricing
 
 > There are 3 ways to use Claude Code. Beginners should start with the Max $100 plan.
 

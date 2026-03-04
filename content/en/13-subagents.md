@@ -1,4 +1,4 @@
-# 16. Sub-agents & Agent Teams
+# 17. Sub-agents & Agent Teams
 
 > Claude delegating to other Claudes — parallel processing for complex tasks
 

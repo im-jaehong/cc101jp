@@ -1,4 +1,4 @@
-# 05. Recommended Plugin Installation
+# 06. Recommended Plugin Installation
 
 > Extend Claude Code's capabilities by installing plugins.
 

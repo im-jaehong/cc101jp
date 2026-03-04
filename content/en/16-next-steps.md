@@ -1,4 +1,4 @@
-# 20. Next Steps & Resources
+# 21. Next Steps & Resources
 
 > You've finished CC101. Now the real journey begins.
 
