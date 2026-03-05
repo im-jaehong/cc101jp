@@ -1,74 +1,119 @@
-# 15. Hooks — The Core of Automation
+# 15. Hooks — Protect Your Work
 
-> "Format every file Claude edits", "Notify me when the task is done", "Block edits to .env" — all of this runs automatically with Hooks
+> What if AI runs `rm -rf` or `git push --force` and wipes your history? With Hooks configured, **that can never happen.**
+
+---
+
+## Why you need Hooks
+
+Claude Code is powerful. It creates, edits, deletes files, and runs Git commands. During vibe coding, these things actually happen:
+
+- `rm -rf` wipes your entire project folder
+- `git reset --hard` destroys all uncommitted work
+- `git push --force` overwrites your teammates' code
+- `DROP TABLE` deletes your database
+
+**Hooks automatically block dangerous commands before Claude executes them.** Not relying on the LLM's "judgment" — blocking with code, 100% guaranteed.
 
 ---
 
 ## What are Hooks?
 
-**Hooks** are user-defined shell commands that execute automatically at specific points in Claude Code's lifecycle.
+**Hooks** are shell commands that execute automatically when specific events occur in Claude Code.
 
-Claude Code generates events when it edits files, runs commands, finishes a task, and more. Hooks let you react to these events with **deterministic, guaranteed actions** — no LLM judgment involved.
-
-> **Key insight**: Hooks are not for things you want Claude to "try to do." They are for things that **must always happen**, regardless of what Claude decides. Think of them as invariants on Claude's behavior.
-
----
-
-## Manual work Hooks eliminate
-
-| Without Hooks | With Hooks configured |
-|---------------|----------------------|
-| Run Prettier manually after every file edit | Auto-format on every file write |
-| Keep watching the terminal for task completion | Desktop notification when done |
-| Worry about Claude accidentally editing `.env` | Protected files blocked automatically |
-| Re-explain coding rules after context compaction | Rules auto-injected after compaction |
-| Manually log every command Claude runs | All Bash commands logged automatically |
-
----
-
-## Hook events reference
-
-| Event | When it fires | Common uses |
-|-------|--------------|-------------|
-| `PreToolUse` | Before a tool executes | Block dangerous commands, validate inputs |
+| Event | When it fires | Common use |
+|-------|--------------|------------|
+| `PreToolUse` | **Before** a tool executes | Block dangerous commands |
 | `PostToolUse` | After a tool succeeds | Auto-format, log activity |
-| `Stop` | When Claude finishes responding | Send notifications, run post-processing |
-| `SessionStart` | When a session begins or resumes | Inject context, initialize state |
-| `Notification` | When Claude sends a notification | Desktop push notifications |
+| `Stop` | When Claude finishes responding | Completion notification |
+| `Notification` | When Claude sends a notification | Desktop alerts |
+| `SessionStart` | When a session starts or resumes | Inject context |
 | `UserPromptSubmit` | When you submit a prompt | Pre-process input |
-| `SubagentStart` | When a subagent is spawned | Track agent usage |
-| `SubagentStop` | When a subagent finishes | Post-process results |
-| `PreCompact` | Before context compaction | Preserve critical information |
-| `SessionEnd` | When a session terminates | Clean up temp files |
+| `PreCompact` | Before context compaction | Preserve critical info |
+
+> Key: `exit 0` = allow, `exit 2` = **block** (stderr message is sent to Claude)
 
 ---
 
-## Where to put your Hook configuration
+## Where to configure
 
 | Location | Scope | Shareable |
 |----------|-------|-----------|
 | `~/.claude/settings.json` | All your projects | No |
 | `.claude/settings.json` | Current project | Yes (commit to Git) |
-| `.claude/settings.local.json` | Current project | No (gitignored) |
+| `.claude/settings.local.json` | Current project | No |
+
+> You can also use the `/hooks` command for interactive setup, but copy-pasting the examples below is faster.
 
 ---
 
-## Practical examples
+## Essential Hook 1: Safety Hook — Block Dangerous Commands
 
-### Example 1: Auto-format files after every edit
+**This single hook prevents most disasters.**
 
-Run Prettier automatically on every file Claude writes or modifies:
+### Step 1: Create the script
+
+Create `~/.claude/hooks/block_dangerous.py`:
+
+```python
+#!/usr/bin/env python3
+"""Safety Hook — automatically block dangerous commands"""
+import json, re, sys
+
+BLOCKED_PATTERNS = [
+    # Block file deletion — use trash instead (recoverable)
+    (r"\brm\s+", "Use trash instead of rm (brew install trash)"),
+    (r"\bunlink\s+", "Use trash instead of unlink"),
+
+    # Block Git history destruction
+    (r"git\s+reset\s+--hard", "git reset --hard destroys uncommitted work"),
+    (r"git\s+push\s+.*--force", "git push --force overwrites remote history"),
+    (r"git\s+push\s+.*-f\b", "git push -f overwrites remote history"),
+    (r"git\s+clean\s+-.*f", "git clean -f permanently deletes untracked files"),
+    (r"git\s+checkout\s+\.\s*$", "git checkout . discards all changes"),
+    (r"git\s+stash\s+drop", "git stash drop permanently deletes a stash"),
+    (r"git\s+branch\s+-D", "git branch -D force-deletes a branch"),
+
+    # Block database destruction
+    (r"DROP\s+(DATABASE|TABLE)", "DROP permanently deletes data"),
+    (r"TRUNCATE\s+TABLE", "TRUNCATE deletes all data"),
+]
+
+data = json.load(sys.stdin)
+if data.get("tool_name") != "Bash":
+    sys.exit(0)
+
+command = data.get("tool_input", {}).get("command", "")
+for pattern, reason in BLOCKED_PATTERNS:
+    if re.search(pattern, command, re.IGNORECASE):
+        print(f"Blocked: {reason}", file=sys.stderr)
+        sys.exit(2)
+
+sys.exit(0)
+```
+
+### Step 2: Make it executable
+
+Run in your terminal:
+
+```bash
+chmod +x ~/.claude/hooks/block_dangerous.py
+```
+
+### Step 3: Register the hook
+
+Add to `~/.claude/settings.json`:
 
 ```json
 {
   "hooks": {
-    "PostToolUse": [
+    "PreToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write"
+            "command": "python3 ~/.claude/hooks/block_dangerous.py"
           }
         ]
       }
@@ -77,23 +122,58 @@ Run Prettier automatically on every file Claude writes or modifies:
 }
 ```
 
-> The `matcher` field filters which tools trigger the hook. `Edit|Write` fires only on file edits and writes.
+### How it works
 
-### Example 2: Desktop notification when Claude finishes
+When Claude tries to run `rm -rf node_modules`:
 
-Get notified when Claude completes a task, even if you've switched windows:
+1. `PreToolUse` event fires → `block_dangerous.py` runs
+2. The command matches the `rm` pattern
+3. Script exits with code `2` → **blocked** + "Use trash instead" message sent to Claude
+4. Claude receives the message and runs `trash node_modules` instead
 
-**macOS** (`~/.claude/settings.json`):
+> **trash** sends files to the system trash so you can recover from mistakes. Install with `brew install trash` (macOS) or `npm install -g trash-cli`.
+
+### Adding more blocked patterns
+
+Add entries to the `BLOCKED_PATTERNS` list:
+
+```python
+# Example: block chmod 777
+(r"chmod\s+777", "chmod 777 is a security risk"),
+
+# Example: block SSH to production
+(r"ssh\s+.*prod", "Production server access blocked"),
+```
+
+---
+
+## Essential Hook 2: Completion Notification
+
+Get notified with a sound when Claude finishes. Never miss it while vibe coding in another window.
+
+### macOS — System sounds
+
 ```json
 {
   "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+            "command": "afplay /System/Library/Sounds/Frog.aiff"
           }
         ]
       }
@@ -102,17 +182,72 @@ Get notified when Claude completes a task, even if you've switched windows:
 }
 ```
 
-**Linux**:
+> Use **different sounds** for `Stop` vs `Notification` to tell "done" from "needs attention" by ear.
+
+Browse available macOS system sounds:
+
+```bash
+ls /System/Library/Sounds/
+```
+
+### macOS — Desktop notification popup
+
+Show a notification popup instead of (or in addition to) sound:
+
+```json
+{
+  "type": "command",
+  "command": "osascript -e 'display notification \"Task complete\" with title \"Claude Code\"'"
+}
+```
+
+### Linux
+
+```json
+{
+  "type": "command",
+  "command": "notify-send 'Claude Code' 'Task complete'"
+}
+```
+
+---
+
+## Combined setup
+
+Safety Hook + completion notification in one `settings.json`:
+
 ```json
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/block_dangerous.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "notify-send 'Claude Code' 'Claude Code needs your attention'"
+            "command": "afplay /System/Library/Sounds/Frog.aiff"
           }
         ]
       }
@@ -121,35 +256,17 @@ Get notified when Claude completes a task, even if you've switched windows:
 }
 ```
 
-### Example 3: Block edits to protected files
+> If you already have a `settings.json`, just add or merge the `hooks` key. Use `/hooks` to verify.
 
-Prevent Claude from modifying `.env`, `package-lock.json`, or anything in `.git/`:
+---
 
-**Step 1**: Create the hook script (`.claude/hooks/protect-files.sh`):
+<details>
+<summary>More examples: Additional Hook use cases</summary>
 
-```bash
-#!/bin/bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+### Protect sensitive folders
 
-PROTECTED_PATTERNS=(".env" "package-lock.json" ".git/")
+Block Claude from editing `customers/` or `invoices/` directories:
 
-for pattern in "${PROTECTED_PATTERNS[@]}"; do
-  if [[ "$FILE_PATH" == *"$pattern"* ]]; then
-    echo "Blocked: $FILE_PATH matches protected pattern '$pattern'" >&2
-    exit 2
-  fi
-done
-
-exit 0
-```
-
-**Step 2**: Make it executable:
-```bash
-chmod +x .claude/hooks/protect-files.sh
-```
-
-**Step 3**: Register the hook (`.claude/settings.json`):
 ```json
 {
   "hooks": {
@@ -159,7 +276,7 @@ chmod +x .claude/hooks/protect-files.sh
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh"
+            "command": "FILE=\"$(jq -r '.tool_input.file_path // empty')\"; if [[ \"$FILE\" == customers/* || \"$FILE\" == invoices/* ]]; then echo \"Blocked: sensitive folder\" >&2; exit 2; fi"
           }
         ]
       }
@@ -168,22 +285,18 @@ chmod +x .claude/hooks/protect-files.sh
 }
 ```
 
-> Exit code `2` blocks the action and sends the stderr message to Claude. Exit code `0` allows it. Any other exit code lets the action proceed but only logs the error.
-
-### Example 4: Re-inject context after compaction
-
-When Claude's context window fills up, it compacts automatically. Re-inject critical rules when that happens:
+### Auto-inject context on session start
 
 ```json
 {
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "compact",
+        "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'Reminder: use Bun, not npm. Run bun test before committing. Current sprint: auth refactor.'"
+            "command": "cat ~/work-rules.txt"
           }
         ]
       }
@@ -192,74 +305,9 @@ When Claude's context window fills up, it compacts automatically. Re-inject crit
 }
 ```
 
-### Example 5: Audit log of every Bash command
+### Prompt-based hooks (advanced)
 
-Record every command Claude runs to a file:
-
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "jq -r '.tool_input.command' >> ~/.claude/command-log.txt"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
----
-
-## The easiest way to set up your first hook
-
-Run `/hooks` inside Claude Code to open the interactive menu:
-
-```
-/hooks
-```
-
-1. Select the event you want to react to
-2. Set the matcher (`*` for all, `Edit|Write` for file edits only)
-3. Enter the shell command to run
-4. Choose storage location (User settings → applies to all projects)
-
-Changes from the `/hooks` menu take effect immediately.
-
----
-
-## How hooks communicate with Claude Code
-
-Hooks receive a JSON payload on **stdin** describing the event. They communicate back through **exit codes** and **stdout/stderr**:
-
-```json
-{
-  "session_id": "abc123",
-  "cwd": "/Users/sarah/myproject",
-  "hook_event_name": "PreToolUse",
-  "tool_name": "Bash",
-  "tool_input": {
-    "command": "npm test"
-  }
-}
-```
-
-| Exit code | Behavior |
-|-----------|----------|
-| `0` | Action proceeds. Stdout is added to Claude's context (for `SessionStart` and `UserPromptSubmit`) |
-| `2` | Action is **blocked**. Stderr is sent to Claude as feedback |
-| Any other | Action proceeds. Stderr is logged but not shown to Claude |
-
----
-
-## Advanced: Prompt-based hooks
-
-For decisions that need judgment rather than rules, use `type: "prompt"`:
+For decisions requiring judgment, use `type: "prompt"`:
 
 ```json
 {
@@ -269,7 +317,7 @@ For decisions that need judgment rather than rules, use `type: "prompt"`:
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Check if all tasks are complete. If not, respond with {\"ok\": false, \"reason\": \"what remains\"}."
+            "prompt": "Check if all tasks are complete. If not, continue working."
           }
         ]
       }
@@ -278,7 +326,7 @@ For decisions that need judgment rather than rules, use `type: "prompt"`:
 }
 ```
 
-For verification that requires reading files or running commands, use `type: "agent"` — a subagent with full tool access checks the actual state of the codebase.
+</details>
 
 ---
 
@@ -286,26 +334,17 @@ For verification that requires reading files or running commands, use `type: "ag
 
 | Problem | Fix |
 |---------|-----|
-| Hook not firing | Run `/hooks` to confirm it appears; check matcher casing (case-sensitive) |
-| Script not executing | Run `chmod +x ./my-hook.sh` |
-| Stop hook loops forever | Parse `stop_hook_active` from input JSON and `exit 0` if `true` |
-| JSON validation failed | Wrap `echo` statements in `~/.zshrc` with an interactive shell check |
+| Hook not firing | Run `/hooks` to confirm it appears; check matcher casing |
+| Script not executing | Run `chmod +x` to add execute permission |
+| JSON parse error | Wrap `echo` in `~/.zshrc` with an interactive shell check |
+| All file edits blocked | Check the `exit 2` condition in your `PreToolUse` hook |
 
-Debug mode: `claude --debug` or press `Ctrl+O` to see hook output in the transcript.
-
----
-
-## ⚠️ Cautions
-
-- Hooks are powerful. **A `PreToolUse` hook with `exit 2` misconfigured can block Claude from editing any file**
-- `PostToolUse` hooks cannot undo an action — the tool has already run
-- `PermissionRequest` hooks do not fire in non-interactive mode (`-p`) — use `PreToolUse` for automated pipelines instead
-- If you edit settings files directly while Claude Code is running, changes won't take effect until you visit `/hooks` or restart the session
+Debug: `claude --debug` or `Ctrl+O` to see hook execution logs.
 
 ---
 
 ## One-line summary
 
-> Hooks = shell commands that fire automatically on Claude Code events. Format files, send notifications, block dangerous operations — all guaranteed to run, no LLM judgment required.
+> **Safety Hook + Completion Notification** — just these two make vibe coding dramatically safer and smoother. Prevent the `rm` disaster before it happens.
 
 Next section: package repeatable workflows into Skills.
