@@ -40,6 +40,15 @@ This isn't just learning a new tool. You've picked up a new way of developing so
 
 ### Intermediate Goals
 
+**Maximize Plugin Workflows**
+- **show-me-the-prd** for planning → **kkirikkiri** for research team → Claude Code for implementation — idea to prototype in a day
+- **deep-research** for market research → **docs-guide** for technical validation — AI-powered decision making
+- Improve prompt quality over time using **vibe-sunsang** feedback
+
+**Multi-session & Parallel Work**
+- Run Claude Code in multiple terminals to divide and conquer
+- Try parallel development with **pumasi** (works with Claude alone, no Codex needed)
+
 **MCP (Model Context Protocol) Setup**
 
 Connect Claude Code to external services through MCP.
@@ -117,6 +126,8 @@ Analyze and fix the following GitHub issue: $ARGUMENTS
 5. Create a PR
 ```
 
+> You can also quickly prototype skills using the **skillers-suda** plugin.
+
 ---
 
 **Agent Teams**
@@ -158,15 +169,14 @@ on:
 
 ---
 
-### gptaku_plugins Community
+### CC101 & gptaku_plugins Community
 
-A plugin community maintained by the CC101 team, sharing battle-tested plugins built from real-world use.
+| Resource | URL | Description |
+|----------|-----|-------------|
+| **CC101 GitHub** | [github.com/fivetaku/cc101](https://github.com/fivetaku/cc101) | This guide's repository. Typo fixes and content contributions welcome |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 8 plugins for vibe coders: planning (show-me-the-prd), Git (git-teacher), mentor (vibe-sunsang), research (deep-research), parallel dev (pumasi), team setup (kkirikkiri), skill creation (skillers-suda), official docs (docs-guide) |
 
-| Resource | URL |
-|----------|-----|
-| **GitHub** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) |
-
-If this repository has been helpful, please give it a **Star**. It helps the community grow.
+If this has been helpful, please give it a **Star**. It helps the community grow.
 
 ---
 
@@ -278,10 +288,13 @@ By completing CC101, you've taken the first step. The rest is practice.
 Official Docs:   https://docs.anthropic.com/en/docs/claude-code
 GitHub:          https://github.com/anthropics/claude-code
 Plugins:         https://github.com/anthropics/claude-plugins-official
-Community:       https://github.com/fivetaku/gptaku_plugins
+gptaku_plugins:  https://github.com/fivetaku/gptaku_plugins
+CC101:           https://github.com/fivetaku/cc101
 Console:         https://platform.claude.com
 
 Next targets:
-  Intermediate → MCP setup, custom Hooks, plugin exploration
-  Advanced     → Build Skills, Agent Teams, full CI/CD automation
+  Vibe coders  → Install gptaku_plugins, plan with show-me-the-prd, grow with vibe-sunsang
+  Intermediate → MCP setup (Notion/Slack/GitHub), custom Hooks, plugin exploration
+  Advanced     → Build Skills (or use skillers-suda), Agent Teams with kkirikkiri
+  (Developers) → Full CI/CD automation, parallel dev with pumasi
 ```

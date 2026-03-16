@@ -79,7 +79,7 @@ Install these into Claude Code to make vibe coding much easier:
 | **docs-guide** | Accuracy | Answers based on official docs to prevent hallucinations |
 | **deep-research** | Research | Multi-agent tech research and market analysis |
 | **끼리끼리** (Team Builder) | Team setup | "Make me a research team" → AI team auto-assembled |
-| **품앗이** (Parallel Dev) | Parallel development | Claude (PM) + Codex (developer) for large-scale parallel processing |
+| **품앗이** (Parallel Dev) | Parallel development | Claude (PM) distributes tasks for parallel processing. Uses Codex if installed, otherwise works with Claude alone |
 | **스킬러들의 수다** (Skill Creators) | Skill creation | "Make a translation skill" → designed and built by 4 specialists |
 
 Installation is covered in the **Plugin Installation** section.
