@@ -62,27 +62,31 @@ Type `/plugin` inside Claude Code and go to the **Discover tab** to browse offic
 
 ## Installation
 
-### Step 1: Add the Marketplace and Install Plugins
+### Step 1: Register the Marketplace (One-Time)
 
 Inside Claude Code, run:
 
 ```shell
-/plugin install https://github.com/fivetaku/gptaku_plugins
+/plugin marketplace add https://github.com/fivetaku/gptaku_plugins.git
 ```
 
-Or add the marketplace first and browse:
+### Step 2: Install Plugins
+
+Once the marketplace is registered, install the plugins you want:
 
 ```shell
-# Add the marketplace
-/plugin marketplace add fivetaku/gptaku_plugins
-
-# Then open the plugin manager and go to the Discover tab
-/plugin
+/plugin install
 ```
 
-### Step 2: Verify Installation
+Select the plugin you want from the list, or specify it by name:
 
-Check your installed plugins:
+```shell
+/plugin install show-me-the-prd
+```
+
+> **Note**: One plugin installs at a time. Repeat for multiple installations.
+
+### Step 3: Verify Installation
 
 ```shell
 /plugin list
@@ -90,7 +94,17 @@ Check your installed plugins:
 
 Or type `/plugin` and navigate to the **Installed tab**.
 
-### Step 3: Try a Plugin
+### Step 4: Update
+
+When new versions are available, update with:
+
+```shell
+/plugin update
+```
+
+> **Important**: Restart Claude Code after installation or update.
+
+### Step 5: Try a Plugin
 
 Once installed, plugins are ready to use immediately:
 
