@@ -22,11 +22,14 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
+      document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
     } else {
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
     }
     return () => {
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
     }
   }, [mobileMenuOpen])
@@ -63,7 +66,7 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
             onClick={() => setMobileMenuOpen(false)}
           />
           {/* Drawer panel */}
-          <div className="absolute right-0 top-14 h-[calc(100vh-3.5rem)] w-72 overflow-y-auto border-l border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
+          <div className="absolute right-0 top-14 h-[calc(100vh-3.5rem)] w-72 overflow-y-auto overscroll-contain border-l border-zinc-200 bg-white p-4 shadow-xl dark:border-zinc-800 dark:bg-zinc-950">
             <p className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
               {lang === 'ko' ? '목차' : 'Contents'}
             </p>
