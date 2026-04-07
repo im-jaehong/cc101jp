@@ -1,13 +1,11 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Nav } from './Nav'
 import { Sidebar } from './Sidebar'
 import { Footer } from './Footer'
 import { Hero } from './Hero'
 import type { SectionMeta, Lang } from '@/types'
-import { trackLanguageToggle } from '@/lib/analytics'
 
 interface PageClientProps {
   lang: Lang
@@ -16,7 +14,6 @@ interface PageClientProps {
 }
 
 export function PageClient({ lang, sections, children }: PageClientProps) {
-  const router = useRouter()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Lock body scroll when mobile menu is open
@@ -34,12 +31,6 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
     }
   }, [mobileMenuOpen])
 
-  const handleLangChange = useCallback((next: Lang) => {
-    if (next === lang) return
-    trackLanguageToggle({ from: lang, to: next })
-    router.push(`/${next}`, { scroll: false })
-  }, [lang, router])
-
   const watermarkUrl = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Ctext transform='rotate(-45 160 160)' x='160' y='160' text-anchor='middle' dominant-baseline='middle' fill='rgba(120%2C120%2C120%2C0.22)' font-size='15' font-family='system-ui%2Csans-serif' letter-spacing='2'%3ECC101 by GPTaku%3C/text%3E%3C/svg%3E")`
 
   return (
@@ -52,7 +43,6 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
       />
       <Nav
         lang={lang}
-        onLangChange={handleLangChange}
         mobileMenuOpen={mobileMenuOpen}
         onMobileMenuToggle={() => setMobileMenuOpen((v) => !v)}
       />

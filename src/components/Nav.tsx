@@ -7,12 +7,11 @@ import type { Lang } from '@/types'
 
 interface NavProps {
   lang: Lang
-  onLangChange: (lang: Lang) => void
   mobileMenuOpen: boolean
   onMobileMenuToggle: () => void
 }
 
-export function Nav({ lang, onLangChange, mobileMenuOpen, onMobileMenuToggle }: NavProps) {
+export function Nav({ lang, mobileMenuOpen, onMobileMenuToggle }: NavProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-200 bg-white/90 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/90">
       <div className="mx-auto flex h-14 max-w-screen-xl items-center justify-between px-4 lg:px-6">
@@ -39,7 +38,7 @@ export function Nav({ lang, onLangChange, mobileMenuOpen, onMobileMenuToggle }: 
             GitHub
           </a>
           <ThemeToggle />
-          <LangToggle lang={lang} onLangChange={onLangChange} />
+          <LangToggle lang={lang} />
 
           {/* Hamburger — mobile only */}
           <button
