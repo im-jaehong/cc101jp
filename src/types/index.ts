@@ -1,4 +1,4 @@
-export type Lang = 'ko' | 'en'
+export type Lang = 'ko' | 'en' | 'ja'
 
 export type SectionTier = 'core' | 'advanced'
 
@@ -9,13 +9,17 @@ export interface SectionMeta {
   slug: string
   title_ko: string
   title_en: string
+  title_ja?: string
   description_ko: string
   description_en: string
+  description_ja?: string
   icon: string
   badge?: string
   badge_en?: string
+  badge_ja?: string
   file_ko: string
   file_en: string
+  file_ja?: string
 }
 
 export interface SectionContent {
@@ -29,12 +33,13 @@ export interface SectionsConfig {
     url: string
     description: string
     description_en: string
+    description_ja?: string
     version: string
     lastUpdated: string
   }
   sections: SectionMeta[]
   tiers: {
-    core: { label_ko: string; label_en: string; description_ko: string; description_en: string; count: number }
-    advanced: { label_ko: string; label_en: string; description_ko: string; description_en: string; count: number }
+    core: { label_ko: string; label_en: string; label_ja?: string; description_ko: string; description_en: string; description_ja?: string; count: number }
+    advanced: { label_ko: string; label_en: string; label_ja?: string; description_ko: string; description_en: string; description_ja?: string; count: number }
   }
 }

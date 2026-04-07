@@ -21,7 +21,7 @@ export function Nav({ lang, onToggle, mobileMenuOpen, onMobileMenuToggle }: NavP
           <span className="text-orange-500 dark:text-orange-400">▸</span>
           <span>CC101</span>
           <span className="hidden text-xs font-normal text-zinc-400 sm:inline">
-            {lang === 'ko' ? 'Claude Code 한국어 가이드' : 'Claude Code Guide'}
+            {lang === 'ko' ? 'Claude Code 한국어 가이드' : lang === 'ja' ? 'Claude Code 日本語ガイド' : 'Claude Code Guide'}
           </span>
         </Link>
 

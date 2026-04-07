@@ -63,7 +63,7 @@ export function Sidebar({ sections, lang, onLinkClick, isMobile = false }: Sideb
       {/* Core sections */}
       <div className="mb-2">
         <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-          {lang === 'ko' ? '기초 필수' : 'Core Essentials'}
+          {lang === 'ko' ? '기초 필수' : lang === 'ja' ? '基礎' : 'Core Essentials'}
         </p>
         {coreSections.map((section) => (
           <SidebarItem key={section.id} section={section} lang={lang} isActive={activeId === section.id} onLinkClick={onLinkClick} isMobile={isMobile} />
@@ -76,7 +76,7 @@ export function Sidebar({ sections, lang, onLinkClick, isMobile = false }: Sideb
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="mb-2 flex w-full items-center justify-between px-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 transition-colors hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
         >
-          <span>{lang === 'ko' ? '고급 확장' : 'Advanced'}</span>
+          <span>{lang === 'ko' ? '고급 확장' : lang === 'ja' ? '応用' : 'Advanced'}</span>
           <span className="text-zinc-300 dark:text-zinc-600">{showAdvanced ? '▾' : '▸'}</span>
         </button>
         {showAdvanced &&
@@ -101,7 +101,7 @@ function SidebarItem({
   onLinkClick?: () => void
   isMobile?: boolean
 }) {
-  const title = lang === 'ko' ? section.title_ko : section.title_en
+  const title = lang === 'ko' ? section.title_ko : lang === 'ja' ? (section.title_ja ?? section.title_ko) : section.title_en
 
   const handleClick = () => {
     trackTocClick({ target_section: section.id, is_mobile: isMobile, lang })
@@ -124,7 +124,7 @@ function SidebarItem({
       <span className="truncate">{title}</span>
       {section.badge && (
         <span className="ml-auto shrink-0 rounded bg-orange-500/20 px-1 py-0.5 text-xs text-orange-500 dark:text-orange-400">
-          {lang === 'ko' ? section.badge : (section.badge_en ?? section.badge)}
+          {lang === 'ko' ? section.badge : lang === 'ja' ? (section.badge_ja ?? section.badge) : (section.badge_en ?? section.badge)}
         </span>
       )}
     </a>

@@ -17,6 +17,8 @@ export function LangToggle({ lang, onToggle }: LangToggleProps) {
       <span className={lang === 'ko' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}>한국어</span>
       <span className="text-zinc-400 dark:text-zinc-600">/</span>
       <span className={lang === 'en' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}>EN</span>
+      <span className="text-zinc-400 dark:text-zinc-600">/</span>
+      <span className={lang === 'ja' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}>日本語</span>
     </button>
   )
 }

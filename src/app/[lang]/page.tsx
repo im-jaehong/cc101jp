@@ -8,10 +8,10 @@ import { PageClient } from '@/components/PageClient'
 import { SectionBlock } from '@/components/SectionBlock'
 import type { Lang } from '@/types'
 
-const SUPPORTED_LANGS = ['ko', 'en'] as const
+const SUPPORTED_LANGS = ['ko', 'en', 'ja'] as const
 
 export function generateStaticParams() {
-  return [{ lang: 'ko' }, { lang: 'en' }]
+  return [{ lang: 'ko' }, { lang: 'en' }, { lang: 'ja' }]
 }
 
 interface PageProps {
@@ -38,6 +38,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: 'CC101 — Claude Code Beginner Guide',
         description:
           'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
+        images: ['https://cc101.axwith.com/og.png'],
+      },
+    }
+  }
+
+  if (lang === 'ja') {
+    return {
+      title: 'CC101 — Claude Code 日本語入門ガイド',
+      description:
+        'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
+      openGraph: {
+        title: 'CC101 — Claude Code 日本語入門ガイド',
+        description:
+          'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
+        images: [{ url: 'https://cc101.axwith.com/og.png' }],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'CC101 — Claude Code 日本語入門ガイド',
+        description:
+          'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
         images: ['https://cc101.axwith.com/og.png'],
       },
     }
@@ -79,9 +100,9 @@ export default async function Page({ params }: PageProps) {
     <Suspense fallback={<div className="min-h-screen" />}>
       <PageClient lang={lang} sections={sections}>
         {sectionContents.map(({ meta, markdown }) => {
-          const title = lang === 'ko' ? meta.title_ko : meta.title_en
-          const description = lang === 'ko' ? meta.description_ko : meta.description_en
-          const badge = lang === 'ko' ? meta.badge : (meta.badge_en ?? meta.badge)
+          const title = lang === 'ko' ? meta.title_ko : lang === 'ja' ? (meta.title_ja ?? meta.title_ko) : meta.title_en
+          const description = lang === 'ko' ? meta.description_ko : lang === 'ja' ? (meta.description_ja ?? meta.description_ko) : meta.description_en
+          const badge = lang === 'ko' ? meta.badge : lang === 'ja' ? (meta.badge_ja ?? meta.badge) : (meta.badge_en ?? meta.badge)
 
           return (
             <SectionBlock

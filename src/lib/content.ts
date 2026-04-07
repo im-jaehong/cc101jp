@@ -16,19 +16,31 @@ export function getSectionMetas(): SectionMeta[] {
   return config.sections.sort((a, b) => a.order - b.order)
 }
 
+function getLangFile(section: SectionMeta, lang: Lang): string {
+  if (lang === 'ko') return section.file_ko
+  if (lang === 'ja') return section.file_ja ?? section.file_ko
+  return section.file_en
+}
+
+function getLangTitle(section: SectionMeta, lang: Lang): string {
+  if (lang === 'ko') return section.title_ko
+  if (lang === 'ja') return section.title_ja ?? section.title_ko
+  return section.title_en
+}
+
 export function getSectionMarkdown(section: SectionMeta, lang: Lang): string {
-  const filePath = path.join(contentDir, lang === 'ko' ? section.file_ko : section.file_en)
+  const filePath = path.join(contentDir, getLangFile(section, lang))
 
   let raw = ''
   try {
     raw = fs.readFileSync(filePath, 'utf-8')
   } catch {
-    // Fallback to Korean if English not available
+    // Fallback to Korean if target language not available
     try {
       const fallbackPath = path.join(contentDir, section.file_ko)
       raw = fs.readFileSync(fallbackPath, 'utf-8')
     } catch {
-      return `# ${lang === 'ko' ? section.title_ko : section.title_en}\n\n콘텐츠 준비 중입니다.`
+      return `# ${getLangTitle(section, lang)}\n\nコンテンツ準備中です。`
     }
   }
 

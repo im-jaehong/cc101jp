@@ -10,11 +10,12 @@ export function useLang() {
 
   useEffect(() => {
     const saved = localStorage.getItem(LANG_KEY) as Lang | null
-    if (saved === 'ko' || saved === 'en') {
+    if (saved === 'ko' || saved === 'en' || saved === 'ja') {
       setLangState(saved)
     } else {
       // Auto-detect browser language
-      const browserLang = navigator.language.startsWith('ko') ? 'ko' : 'en'
+      const bl = navigator.language
+      const browserLang: Lang = bl.startsWith('ko') ? 'ko' : bl.startsWith('ja') ? 'ja' : 'en'
       setLangState(browserLang)
     }
   }, [])
@@ -25,7 +26,8 @@ export function useLang() {
   }, [])
 
   const toggle = useCallback(() => {
-    setLang(lang === 'ko' ? 'en' : 'ko')
+    const order: Lang[] = ['ko', 'en', 'ja']
+    setLang(order[(order.indexOf(lang) + 1) % order.length])
   }, [lang, setLang])
 
   return { lang, setLang, toggle }

@@ -84,7 +84,7 @@ export function SectionBlock({
               )}
               {isAdvanced && (
                 <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-500">
-                  {lang === 'ko' ? '고급' : 'Advanced'}
+                  {lang === 'ko' ? '고급' : lang === 'ja' ? '応用' : 'Advanced'}
                 </span>
               )}
             </div>
@@ -98,8 +98,8 @@ export function SectionBlock({
             className="shrink-0 rounded-md border border-zinc-300 px-3 py-1.5 text-xs text-zinc-500 transition-colors hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500 dark:hover:text-white"
           >
             {isOpen
-              ? lang === 'ko' ? '접기 ▲' : 'Collapse ▲'
-              : lang === 'ko' ? '펼치기 ▼' : 'Expand ▼'}
+              ? lang === 'ko' ? '접기 ▲' : lang === 'ja' ? '折りたたむ ▲' : 'Collapse ▲'
+              : lang === 'ko' ? '펼치기 ▼' : lang === 'ja' ? '展開する ▼' : 'Expand ▼'}
           </button>
         )}
       </div>

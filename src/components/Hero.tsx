@@ -10,13 +10,14 @@ interface HeroProps {
 
 export function Hero({ lang }: HeroProps) {
   const ko = lang === 'ko'
+  const ja = lang === 'ja'
   const sectionRef = useRef<HTMLElement>(null)
   const [mousePos, setMousePos] = useState({ x: 50, y: 30 })
   const [typedPrompt, setTypedPrompt] = useState('')
   const [cursorOn, setCursorOn] = useState(true)
   const [phase, setPhase] = useState<'waiting' | 'typing' | 'done'>('waiting')
 
-  const prompt = ko ? '> 무엇을 만들어 드릴까요?' : '> What would you like to build?'
+  const prompt = ko ? '> 무엇을 만들어 드릴까요?' : ja ? '> 何を作りましょうか？' : '> What would you like to build?'
 
   // Typewriter loop
   useEffect(() => {
@@ -124,7 +125,7 @@ export function Hero({ lang }: HeroProps) {
         {/* Badge */}
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-1.5 text-sm text-orange-500 dark:text-orange-400">
           <span className="font-mono">▸</span>
-          <span>{ko ? 'Claude Code 한국어 입문 가이드' : 'Claude Code Korean Beginner Guide'}</span>
+          <span>{ko ? 'Claude Code 한국어 입문 가이드' : ja ? 'Claude Code 日本語入門ガイド' : 'Claude Code Korean Beginner Guide'}</span>
         </div>
 
         {/* Title */}
@@ -134,6 +135,12 @@ export function Hero({ lang }: HeroProps) {
               <span className="text-orange-500 dark:text-orange-400">Claude Code</span>로
               <br />
               AI 시작하기
+            </>
+          ) : ja ? (
+            <>
+              <span className="text-orange-500 dark:text-orange-400">Claude Code</span>で
+              <br />
+              AIを始めよう
             </>
           ) : (
             <>
@@ -151,6 +158,12 @@ export function Hero({ lang }: HeroProps) {
               AI Native로 가는 첫 걸음 —{' '}
               <br className="sm:hidden" />
               Claude Code 한국어 실전 가이드
+            </>
+          ) : ja ? (
+            <>
+              AI Nativeへの第一歩 —{' '}
+              <br className="sm:hidden" />
+              Claude Code 日本語実践ガイド
             </>
           ) : (
             'Your first step to going AI Native — a practical guide to Claude Code'
@@ -190,7 +203,7 @@ export function Hero({ lang }: HeroProps) {
             onClick={() => trackCtaClick({ cta_id: 'start_guide', destination: '#01-what-is-cc', lang })}
             className="min-w-[10rem] rounded-lg bg-orange-500 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-orange-400"
           >
-            {ko ? '가이드 시작 →' : 'Start Guide →'}
+            {ko ? '가이드 시작 →' : ja ? 'ガイドを始める →' : 'Start Guide →'}
           </a>
           <a
             href="https://docs.anthropic.com/en/docs/claude-code"
@@ -199,7 +212,7 @@ export function Hero({ lang }: HeroProps) {
             onClick={() => trackCtaClick({ cta_id: 'official_docs', destination: 'https://docs.anthropic.com/en/docs/claude-code', lang })}
             className="min-w-[10rem] rounded-lg border border-zinc-300 px-6 py-3 text-center text-sm font-semibold text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-white"
           >
-            {ko ? '공식 문서' : 'Official Docs'}
+            {ko ? '공식 문서' : ja ? '公式ドキュメント' : 'Official Docs'}
           </a>
         </div>
 
@@ -207,16 +220,18 @@ export function Hero({ lang }: HeroProps) {
         <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm text-zinc-400 dark:text-zinc-500">
           <div className="flex items-center gap-2">
             <span className="text-orange-500 dark:text-orange-400">20</span>
-            <span>{ko ? '섹션' : 'Sections'}</span>
+            <span>{ko ? '섹션' : ja ? 'セクション' : 'Sections'}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-orange-500 dark:text-orange-400">57</span>
-            <span>{ko ? '공식 문서 기반' : 'Official Docs Based'}</span>
+            <span>{ko ? '공식 문서 기반' : ja ? '公式ドキュメント準拠' : 'Official Docs Based'}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-orange-500 dark:text-orange-400">KO</span>
             <span>/</span>
             <span className="text-orange-500 dark:text-orange-400">EN</span>
+            <span>/</span>
+            <span className="text-orange-500 dark:text-orange-400">JA</span>
           </div>
         </div>
       </div>
