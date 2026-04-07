@@ -4,21 +4,41 @@ import type { Lang } from '@/types'
 
 interface LangToggleProps {
   lang: Lang
-  onToggle: () => void
+  onLangChange: (lang: Lang) => void
 }
 
-export function LangToggle({ lang, onToggle }: LangToggleProps) {
+const langs: { value: Lang; label: string }[] = [
+  { value: 'ko', label: '한국어' },
+  { value: 'en', label: 'EN' },
+  { value: 'ja', label: '日本語' },
+]
+
+export function LangToggle({ lang, onLangChange }: LangToggleProps) {
   return (
-    <button
-      onClick={onToggle}
-      className="flex h-9 items-center gap-1 rounded-md border border-zinc-300 bg-zinc-100 px-3 text-sm font-medium text-zinc-600 transition-colors hover:border-zinc-400 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:border-zinc-500 dark:hover:text-white"
-      aria-label="Toggle language"
+    <div
+      className="flex h-9 items-center rounded-md border border-zinc-300 bg-zinc-100 text-sm font-medium dark:border-zinc-700 dark:bg-zinc-800"
+      role="radiogroup"
+      aria-label="Language"
     >
-      <span className={lang === 'ko' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}>한국어</span>
-      <span className="text-zinc-400 dark:text-zinc-600">/</span>
-      <span className={lang === 'en' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}>EN</span>
-      <span className="text-zinc-400 dark:text-zinc-600">/</span>
-      <span className={lang === 'ja' ? 'text-zinc-900 dark:text-white' : 'text-zinc-400 dark:text-zinc-500'}>日本語</span>
-    </button>
+      {langs.map(({ value, label }, i) => (
+        <span key={value} className="flex items-center">
+          {i > 0 && <span className="text-zinc-400 dark:text-zinc-600">/</span>}
+          <button
+            onClick={() => onLangChange(value)}
+            disabled={lang === value}
+            className={`px-2 py-1 transition-colors ${
+              lang === value
+                ? 'text-zinc-900 dark:text-white cursor-default'
+                : 'text-zinc-400 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-white cursor-pointer'
+            }`}
+            role="radio"
+            aria-checked={lang === value}
+            aria-label={label}
+          >
+            {label}
+          </button>
+        </span>
+      ))}
+    </div>
   )
 }

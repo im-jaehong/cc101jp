@@ -34,9 +34,8 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
     }
   }, [mobileMenuOpen])
 
-  const toggleLang = useCallback(() => {
-    const order: Lang[] = ['ko', 'en', 'ja']
-    const next = order[(order.indexOf(lang) + 1) % order.length]
+  const handleLangChange = useCallback((next: Lang) => {
+    if (next === lang) return
     trackLanguageToggle({ from: lang, to: next })
     router.push(`/${next}`, { scroll: false })
   }, [lang, router])
@@ -53,7 +52,7 @@ export function PageClient({ lang, sections, children }: PageClientProps) {
       />
       <Nav
         lang={lang}
-        onToggle={toggleLang}
+        onLangChange={handleLangChange}
         mobileMenuOpen={mobileMenuOpen}
         onMobileMenuToggle={() => setMobileMenuOpen((v) => !v)}
       />
