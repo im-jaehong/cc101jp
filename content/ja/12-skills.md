@@ -277,7 +277,7 @@ $ARGUMENTS[0]を$ARGUMENTS[1]に翻訳してください。
 ```yaml
 ---
 name: pr-summary
-description: PRサマリーを作成します。
+description: PR要約を作成します。
 context: fork
 allowed-tools: Bash(gh *)
 ---
@@ -287,7 +287,7 @@ allowed-tools: Bash(gh *)
 - PRコメント: !`gh pr view --comments`
 - 変更ファイル: !`gh pr diff --name-only`
 
-上記の内容に基づいて明確なPRサマリーを作成してください。
+上記の内容に基づいて明確なPR要約を作成してください。
 ```
 
 Claudeがこのスキルを実行すると：
@@ -320,7 +320,7 @@ Claudeがこのスキルを実行すると：
 
 4人の専門家（企画者/ユーザー/専門家/検収者）が内部で議論した後：
 
-1. **インタビュー** — 3〜5個の質問で核心情報を収集
+1. **インタビュー** — 3〜5個の質問で重要な情報を収集
 2. **ワークフロー設計** — 6種類のステップタイプ（プロンプト/スクリプト/API・MCP/RAG/レビュー/生成）を組み合わせ
 3. **ファイル生成** — `SKILL.md` + `scripts/` + `references/`の全体構造を自動生成
 4. **テスト + 改善** — 作成したスキルをすぐにテストし、対話で継続的に改善

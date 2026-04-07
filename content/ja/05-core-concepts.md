@@ -118,7 +118,7 @@ CLAUDE.mdはClaudeに渡す**指示書**だと考えてください。
 | `~/.claude/CLAUDE.md` | すべてのプロジェクトに適用（グローバル設定） |
 | `./CLAUDE.local.md` | 自分だけのプロジェクト別設定（gitにアップされない） |
 
-> CLAUDE.mdの詳細については**[06. CLAUDE.md完全攻略](./06-claude-md.md)**で解説します。
+> CLAUDE.mdの詳細については**[08. CLAUDE.md 詳細ガイド](./06-claude-md.md)**で解説します。
 
 ---
 

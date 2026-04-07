@@ -161,7 +161,7 @@ export function Hero({ lang }: HeroProps) {
             </>
           ) : ja ? (
             <>
-              AI Nativeへの第一歩 —{' '}
+              AI活用の第一歩 —{' '}
               <br className="sm:hidden" />
               Claude Code 日本語実践ガイド
             </>
@@ -203,7 +203,7 @@ export function Hero({ lang }: HeroProps) {
             onClick={() => trackCtaClick({ cta_id: 'start_guide', destination: '#01-what-is-cc', lang })}
             className="min-w-[10rem] rounded-lg bg-orange-500 px-6 py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-orange-400"
           >
-            {ko ? '가이드 시작 →' : ja ? 'ガイドを始める →' : 'Start Guide →'}
+            {ko ? '가이드 시작 →' : ja ? 'ガイドを見る →' : 'Start Guide →'}
           </a>
           <a
             href="https://docs.anthropic.com/en/docs/claude-code"
