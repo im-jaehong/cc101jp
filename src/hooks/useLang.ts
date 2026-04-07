@@ -6,7 +6,7 @@ import type { Lang } from '@/types'
 const LANG_KEY = 'cc101-lang'
 
 export function useLang() {
-  const [lang, setLangState] = useState<Lang>('ko')
+  const [lang, setLangState] = useState<Lang>('ja')
 
   useEffect(() => {
     const saved = localStorage.getItem(LANG_KEY) as Lang | null
@@ -14,8 +14,7 @@ export function useLang() {
       setLangState(saved)
     } else {
       // Auto-detect browser language
-      const bl = navigator.language
-      const browserLang: Lang = bl.startsWith('ko') ? 'ko' : bl.startsWith('ja') ? 'ja' : 'en'
+      const browserLang: Lang = 'ja'
       setLangState(browserLang)
     }
   }, [])
