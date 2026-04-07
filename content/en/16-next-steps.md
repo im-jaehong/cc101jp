@@ -173,7 +173,7 @@ on:
 
 | Resource | URL | Description |
 |----------|-----|-------------|
-| **CC101 GitHub** | [github.com/fivetaku/cc101](https://github.com/fivetaku/cc101) | This guide's repository. Typo fixes and content contributions welcome |
+| **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | This guide's repository. Typo fixes and content contributions welcome |
 | **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 8 plugins for vibe coders: planning (show-me-the-prd), Git (git-teacher), mentor (vibe-sunsang), research (deep-research), parallel dev (pumasi), team setup (kkirikkiri), skill creation (skillers-suda), official docs (docs-guide) |
 
 If this has been helpful, please give it a **Star**. It helps the community grow.
@@ -289,7 +289,7 @@ Official Docs:   https://docs.anthropic.com/en/docs/claude-code
 GitHub:          https://github.com/anthropics/claude-code
 Plugins:         https://github.com/anthropics/claude-plugins-official
 gptaku_plugins:  https://github.com/fivetaku/gptaku_plugins
-CC101:           https://github.com/fivetaku/cc101
+CC101:           https://github.com/im-jaehong/cc101jp
 Console:         https://platform.claude.com
 
 Next targets:

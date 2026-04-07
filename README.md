@@ -3,7 +3,7 @@
 > **Claude Code를 가장 쉽게 시작하는 한국어 가이드**
 
 🌐 **사이트**: [cc101.axwith.com](https://cc101.axwith.com)
-📦 **GitHub**: [github.com/fivetaku/cc101](https://github.com/fivetaku/cc101)
+📦 **GitHub**: [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp)
 
 ---
 

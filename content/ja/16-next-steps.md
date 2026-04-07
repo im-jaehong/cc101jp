@@ -103,7 +103,7 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 
 | リソース | URL | 説明 |
 |--------|-----|------|
-| **CC101 GitHub** | [github.com/fivetaku/cc101](https://github.com/fivetaku/cc101) | このガイドのリポジトリ。誤字・内容追加の貢献を歓迎します |
+| **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | このガイドのリポジトリ。誤字・内容追加の貢献を歓迎します |
 | **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | バイブコーダー向け8つのプラグインコレクション：企画(show-me-the-prd)、Git管理、メンタリング、リサーチ(deep-research)、並列開発、チーム構成、スキル生成、公式ドキュメント(docs-guide) |
 
 このガイドが役に立ったら**Star**を押してください！更新と改善の大きな励みになります。
@@ -241,7 +241,7 @@ Claude Code自体が最も強力なヘルプです。
 ### ステップ3：コミュニティ
 
 - **GitHub Issues**：[github.com/anthropics/claude-code/issues](https://github.com/anthropics/claude-code/issues)
-- **CC101**：[github.com/fivetaku/cc101](https://github.com/fivetaku/cc101)
+- **CC101**：[github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp)
 
 ---
 
@@ -268,7 +268,7 @@ CC101を終えた皆さんは、その第一歩を踏み出しました。これ
 GitHub:            https://github.com/anthropics/claude-code
 プラグイン:        https://github.com/anthropics/claude-plugins-official
 gptaku_plugins:    https://github.com/fivetaku/gptaku_plugins
-CC101:             https://github.com/fivetaku/cc101
+CC101:             https://github.com/im-jaehong/cc101jp
 コンソール:        https://platform.claude.com
 
 次の目標:

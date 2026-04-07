@@ -47,7 +47,7 @@ export function Footer({ lang }: FooterProps) {
               GitHub
             </a>
             <a
-              href="https://github.com/fivetaku/cc101"
+              href="https://github.com/im-jaehong/cc101jp"
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors hover:text-orange-500 dark:hover:text-orange-400"
