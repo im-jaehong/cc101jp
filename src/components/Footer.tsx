@@ -69,6 +69,11 @@ export function Footer({ lang }: FooterProps) {
             © {year} CC101 · cc101.axwith.com ·{' '}
             {ko ? '비공식 커뮤니티 가이드' : lang === 'ja' ? '非公式コミュニティガイド' : 'Unofficial Community Guide'}
           </p>
+          <p className="mt-1 text-xs text-zinc-300/70 dark:text-zinc-700/70">
+            ※ 本プロジェクトは{' '}
+            <a href="https://github.com/fivetaku/cc101" target="_blank" rel="noopener noreferrer" className="underline decoration-dotted hover:text-zinc-400 dark:hover:text-zinc-500">CC101</a>
+            {' '}をベースに日本語対応を行ったものです
+          </p>
         </div>
       </div>
     </footer>
