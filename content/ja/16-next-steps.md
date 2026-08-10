@@ -31,7 +31,7 @@ Claude Codeの基礎から高度な自動化まで、全過程を走破しまし
 ```
 ✅ Claude Codeのインストール & 認証
 ✅ CLAUDE.mdの作成
-✅ 基本コマンド（/help, /cost, /compact, /model）
+✅ 基本コマンド（/help, /usage, /compact, /model）
 ✅ ファイルの読み込み、内容の修正、ドキュメント生成
 ✅ プラグインの基本的な使用
 ```
@@ -48,7 +48,7 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 
 **プラグインの活用を最大化**
 - **show-me-the-prd**で企画 → チーム構成プラグインでリサーチチーム編成 → Claude Codeで実装 -- アイデアからプロトタイプまで1日で
-- **deep-research**で市場調査後、**docs-guide**で技術検証 -- 意思決定にAIを活用
+- **insane-research**で市場調査後、**docs-guide**で技術検証 -- 意思決定にAIを活用
 - メンタリングプラグインのフィードバックを反映してプロンプト品質を段階的に改善
 
 **マルチセッション & 並列作業**
@@ -62,7 +62,7 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 このガイドでは扱わなかった発展的なトピックです。
 
 **Agent SDKで自分だけのAIアプリを作る**
-- Anthropicの[Agent SDK](https://docs.anthropic.com/en/docs/agents)を使えば、Claudeをエンジンとした独立したAIアプリケーションを開発できます
+- Anthropicの[Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview)を使えば、Claudeをエンジンとした独立したAIアプリケーションを開発できます
 - Python/TypeScriptでカスタムエージェントを構築 -- Claude Codeなしでも動作する自動化システム
 
 **Model Context Protocol (MCP) サーバーを自分で作る**
@@ -92,7 +92,7 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 
 | リソース | URL |
 |--------|-----|
-| **公式ドキュメント（英語）** | [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code) |
+| **公式ドキュメント（英語）** | [code.claude.com/docs](https://code.claude.com/docs) |
 | **GitHubリポジトリ** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
 | **公式プラグイン** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
 | **Anthropicコンソール** | [platform.claude.com](https://platform.claude.com) |
@@ -104,7 +104,7 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 | リソース | URL | 説明 |
 |--------|-----|------|
 | **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | このガイドのリポジトリ。誤字・内容追加の貢献を歓迎します |
-| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | バイブコーダー向け8つのプラグインコレクション：企画(show-me-the-prd)、Git管理、メンタリング、リサーチ(deep-research)、並列開発、チーム構成、スキル生成、公式ドキュメント(docs-guide) |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | バイブコーダー向け15個のプラグインコレクション：企画(show-me-the-prd)、Git管理、メンタリング、リサーチ(insane-research)、並列開発、チーム構成、スキル生成、公式ドキュメント(docs-guide)ほか |
 
 このガイドが役に立ったら**Star**を押してください！更新と改善の大きな励みになります。
 
@@ -216,7 +216,7 @@ CC101を終えたら、すぐに実践に飛び込んでみましょう。コー
 ほとんどの答えは公式ドキュメントにあります。
 
 ```
-https://docs.anthropic.com/en/docs/claude-code
+https://code.claude.com/docs
 ```
 
 Claude Codeの中でもヘルプを得ることができます：
@@ -264,7 +264,7 @@ CC101を終えた皆さんは、その第一歩を踏み出しました。これ
 ## クイックリファレンスカード
 
 ```
-公式ドキュメント:   https://docs.anthropic.com/en/docs/claude-code
+公式ドキュメント:   https://code.claude.com/docs
 GitHub:            https://github.com/anthropics/claude-code
 プラグイン:        https://github.com/anthropics/claude-plugins-official
 gptaku_plugins:    https://github.com/fivetaku/gptaku_plugins

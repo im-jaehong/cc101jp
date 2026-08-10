@@ -149,6 +149,10 @@ Press `Shift+Tab` to cycle through permission modes.
 | **Auto-Accept** | Automatically accepts file edits; still asks for shell commands | When you want to move faster on coding tasks |
 | **Plan Mode** | Read-only — analyzes but never modifies anything | When you want to review the plan before committing |
 
+> **Note (as of August 2026)**: From Claude Code v2.1.200, Default mode is labeled **Manual** in the UI. Its config value is still `default`.
+>
+> If your account qualifies, an **Auto mode** is also available: it removes most permission prompts while running background safety checks, which helps on long tasks. When enabled, it joins the `Shift+Tab` cycle.
+
 ### How to Switch Modes
 
 ```

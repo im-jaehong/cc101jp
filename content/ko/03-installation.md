@@ -23,13 +23,15 @@
 ### 하드웨어 요구사항
 
 - RAM: 4GB 이상
+- CPU: x64 또는 ARM64
+- 셸: Bash, Zsh, PowerShell, CMD 중 하나
 - 인터넷 연결 필수
 
 ### Node.js가 필요한가요?
 
 **아닙니다.** Claude Code는 네이티브(Native) 설치 방식을 사용합니다. Node.js를 따로 설치할 필요가 없습니다.
 
-> ⚠️ **npm 설치는 deprecated(구식)입니다.** 예전에는 `npm install -g @anthropic-ai/claude-code`로 설치했지만, 지금은 공식적으로 아래 방법을 권장합니다. npm 방식은 사용하지 마세요.
+> 💡 **npm 설치도 여전히 지원됩니다.** `npm install -g @anthropic-ai/claude-code`는 아래 네이티브 설치와 **동일한 바이너리**를 설치합니다(단, Node.js 22 이상 필요). 다만 공식 권장은 아래 네이티브 설치 방식이므로, 특별한 이유가 없다면 네이티브 설치를 사용하세요.
 
 ---
 
@@ -69,12 +71,24 @@ winget install Anthropic.ClaudeCode
 curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
 ```
 
-> Windows에서 로컬 세션을 사용하려면 [Git for Windows](https://git-scm.com/downloads/win)가 설치되어 있어야 합니다.
+> **방법 4 — 패키지 매니저 (Linux):** Debian/Ubuntu는 `apt`, Fedora/RHEL은 `dnf`, Alpine은 `apk` 공식 저장소로도 설치할 수 있습니다. 자세한 절차는 [공식 설치 문서](https://code.claude.com/docs/en/setup)를 참고하세요.
+
+> Windows에서 [Git for Windows](https://git-scm.com/downloads/win)는 **선택 사항이지만 권장**됩니다. 설치하면 Claude Code가 Git Bash로 Bash 도구를 사용하고, 없으면 PowerShell 도구로 대체 동작합니다.
 
 ### Alpine Linux 추가 패키지
 
+Alpine에는 `bash`와 `curl`이 기본 포함되어 있지 않아 설치 명령이 실패합니다. 먼저 아래 패키지를 설치하세요:
+
 ```bash
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
+```
+
+설치 후 `~/.claude/settings.json`에 아래 설정을 추가합니다:
+
+```json
+{
+  "env": { "USE_BUILTIN_RIPGREP": "0" }
+}
 ```
 
 ---
@@ -87,7 +101,9 @@ apk add libgcc libstdc++ ripgrep
 claude
 ```
 
-처음 실행하면 **브라우저가 자동으로 열리면서 OAuth 로그인 화면**이 나타납니다. Claude.ai 계정(Pro 또는 Max 구독)으로 로그인하면 자동으로 인증이 완료됩니다.
+처음 실행하면 **브라우저가 자동으로 열리면서 OAuth 로그인 화면**이 나타납니다. Claude.ai 계정으로 로그인하면 자동으로 인증이 완료됩니다.
+
+> ⚠️ **무료(Free) 플랜은 Claude Code를 지원하지 않습니다.** Pro, Max, Team, Enterprise 또는 Console(API) 계정이 필요합니다.
 
 ### 인증 흐름 요약
 
@@ -128,7 +144,9 @@ claude doctor
 
 ## 자동 업데이트
 
-Claude Code는 **자동으로 최신 버전으로 업데이트**됩니다. 시작 시 업데이트를 확인하고 백그라운드에서 다운로드합니다. 다음 실행 시 새 버전이 적용됩니다.
+네이티브 설치는 **자동으로 최신 버전으로 업데이트**됩니다. 시작 시 업데이트를 확인하고 백그라운드에서 다운로드합니다. 다음 실행 시 새 버전이 적용됩니다.
+
+> Homebrew, WinGet, Linux 패키지 매니저로 설치한 경우에는 자동 업데이트되지 않습니다. `brew upgrade claude-code`, `winget upgrade Anthropic.ClaudeCode` 등을 직접 실행하세요.
 
 수동으로 업데이트하려면:
 

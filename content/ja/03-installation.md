@@ -23,13 +23,15 @@
 ### ハードウェア要件
 
 - RAM: 4GB以上
+- CPU: x64またはARM64
+- シェル: Bash、Zsh、PowerShell、CMDのいずれか
 - インターネット接続が必要
 
 ### Node.jsは必要？
 
 **いいえ。** Claude Codeはネイティブインストール方式を採用しています。Node.jsを別途インストールする必要はありません。
 
-> ⚠️ **npmによるインストールは非推奨です。** 以前は `npm install -g @anthropic-ai/claude-code` でインストールしていましたが、現在は以下の方法が公式に推奨されています。npm方式は使わないでください。
+> 💡 **npmによるインストールも引き続きサポートされています。** `npm install -g @anthropic-ai/claude-code` は以下のネイティブインストールと**同じバイナリ**をインストールします（Node.js 22以降が必要）。ただし公式推奨は以下のネイティブ方式なので、特別な理由がなければそちらを使ってください。
 
 ---
 
@@ -69,12 +71,12 @@ winget install Anthropic.ClaudeCode
 curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
 ```
 
-> Windowsでローカルセッションを使用するには、[Git for Windows](https://git-scm.com/downloads/win)のインストールが必要です。
+> Windowsでの[Git for Windows](https://git-scm.com/downloads/win)は**任意ですが推奨**です。インストールするとClaude CodeがGit BashでBashツールを使い、ない場合はPowerShellツールで代替動作します。
 
 ### Alpine Linux 追加パッケージ
 
 ```bash
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
 ```
 
 ---
@@ -87,7 +89,9 @@ apk add libgcc libstdc++ ripgrep
 claude
 ```
 
-初回起動時に**ブラウザが自動的に開き、OAuthログイン画面**が表示されます。Claude.aiアカウント（ProまたはMaxサブスクリプション）でログインすると、自動的に認証が完了します。
+初回起動時に**ブラウザが自動的に開き、OAuthログイン画面**が表示されます。Claude.aiアカウントでログインすると、自動的に認証が完了します。
+
+> ⚠️ **無料（Free）プランではClaude Codeを利用できません。** Pro、Max、Team、EnterpriseまたはConsole（API）アカウントが必要です。
 
 ### 認証フローの概要
 

@@ -247,6 +247,14 @@ If a background sub-agent fails due to missing permissions, you can resume it in
 
 Consider Agent Teams when sub-agent results overflow your context window, or when work needs to span multiple sessions.
 
+> ⚠️ **Agent Teams are experimental and disabled by default.** To use them, add this to `~/.claude/settings.json`:
+>
+> ```json
+> { "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" } }
+> ```
+>
+> Without it, no team is set up and Claude neither spawns nor proposes teammates. Known limitations remain around session resumption (`/resume` and `/rewind` don't restore in-process teammates).
+
 ---
 
 ## ⚠️ Cost awareness

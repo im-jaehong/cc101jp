@@ -65,16 +65,34 @@ Claude Code内で `/plugin` と入力すると、**Discoverタブ**からすぐ�
 
 ### 含まれているプラグイン
 
+> 2026年8月時点で**合計15個**のプラグインが登録されています。
+
+#### 入門者にまずおすすめ
+
 | プラグイン名 | 役割 | 使用例 |
 |------------|------|---------|
-| **docs-guide** | ライブラリの公式ドキュメントに基づいた正確な回答を提供。Claudeが最新の公式ドキュメントを参照し、ハルシネーションなしで回答 | `/docs-guide:explain React hooks` |
-| **git-teacher** | 非開発者向けのGitオンボーディングガイド。「コミットって何？」から始めて実務のGitワークフローまで段階的に案内 | `/git-teacher:what-is-commit` |
-| **vibe-sunsang** | Claude Codeの対話ログを自動収集し、リクエストの品質をA〜Dで評価して成長レポートを生成。AI活用パターンを分析し、より効果的な使い方をコーチング | `/vibe-sunsang 開始` |
-| **deep-research-kit** | マルチエージェント7段階リサーチ自動化。Web/学術/技術ソースを並列収集→クロス検証→レポート生成 | `/deep-research [テーマ]` |
-| **pumasi** | Claude（PM）がタスクを分担し並列処理。CodexがインストールされていればCodexが開発者役、なければClaudeだけで動作 | `/pumasi [タスクの説明]` |
-| **show-me-the-prd** | インタビュー5〜6回で4種のデザインドキュメント（PRD、データモデル、Phase分離、プロジェクトスペック）を自動生成。企画が苦手でもOK | `/show-me-the-prd 写真整理アプリを作りたい` |
-| **kkirikkiri** | 自然言語の一言でClaude Code Agent Teamsを自動構成・実行。リサーチ/開発/分析/コンテンツの4種プリセット | `/kkirikkiri リサーチチームを作って` |
-| **skillers-suda** | 4人の専門家（企画者/ユーザー/専門家/検収者）が曖昧なアイデアを動作するスキルに変換 | `/skillers-suda 翻訳スキルを作って` |
+| **docs-guide** | ライブラリの公式ドキュメント（llms.txt）に基づいた正確な回答を提供。ハルシネーションなしで最新ドキュメントを参照 | `/docs-guide:explain React hooks` |
+| **git-teacher** | 非開発者向けのGit/GitHubオンボーディング。クラウドフォルダの比喩で5段階に案内 | `/git-teacher:what-is-commit` |
+| **vibe-sunsang** | Claude Codeの対話を分析して成長コーチングを提供。4種のワークスペースタイプに対応 | `/vibe-sunsang 開始` |
+| **show-me-the-prd** | ドラフト優先のPRD生成器。4種のデザインドキュメント（PRD、データモデル、Phase分離、プロジェクトスペック）をすぐ作成し、前提をまとめて確認 | `/show-me-the-prd 写真整理アプリを作りたい` |
+| **insane-research** | マルチエージェントによるディープリサーチ。7段階パイプラインでソースをクロス検証し、構造化レポートを生成 | `/insane-research [テーマ]` |
+| **kkirikkiri** | 自然言語の一言でAIチーム、または決定論的なエージェントパイプラインを構成 | `/kkirikkiri リサーチチームを作って` |
+| **pumasi** | 並列コーディングのオーケストレーション + Codex画像生成（`/pumasi:image`） | `/pumasi [タスクの説明]` |
+| **skillers-suda** | 4つのペルソナエージェントが分析・議論し、動作するスキルを自動評価付きで構築 | `/skillers-suda 翻訳スキルを作って` |
+
+> ⚠️ **`deep-research-kit`は提供終了しました。** 後継の**`insane-research`**を使用してください。
+
+#### その他のプラグイン
+
+| プラグイン | 説明 |
+|---------|------|
+| **goaljaby** | PRDを`/goal`ワークフローの実行契約書に変換。レビュー文書の自動生成と承認ゲート管理 |
+| **insane-search** | APIキーなしでブロックされたサイトへ適応的にアクセスする戦略を提供 |
+| **insane-design** | デザインシステムの抽出・適用・構築。任意のURLを分析して自分のプロジェクトに適用 |
+| **insane-review** | repomix + ブラウザ自動化でClaude Code内からChatGPT Pro級のコード分析を活用 |
+| **nopal** | Google Workspaceを自然言語で操作（Opal不要） |
+| **dd** | クリップボードのテキスト・画像を貼り付けずに投入（`/dd`、`/ㅇㅇ`） |
+| **gaseo** | 現在のClaude CodeセッションをPaseoアプリに登録し、アプリ側で継続 |
 
 ---
 
@@ -99,7 +117,7 @@ Claude Code内で以下のコマンドを入力してください：
 リストから希望のプラグインを選択するか、名前を直接指定することもできます：
 
 ```shell
-/plugin install show-me-the-prd
+/plugin install show-me-the-prd@gptaku-plugins
 ```
 
 > **注意**：プラグインは一度に1つずつインストールされます。複数インストールする場合は繰り返してください。

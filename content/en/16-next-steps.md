@@ -31,7 +31,7 @@ This isn't just learning a new tool. You've picked up a new way of developing so
 ```
 ✅ Install & authenticate Claude Code
 ✅ Write a CLAUDE.md file
-✅ Core commands (/help, /cost, /compact, /model)
+✅ Core commands (/help, /usage, /compact, /model)
 ✅ Read files, edit code, run tests
 ✅ Basic plugin usage
 ```
@@ -42,7 +42,7 @@ This isn't just learning a new tool. You've picked up a new way of developing so
 
 **Maximize Plugin Workflows**
 - **show-me-the-prd** for planning → **kkirikkiri** for research team → Claude Code for implementation — idea to prototype in a day
-- **deep-research** for market research → **docs-guide** for technical validation — AI-powered decision making
+- **insane-research** for market research → **docs-guide** for technical validation — AI-powered decision making
 - Improve prompt quality over time using **vibe-sunsang** feedback
 
 **Multi-session & Parallel Work**
@@ -162,7 +162,7 @@ on:
 
 | Resource | URL |
 |----------|-----|
-| **Official Docs** | [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code) |
+| **Official Docs** | [code.claude.com/docs](https://code.claude.com/docs) |
 | **GitHub Repository** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
 | **Official Plugins** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
 | **Anthropic Console** | [platform.claude.com](https://platform.claude.com) |
@@ -174,7 +174,7 @@ on:
 | Resource | URL | Description |
 |----------|-----|-------------|
 | **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | This guide's repository. Typo fixes and content contributions welcome |
-| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 8 plugins for vibe coders: planning (show-me-the-prd), Git (git-teacher), mentor (vibe-sunsang), research (deep-research), parallel dev (pumasi), team setup (kkirikkiri), skill creation (skillers-suda), official docs (docs-guide) |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 15 plugins for vibe coders: planning (show-me-the-prd), Git (git-teacher), mentor (vibe-sunsang), research (insane-research), parallel dev (pumasi), team setup (kkirikkiri), skill creation (skillers-suda), official docs (docs-guide), and more |
 
 If this has been helpful, please give it a **Star**. It helps the community grow.
 
@@ -237,7 +237,7 @@ Convert each file and verify with tests."
 Most answers are in the official documentation.
 
 ```
-https://docs.anthropic.com/en/docs/claude-code
+https://code.claude.com/docs
 ```
 
 You can also get help from within Claude Code itself:
@@ -285,7 +285,7 @@ By completing CC101, you've taken the first step. The rest is practice.
 ## Quick Reference Card
 
 ```
-Official Docs:   https://docs.anthropic.com/en/docs/claude-code
+Official Docs:   https://code.claude.com/docs
 GitHub:          https://github.com/anthropics/claude-code
 Plugins:         https://github.com/anthropics/claude-plugins-official
 gptaku_plugins:  https://github.com/fivetaku/gptaku_plugins

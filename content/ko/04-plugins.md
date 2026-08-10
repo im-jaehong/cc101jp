@@ -65,16 +65,34 @@ Claude Code 안에서 `/plugin` 을 입력하면 **Discover 탭**에서 바로 �
 
 ### 포함된 플러그인
 
+> 2026년 8월 기준 **총 15개** 플러그인이 등록되어 있습니다.
+
+#### 입문자에게 먼저 추천
+
 | 플러그인 이름 | 역할 | 사용 예시 |
 |------------|------|---------|
-| **docs-guide** | 라이브러리 공식 문서 기반으로 정확한 답변 제공. Claude가 최신 공식 문서를 참고해 할루시네이션 없이 답변 | `/docs-guide:explain React hooks` |
-| **바르다 깃선생** (git-teacher) | 비개발자를 위한 Git 온보딩 가이드. "커밋이 뭐야?"부터 시작해서 실무 Git 워크플로우까지 단계별 안내 | `/git-teacher:what-is-commit` |
-| **바선생** (vibe-sunsang) | Claude Code 대화 로그를 자동 수집해 요청 품질을 A~D로 평가하고 성장 보고서 생성. AI 사용 패턴을 분석해 더 잘 쓰는 법을 코칭 | `/vibe-sunsang 시작` |
-| **deep-research-kit** | 멀티에이전트 7단계 리서치 자동화. 웹/학술/기술 출처 병렬 수집 → 교차검증 → 보고서 생성 | `/deep-research [주제]` |
-| **품앗이** (pumasi) | Claude(PM)가 작업을 분담하고 병렬 처리. Codex가 설치되어 있으면 Codex가 개발자 역할, 없으면 Claude만으로 동작 | `/pumasi [작업 설명]` |
-| **쇼미더피알디** (show-me-the-prd) | 인터뷰 5~6번으로 4종 디자인 문서(PRD, 데이터 모델, Phase 분리, 프로젝트 스펙) 자동 생성. 기획을 못 해도 OK | `/show-me-the-prd 사진 정리 앱 만들고 싶어` |
-| **끼리끼리** (kkirikkiri) | 자연어 한마디로 Claude Code Agent Teams를 자동 구성하고 실행. 리서치/개발/분석/콘텐츠 4종 프리셋 | `/kkirikkiri 리서치 팀 만들어줘` |
-| **스킬러들의 수다** (skillers-suda) | 4명의 전문가(기획자/사용자/전문가/검수자)가 모호한 아이디어를 동작하는 스킬로 변환 | `/skillers-suda 번역 스킬 만들어줘` |
+| **docs-guide** | 라이브러리 공식 문서(llms.txt) 기반으로 정확한 답변 제공. 할루시네이션 없이 최신 문서를 참고 | `/docs-guide:explain React hooks` |
+| **바르다 깃선생** (git-teacher) | 비개발자를 위한 Git 온보딩. 클라우드 폴더 비유로 5단계 안내 | `/git-teacher:what-is-commit` |
+| **바선생** (vibe-sunsang) | Claude Code 대화를 분석해 성장 코칭 제공. 4종 워크스페이스 타입 지원 | `/vibe-sunsang 시작` |
+| **쇼미더피알디** (show-me-the-prd) | 초안 우선 PRD 생성기. 4종 설계 문서(PRD, 데이터 모델, Phase 분리, 프로젝트 스펙)를 바로 작성하고 가정을 한 번에 확인 | `/show-me-the-prd 사진 정리 앱 만들고 싶어` |
+| **insane-research** | 멀티에이전트 딥리서치. 7단계 파이프라인으로 출처를 교차검증한 뒤 구조화된 보고서 생성 | `/insane-research [주제]` |
+| **끼리끼리** (kkirikkiri) | 자연어 한마디로 AI 팀 또는 결정형 에이전트 파이프라인을 구성 | `/kkirikkiri 리서치 팀 만들어줘` |
+| **품앗이** (pumasi) | 병렬 코딩 오케스트레이션 + Codex 이미지 생성(`/pumasi:image`) | `/pumasi [작업 설명]` |
+| **스킬러들의 수다** (skillers-suda) | 4개 페르소나 에이전트가 분석·토론해 동작하는 스킬을 만들고 자동 평가까지 수행 | `/skillers-suda 번역 스킬 만들어줘` |
+
+> ⚠️ **`deep-research-kit`는 더 이상 제공되지 않습니다.** 후속인 **`insane-research`**를 사용하세요.
+
+#### 그 외 플러그인
+
+| 플러그인 | 설명 |
+|---------|------|
+| **goaljaby** | PRD를 `/goal` 워크플로 실행 계약서로 변환. 검토 문서 자동 생성 + 승인 게이트 관리 |
+| **insane-search** | API 키 없이 차단된 사이트에 적응적으로 접근하는 전략 제공 |
+| **insane-design** | 디자인 시스템 추출·적용·생성. 임의의 URL을 분석해 내 프로젝트에 적용 |
+| **insane-review** | repomix + 브라우저 자동화로 Claude Code 안에서 ChatGPT Pro 수준의 코드 분석 활용 |
+| **nopal** | Google Workspace를 자연어로 조작 (Opal 불필요) |
+| **dd** | 클립보드의 텍스트·이미지를 붙여넣기 없이 바로 투입 (`/dd`, `/ㅇㅇ`) |
+| **gaseo** | 현재 Claude Code 세션을 Paseo 앱에 등록해 앱에서 이어서 작업 |
 
 ---
 
@@ -99,7 +117,7 @@ Claude Code 안에서 다음 명령어를 입력하세요:
 목록에서 원하는 플러그인을 선택하거나, 이름을 직접 지정할 수도 있습니다:
 
 ```shell
-/plugin install show-me-the-prd
+/plugin install show-me-the-prd@gptaku-plugins
 ```
 
 > **참고**: 플러그인은 한 번에 하나씩 설치됩니다. 여러 개를 설치하려면 반복하세요.
