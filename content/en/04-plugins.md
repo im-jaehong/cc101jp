@@ -52,16 +52,34 @@ Type `/plugin` inside Claude Code and go to the **Discover tab** to browse offic
 
 ### Included Plugins
 
+> As of August 2026 the marketplace lists **15 plugins**.
+
+#### Recommended for beginners
+
 | Plugin Name | Role | Example Usage |
 |-------------|------|---------------|
-| **docs-guide** | Answers questions based on official library documentation — no hallucinations, just accurate info | `/docs-guide:explain React hooks` |
-| **git-teacher** | Git onboarding for non-developers. Guides you step by step from "what is a commit?" to real-world workflows | `/git-teacher:what-is-commit` |
-| **vibe-sunsang** | Auto-collects Claude Code conversation logs, rates your prompt quality A~D, and generates growth reports. Coaches you on better AI usage patterns | `/vibe-sunsang start` |
-| **deep-research-kit** | Multi-agent 7-step research automation. Collects web/academic/technical sources in parallel → cross-validates → generates report | `/deep-research [topic]` |
-| **pumasi** | Claude (PM) distributes tasks for parallel processing. Uses Codex if installed, otherwise works with Claude alone | `/pumasi [task description]` |
-| **show-me-the-prd** | 5-6 interview questions automatically generate 4 design documents (PRD, data model, phase breakdown, project spec). No planning skills needed | `/show-me-the-prd I want to build a photo organizer app` |
-| **kkirikkiri** | One sentence in natural language auto-configures and runs Claude Code Agent Teams. 4 presets: research, development, analysis, content | `/kkirikkiri create a research team` |
-| **skillers-suda** | 4 experts (planner, user, specialist, reviewer) turn a vague idea into a working skill | `/skillers-suda create a translation skill` |
+| **docs-guide** | Answers grounded in official library documentation (llms.txt pattern) — no hallucinations | `/docs-guide:explain React hooks` |
+| **git-teacher** | Git/GitHub onboarding for non-developers using a cloud-folder analogy, in 5 phases | `/git-teacher:what-is-commit` |
+| **vibe-sunsang** | AI mentor that analyzes your Claude Code conversations and provides growth coaching | `/vibe-sunsang start` |
+| **show-me-the-prd** | Draft-first PRD generator — drafts 4 design documents (PRD, data model, phases, project spec) and confirms assumptions in one batch | `/show-me-the-prd I want to build a photo organizer app` |
+| **insane-research** | Multi-agent deep research with source verification, a 7-phase pipeline, and structured report generation | `/insane-research [topic]` |
+| **kkirikkiri** | Turns one sentence into an AI team or a deterministic agent pipeline | `/kkirikkiri create a research team` |
+| **pumasi** | Parallel coding orchestration plus Codex image generation (`/pumasi:image`) | `/pumasi [task description]` |
+| **skillers-suda** | 4 persona agents analyze and debate your idea, then build a working skill with auto eval | `/skillers-suda create a translation skill` |
+
+> ⚠️ **`deep-research-kit` is no longer available.** Use its successor, **`insane-research`**.
+
+#### Also available
+
+| Plugin | Description |
+|--------|-------------|
+| **goaljaby** | Bridges a PRD to `/goal` — auto-generates review documentation and manages approval gates |
+| **insane-search** | Adaptively reaches blocked sites without API keys |
+| **insane-design** | Design system extractor, applier, and builder — analyze any URL or build from scratch |
+| **insane-review** | Uses repomix and browser automation to bring ChatGPT Pro-grade code analysis into Claude Code |
+| **nopal** | Google Workspace orchestration through natural language |
+| **dd** | Drops your clipboard (text or image) into Claude Code without pasting (`/dd`, `/ㅇㅇ`) |
+| **gaseo** | Registers the current Claude Code session with Paseo so you can continue it in the app |
 
 ---
 
@@ -86,7 +104,7 @@ Once the marketplace is registered, install the plugins you want:
 Select the plugin you want from the list, or specify it by name:
 
 ```shell
-/plugin install show-me-the-prd
+/plugin install show-me-the-prd@gptaku-plugins
 ```
 
 > **Note**: One plugin installs at a time. Repeat for multiple installations.

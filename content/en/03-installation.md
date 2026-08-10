@@ -17,13 +17,15 @@
 ### Hardware Requirements
 
 - RAM: 4 GB or more
+- CPU: x64 or ARM64
+- Shell: Bash, Zsh, PowerShell, or CMD
 - Active internet connection required
 
 ### Do I Need Node.js?
 
 **No.** Claude Code uses a native installation. You do not need to install Node.js separately.
 
-> ⚠️ **npm installation is deprecated.** Previously Claude Code was installed via `npm install -g @anthropic-ai/claude-code`, but that method is no longer recommended. Use the official installation commands below instead.
+> 💡 **npm installation is still supported.** `npm install -g @anthropic-ai/claude-code` installs the **same native binary** as the installer below (it requires Node.js 22 or later). The native install is still the recommended path, so use it unless you have a specific reason not to.
 
 ---
 
@@ -68,7 +70,7 @@ curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del in
 ### Alpine Linux Additional Packages
 
 ```bash
-apk add libgcc libstdc++ ripgrep
+apk add bash curl libgcc libstdc++ ripgrep
 ```
 
 ---
@@ -81,7 +83,9 @@ Once installation is complete, run the following in your terminal:
 claude
 ```
 
-On first launch, **your browser opens automatically to an OAuth login page**. Log in with your Claude.ai account (Pro or Max subscription) and authentication completes automatically.
+On first launch, **your browser opens automatically to an OAuth login page**. Log in with your Claude.ai account and authentication completes automatically.
+
+> ⚠️ **The free Claude.ai plan does not include Claude Code.** You need a Pro, Max, Team, Enterprise, or Console (API) account.
 
 ### Authentication Flow
 

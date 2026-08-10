@@ -36,13 +36,18 @@ These commands launch or control Claude Code from your terminal prompt.
 
 ```bash
 # Start with a specific model
-claude --model claude-opus-4-5
+claude --model claude-opus-5
 
 # Short aliases also work
-claude --model opus
-claude --model sonnet
-claude --model haiku
+claude --model opus      # latest Opus (currently Opus 5)
+claude --model sonnet    # latest Sonnet (currently Sonnet 5)
+claude --model haiku     # fastest and cheapest (Haiku 4.5)
+claude --model fable     # for the hardest, longest-running tasks (Fable 5)
+claude --model opusplan  # Opus while planning, Sonnet while executing
 ```
+
+> **Model lineup as of August 2026**: Fable 5 → Opus 5 → Sonnet 5 → Haiku 4.5.
+> Aliases like `opus` and `sonnet` move to newer versions over time, so use a full model name such as `claude-opus-5` to pin a version.
 
 ### Useful Startup Options
 
@@ -72,7 +77,8 @@ Type `/` at the prompt inside Claude Code to access built-in commands.
 | `/help` | Show all available commands |
 | `/compact` | Compress the conversation (essential for long sessions!) |
 | `/clear` | Clear conversation history and start fresh |
-| `/cost` | Show token usage for the current session |
+| `/usage` | Show token usage and cost for the current session (`/cost` is an alias) |
+| `/effort` | Set the model effort level (low/medium/high/xhigh/max) |
 | `/model` | Change the AI model |
 | `/permissions` | View and manage tool permissions |
 | `/memory` | Edit CLAUDE.md memory files |
@@ -84,7 +90,12 @@ Type `/` at the prompt inside Claude Code to access built-in commands.
 | `/vim` | Toggle vim editing mode |
 | `/theme` | Change the color theme |
 | `/rename <name>` | Name the current session for easy resumption |
-| `/rewind` | Restore conversation and code to a previous state |
+| `/rewind` | Roll code and conversation back to a checkpoint |
+| `/branch` | Branch the conversation here so you can try a different direction |
+| `/fork` | Copy the conversation into a background session and keep working here |
+| `/context` | Visualize context window usage |
+| `/goal` | Set a goal — Claude keeps working across turns until it's met |
+| `/subtask` | Hand a side task to a subagent and get just the result back |
 
 ### How to Use Slash Commands
 
@@ -175,13 +186,13 @@ Create a login page with:
 - Form validation with error messages
 ```
 
-### 5. `/cost` — Check Token Usage
+### 5. `/usage` — Check Token Usage
 
 ```
-> /cost
+> /usage
 ```
 
-Shows how much you have spent in the current session. (For API key users. Subscription users should use `/stats`.)
+Shows how much you have used in the current session. (`/cost` is an alias for the same command. Subscription users also see plan usage bars here; `/stats` shows session statistics.)
 
 ---
 
@@ -248,7 +259,8 @@ Inside a session:
   /help               → All commands
   /compact            → Compress conversation (use often!)
   /clear              → Reset conversation
-  /cost               → Check usage cost
+  /usage (= /cost)    → Check usage and cost
+  /effort             → Set model effort level
   /model              → Change model
   /quit               → Exit
 

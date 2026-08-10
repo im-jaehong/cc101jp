@@ -13,9 +13,9 @@ Claude Code has two main pricing models:
 | **Claude.ai Pro / Max** | Flat-rate subscription | Fixed monthly fee, no separate API costs |
 | **Anthropic API** | Pay-as-you-go | Charges based on tokens consumed |
 
-**Claude.ai Pro/Max subscribers** have Claude Code usage included in their subscription — no additional API charges. The numbers shown by `/cost` are intended for API users, so subscribers can treat them as informational only.
+**Claude.ai Pro/Max subscribers** have Claude Code usage included in their subscription — no additional API charges. The dollar figure shown by `/usage` (formerly `/cost`) is intended for API users, so subscribers can treat it as informational only; the same screen shows plan usage bars.
 
-**API users** are charged based on usage. According to official documentation, the average cost is approximately $6 per developer per day, with 90% of users staying under $12 per day.
+**API users** are charged based on usage. According to official documentation (as of August 2026), the average cost is approximately **$13 per developer per active day and $150–$250 per month**, staying under $30 per active day for 90% of users.
 
 ---
 
@@ -119,24 +119,24 @@ claude --model haiku
 
 ### Tip 4: Use Fast Mode Wisely
 
-The `/fast` command enables Fast Mode, making Opus 4.6 respond approximately 2.5x faster.
+The `/fast` command enables Fast Mode, making Opus respond approximately 2.5x faster. It is supported on **Opus 5 and Opus 4.8** (Opus 5 is the default from Claude Code v2.1.219).
 
 ```
 /fast
 ```
 
-However, Fast Mode has **higher per-token pricing**. Use it when speed matters (rapid iteration, live debugging) and turn it off for long autonomous tasks where latency is less critical.
+However, Fast Mode has **higher per-token pricing** ($10 input / $50 output per MTok on Opus 5 — twice the standard Opus 5 rate). Use it when speed matters (rapid iteration, live debugging) and turn it off for long autonomous tasks where latency is less critical. Run `/fast` again at any time to check whether it's on or off.
 
 > **Note**: Fast Mode is billed as extra usage and is not included in your subscription's standard rate limits.
 
 ---
 
-### Tip 5: Check Costs Regularly with `/cost`
+### Tip 5: Check Costs Regularly with `/usage`
 
-API users can check token usage for the current session at any time:
+Check token usage for the current session at any time (`/cost` is an alias for the same command):
 
 ```
-/cost
+/usage
 ```
 
 Example output:
@@ -147,7 +147,7 @@ Total duration (wall): 6h 33m 10.2s
 Total code changes:    0 lines added, 0 lines removed
 ```
 
-Subscribers can use `/stats` to view usage patterns instead.
+Subscribers also see plan usage bars and an attribution breakdown (skills, subagents, plugins, MCP servers) on the same screen; `/stats` shows session statistics.
 
 You can also configure the status line to display context usage in real time.
 
@@ -155,14 +155,18 @@ You can also configure the status line to display context usage in real time.
 
 ## Model Cost Comparison (Summary)
 
-| Model | Characteristics | Relative Cost |
-|-------|----------------|---------------|
-| Haiku | Fast and cheap, simple tasks | Lowest |
-| Sonnet | Balanced performance, everyday coding | Medium |
-| Opus | Maximum capability, complex reasoning | Highest |
-| Opus (Fast Mode) | 2.5x faster Opus, higher per-token cost | Higher than Opus |
+(List API pricing as of August 2026, per million tokens, input / output)
 
-> For exact token pricing, see the [Anthropic pricing page](https://www.anthropic.com/pricing).
+| Model | Characteristics | Context | Input / Output |
+|-------|----------------|---------|----------------|
+| Haiku 4.5 | Fastest and cheapest, simple tasks | 200K | $1 / $5 |
+| Sonnet 5 | Best speed-to-intelligence balance, everyday coding | 1M | $3 / $15 |
+| Opus 5 | Complex agentic coding and reasoning | 1M | $5 / $25 |
+| Fable 5 | Hardest, longest-running autonomous work | 1M | $10 / $50 |
+| Opus 5 (Fast Mode) | 2.5x faster Opus 5 | 1M | $10 / $50 |
+
+> Sonnet 5 has **introductory pricing of $2 / $10 through August 31, 2026**.
+> For current pricing, see the [Anthropic pricing page](https://claude.com/pricing) and the [API pricing docs](https://platform.claude.com/docs/en/about-claude/pricing).
 
 ---
 
@@ -175,7 +179,7 @@ Claude.ai Pro and Max subscribers can use Claude Code **without pay-as-you-go AP
 - Freedom to experiment without watching per-token costs
 - Max plan includes higher usage limits
 
-> **Note**: Fast Mode and context usage beyond 200K tokens (1M context window) may be billed as extra usage even on subscription plans.
+> **Note**: Fast Mode and usage beyond your plan's limit may be billed as extra usage (usage credits) even on subscription plans.
 
 ---
 
@@ -185,7 +189,7 @@ For teams using the API:
 
 - **Set workspace spend limits**: Configure team-wide spending caps in the [Anthropic Console](https://platform.claude.com).
 - **Usage dashboard**: View per-member cost and usage data in the Console.
-- **Watch out for Agent Teams**: Running multiple Claude instances simultaneously (Agent Teams) uses approximately 7x more tokens than standard sessions.
+- **Watch out for Agent Teams**: Running multiple Claude instances simultaneously (Agent Teams) uses approximately 7x more tokens than standard sessions. The feature is **experimental and disabled by default** — enable it with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `settings.json`.
 
 ---
 
@@ -197,6 +201,6 @@ For teams using the API:
 ✅ Specify exact file names and function names in prompts
 ✅ Use Haiku for simple tasks
 ✅ Enable Fast Mode only when speed is critical
-✅ Check /cost or /stats regularly
+✅ Check /usage (= /cost) regularly
 ✅ Set compact instructions in CLAUDE.md
 ```

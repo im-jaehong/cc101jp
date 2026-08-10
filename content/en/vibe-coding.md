@@ -77,7 +77,7 @@ Install these into Claude Code to make vibe coding much easier:
 | **바르다 깃선생** (Git Teacher) | Version control | No Git knowledge needed — just say "save" or "push" |
 | **바선생** (Ba Teacher) | Growth | Analyzes your AI usage patterns and coaches you on getting better results |
 | **docs-guide** | Accuracy | Answers based on official docs to prevent hallucinations |
-| **deep-research** | Research | Multi-agent tech research and market analysis |
+| **insane-research** | Research | Multi-agent tech research and market analysis |
 | **끼리끼리** (Team Builder) | Team setup | "Make me a research team" → AI team auto-assembled |
 | **품앗이** (Parallel Dev) | Parallel development | Claude (PM) distributes tasks for parallel processing. Uses Codex if installed, otherwise works with Claude alone |
 | **스킬러들의 수다** (Skill Creators) | Skill creation | "Make a translation skill" → designed and built by 4 specialists |

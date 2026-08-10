@@ -31,7 +31,7 @@ Claude Code의 기초부터 고급 자동화까지 전 과정을 완주하셨습
 ```
 ✅ Claude Code 설치 & 인증
 ✅ CLAUDE.md 작성
-✅ 기본 명령어 (/help, /cost, /compact, /model)
+✅ 기본 명령어 (/help, /usage, /compact, /model)
 ✅ 파일 읽기, 내용 수정, 문서 생성
 ✅ 플러그인 기본 사용
 ```
@@ -48,7 +48,7 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 
 **플러그인 활용 극대화**
 - **show-me-the-prd**로 기획 → **끼리끼리**로 리서치 팀 구성 → Claude Code로 구현 — 아이디어에서 프로토타입까지 하루 만에
-- **deep-research**로 시장 조사 후 **docs-guide**로 기술 검증 — 의사결정에 AI 활용
+- **insane-research**로 시장 조사 후 **docs-guide**로 기술 검증 — 의사결정에 AI 활용
 - **바선생**의 피드백을 반영해 프롬프트 품질 점진적 개선
 
 **멀티 세션 & 병렬 작업**
@@ -62,7 +62,7 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 이 가이드에서 다루지 않은 심화 주제들입니다.
 
 **Agent SDK로 나만의 AI 앱 만들기**
-- Anthropic의 [Agent SDK](https://docs.anthropic.com/en/docs/agents)를 사용하면 Claude를 엔진으로 한 독립 AI 애플리케이션을 개발할 수 있습니다
+- Anthropic의 [Claude Agent SDK](https://code.claude.com/docs/en/agent-sdk/overview)를 사용하면 Claude를 엔진으로 한 독립 AI 애플리케이션을 개발할 수 있습니다
 - Python/TypeScript로 커스텀 에이전트 구축 — Claude Code 없이도 동작하는 자동화 시스템
 
 **Model Context Protocol (MCP) 서버 직접 만들기**
@@ -93,7 +93,7 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 
 | 리소스 | URL |
 |--------|-----|
-| **공식 문서 (영어)** | [docs.anthropic.com/en/docs/claude-code](https://docs.anthropic.com/en/docs/claude-code) |
+| **공식 문서 (영어)** | [code.claude.com/docs](https://code.claude.com/docs) |
 | **GitHub 저장소** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
 | **공식 플러그인** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
 | **Anthropic 콘솔** | [platform.claude.com](https://platform.claude.com) |
@@ -105,7 +105,7 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 | 리소스 | URL | 설명 |
 |--------|-----|------|
 | **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | 이 가이드 저장소. 오타·내용 추가 기여 환영 |
-| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 바이브코더를 위한 8개 플러그인 모음: 기획(show-me-the-prd), Git(깃선생), 멘토(바선생), 리서치(deep-research), 병렬개발(품앗이), 팀 구성(끼리끼리), 스킬 생성(스킬러들의 수다), 공식문서(docs-guide) |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 바이브코더를 위한 15개 플러그인 모음: 기획(show-me-the-prd), Git(깃선생), 멘토(바선생), 리서치(insane-research), 병렬개발(품앗이), 팀 구성(끼리끼리), 스킬 생성(스킬러들의 수다), 공식문서(docs-guide) 외 |
 
 이 가이드가 도움이 됐다면 **Star** 를 눌러주세요! 업데이트와 발전에 큰 힘이 됩니다.
 
@@ -217,7 +217,7 @@ CC101을 마쳤다면 바로 실전에 뛰어들어 보세요. 코딩 여부와 
 대부분의 답은 공식 문서에 있습니다.
 
 ```
-https://docs.anthropic.com/en/docs/claude-code
+https://code.claude.com/docs
 ```
 
 Claude Code 안에서도 도움을 받을 수 있습니다:
@@ -265,7 +265,7 @@ CC101을 마친 여러분은 그 첫걸음을 내딛었습니다. 앞으로의 �
 ## 빠른 참조 카드
 
 ```
-공식 문서:      https://docs.anthropic.com/en/docs/claude-code
+공식 문서:      https://code.claude.com/docs
 GitHub:         https://github.com/anthropics/claude-code
 플러그인:       https://github.com/anthropics/claude-plugins-official
 gptaku_plugins: https://github.com/fivetaku/gptaku_plugins

@@ -236,10 +236,10 @@ git commit -m "checkpoint before Claude session $(date +%Y%m%d-%H%M)"
 **Check current usage**
 
 ```
-> /cost
+> /usage
 ```
 
-This is for API key users. Subscription users should use `/stats`.
+`/cost` is an alias for the same command. Subscription users also see plan usage bars here.
 
 **How to reduce costs**
 

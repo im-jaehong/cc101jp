@@ -326,6 +326,14 @@ Ctrl+B
 
 > 서브에이전트로 컨텍스트 창이 부족하거나, 작업이 여러 세션에 걸쳐 지속되어야 할 때 Agent Teams를 고려합니다.
 
+> ⚠️ **Agent Teams는 실험 기능이며 기본적으로 꺼져 있습니다.** 사용하려면 `~/.claude/settings.json`에 아래를 추가하세요:
+>
+> ```json
+> { "env": { "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1" } }
+> ```
+>
+> 켜지 않으면 팀이 구성되지 않고, Claude가 팀원을 만들거나 제안하지도 않습니다. 세션 재개(`/resume`, `/rewind`)로 팀원이 복원되지 않는 등 알려진 제약도 있습니다.
+
 ### 플러그인으로 쉽게 시작하기: 끼리끼리
 
 Agent Teams를 직접 설정하는 게 어렵다면, **끼리끼리(kkirikkiri)** 플러그인이 대신 해줍니다.

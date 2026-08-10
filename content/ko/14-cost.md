@@ -13,9 +13,9 @@ Claude Code의 비용 방식은 크게 두 가지입니다.
 | **Claude.ai Pro / Max** | 정액제 구독 | 월 고정 요금, API 비용 별도 없음 |
 | **Anthropic API** | 종량제 | 사용한 토큰 수만큼 요금 발생 |
 
-**Claude.ai Pro/Max 구독자**는 구독료 안에 Claude Code 사용이 포함되어 있어 API 비용이 따로 청구되지 않습니다. `/cost` 명령어가 표시하는 숫자는 API 사용자를 위한 것이므로 구독자는 참고용으로만 보면 됩니다.
+**Claude.ai Pro/Max 구독자**는 구독료 안에 Claude Code 사용이 포함되어 있어 API 비용이 따로 청구되지 않습니다. `/usage`(옛 `/cost`)가 표시하는 달러 금액은 API 사용자를 위한 것이므로 구독자는 참고용으로만 보면 됩니다. 구독자는 같은 화면에서 플랜 사용량 막대를 볼 수 있습니다.
 
-**API 사용자**는 사용량에 따라 요금이 발생합니다. 공식 문서에 따르면 평균적으로 개발자 1인당 하루 약 $6, 90%의 사용자는 하루 $12 이하의 비용이 발생합니다.
+**API 사용자**는 사용량에 따라 요금이 발생합니다. 공식 문서(2026년 8월 기준)에 따르면 평균적으로 개발자 1인당 **사용한 날 하루 약 $13, 월 $150~$250** 수준이며, 90%의 사용자는 하루 $30 이하입니다.
 
 ---
 
@@ -120,24 +120,24 @@ claude --model haiku
 
 ### 팁 4: Fast Mode 이해하고 활용하기
 
-`/fast` 명령어로 Fast Mode를 켜면 Opus 4.6이 약 2.5배 빠르게 응답합니다.
+`/fast` 명령어로 Fast Mode를 켜면 Opus가 약 2.5배 빠르게 응답합니다. 현재 **Opus 5와 Opus 4.8**에서 지원됩니다(Claude Code v2.1.219부터 Opus 5가 기본).
 
 ```
 /fast
 ```
 
-단, Fast Mode는 **토큰당 비용이 더 높습니다**. 속도가 중요한 순간(빠른 반복 작업, 실시간 디버깅)에만 사용하고, 장시간 자율 작업에는 끄는 것이 좋습니다.
+단, Fast Mode는 **토큰당 비용이 더 높습니다**(Opus 5 기준 입력 $10 / 출력 $50 per MTok — 일반 Opus 5의 2배). 속도가 중요한 순간(빠른 반복 작업, 실시간 디버깅)에만 사용하고, 장시간 자율 작업에는 끄는 것이 좋습니다. `/fast`를 다시 입력하면 현재 켜짐/꺼짐 상태를 확인할 수 있습니다.
 
 > **참고**: Fast Mode는 구독 플랜의 기본 사용량에 포함되지 않고 추가 사용(extra usage)으로 청구됩니다.
 
 ---
 
-### 팁 5: `/cost`로 주기적으로 확인하기
+### 팁 5: `/usage`로 주기적으로 확인하기
 
-API 사용자라면 현재 세션의 토큰 사용량을 확인할 수 있습니다:
+현재 세션의 토큰 사용량을 확인할 수 있습니다 (`/cost`는 같은 명령의 별칭):
 
 ```
-/cost
+/usage
 ```
 
 출력 예시:
@@ -148,7 +148,7 @@ Total duration (wall): 6h 33m 10.2s
 Total code changes:    0 lines added, 0 lines removed
 ```
 
-구독자는 `/stats`로 사용 패턴을 확인할 수 있습니다.
+구독자는 같은 화면에서 플랜 사용량 막대와 사용처 분석(스킬·서브에이전트·플러그인·MCP 서버별 비중)을 볼 수 있고, `/stats`로 세션 통계도 확인할 수 있습니다.
 
 상태 표시줄(status line)을 설정하면 컨텍스트 사용량을 실시간으로 볼 수도 있습니다.
 
@@ -158,7 +158,7 @@ Total code changes:    0 lines added, 0 lines removed
 
 CLAUDE.md는 Claude가 **매 응답마다** 읽는 파일입니다. 길면 길수록 매번 더 많은 토큰을 소모합니다.
 
-**실제 효과**: 과도하게 작성된 CLAUDE.md(~19,000 tokens)를 핵심만 남긴 버전(~9,000 tokens)으로 정리하면 같은 작업에 드는 비용이 절반 가까이 줄어듭니다.
+**실제 효과**: 과도하게 작성된 CLAUDE.md(~19,000 tokens)를 핵심만 남긴 버전(~9,000 tokens)으로 정리하면 같은 작업에 드는 비용이 절반 가까이 줄어듭니다. 공식 문서는 **CLAUDE.md를 200줄 이하로 유지**하고, 특정 작업용 상세 지침은 필요할 때만 로드되는 Skills로 옮길 것을 권장합니다.
 
 **다이어트 기준**
 
@@ -180,23 +180,30 @@ CLAUDE.md는 Claude가 **매 응답마다** 읽는 파일입니다. 길면 길�
 
 ---
 
-### 팁 7: `.claudeignore`로 불필요한 파일 제외
+### 팁 7: 권한 deny 규칙으로 불필요한 파일 제외
 
-`node_modules`, `.git`, 빌드 결과물 등 Claude가 읽을 필요 없는 파일을 명시적으로 제외하면, Claude가 실수로 대용량 파일을 읽는 것을 방지합니다.
+`node_modules`, 빌드 결과물, `.env` 같은 파일을 Claude가 읽지 않도록 막으면, 실수로 대용량 파일이나 비밀 정보를 읽는 것을 방지할 수 있습니다.
 
-`.gitignore`와 같은 문법으로 프로젝트 루트에 `.claudeignore` 파일을 만드세요:
+> ⚠️ **`.claudeignore` 파일은 Claude Code가 읽지 않습니다.** 인터넷에 널리 퍼진 방법이지만 실제로는 아무 효과가 없습니다. 대신 프로젝트의 `.claude/settings.json`에 **권한 deny 규칙**을 쓰세요.
 
+```json
+// .claude/settings.json
+{
+  "permissions": {
+    "deny": [
+      "Read(node_modules/**)",
+      "Read(dist/**)",
+      "Read(build/**)",
+      "Read(coverage/**)",
+      "Read(**/*.log)",
+      "Read(.env)",
+      "Read(.env.*)"
+    ]
+  }
+}
 ```
-# .claudeignore
-node_modules/
-.next/
-dist/
-build/
-coverage/
-*.log
-*.lock
-.git/
-```
+
+> `Read` deny 규칙은 Edit 도구와 `cat`, `head` 같이 Claude Code가 인식하는 Bash 파일 명령에도 적용됩니다. 다만 파이썬·노드 스크립트가 직접 파일을 여는 것까지는 막지 못하므로, OS 수준 차단이 필요하면 샌드박스를 사용하세요.
 
 **언제 특히 효과적인가**
 - 모노레포처럼 파일 수가 많은 프로젝트
@@ -207,14 +214,18 @@ coverage/
 
 ## 모델별 비용 비교 (간략)
 
-| 모델 | 특징 | API 기준 |
-|------|------|----------|
-| Haiku | 빠르고 저렴, 간단한 작업 | 가장 저렴 |
-| Sonnet | 균형 잡힌 성능, 일반 코딩 작업 | 중간 |
-| Opus | 최고 성능, 복잡한 추론 | 가장 비쌈 |
-| Opus (Fast Mode) | Opus 속도 2.5배, 토큰 비용 높음 | Opus보다 비쌈 |
+(2026년 8월 기준 API 정가, 100만 토큰당 입력 / 출력)
 
-> 정확한 토큰 가격은 [Anthropic 가격 페이지](https://www.anthropic.com/pricing)를 참고하세요.
+| 모델 | 특징 | 컨텍스트 | 입력 / 출력 |
+|------|------|----------|-------------|
+| Haiku 4.5 | 가장 빠르고 저렴, 간단한 작업 | 200K | $1 / $5 |
+| Sonnet 5 | 속도와 지능의 균형, 일반 코딩 작업 | 1M | $3 / $15 |
+| Opus 5 | 복잡한 에이전트 코딩·추론 | 1M | $5 / $25 |
+| Fable 5 | 가장 어려운 장시간 자율 작업 | 1M | $10 / $50 |
+| Opus 5 (Fast Mode) | Opus 5 속도 2.5배 | 1M | $10 / $50 |
+
+> Sonnet 5는 **2026년 8월 31일까지 도입 가격 $2 / $10**이 적용됩니다.
+> 정확한 최신 가격은 [Anthropic 가격 페이지](https://claude.com/pricing)와 [API 가격 문서](https://platform.claude.com/docs/en/about-claude/pricing)를 참고하세요.
 
 ---
 
@@ -237,7 +248,7 @@ API를 팀 단위로 사용하는 경우:
 
 - **Workspace 지출 한도 설정**: [Anthropic Console](https://platform.claude.com)에서 팀 전체 지출 한도를 설정할 수 있습니다.
 - **사용량 대시보드**: Console에서 팀원별 비용과 사용량을 확인할 수 있습니다.
-- **에이전트 팀 주의**: Agent Teams(여러 Claude 인스턴스 동시 실행) 기능은 표준 세션보다 약 7배 많은 토큰을 소모합니다.
+- **에이전트 팀 주의**: Agent Teams(여러 Claude 인스턴스 동시 실행) 기능은 표준 세션보다 약 7배 많은 토큰을 소모합니다. 현재 **실험 기능이라 기본적으로 꺼져 있으며**, `settings.json`에 `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`을 넣어야 켜집니다.
 
 > 💡 **끼리끼리** 플러그인은 작업 특성에 맞게 에이전트 팀을 자동 구성하고, **품앗이**는 Codex가 설치되어 있으면 저렴한 모델로 병렬 개발하고, 없으면 Claude만으로도 동작합니다.
 
@@ -251,8 +262,8 @@ API를 팀 단위로 사용하는 경우:
 ✅ 구체적인 파일명과 함수명을 명시
 ✅ 간단한 작업은 Haiku 모델 사용
 ✅ Fast Mode는 필요할 때만 켜기
-✅ /cost 또는 /stats로 주기적으로 확인
+✅ /usage(= /cost)로 주기적으로 확인
 ✅ CLAUDE.md에 compact 지침 설정
 ✅ CLAUDE.md는 핵심 규칙만 남기고 주기적으로 다이어트
-✅ .claudeignore로 node_modules, 빌드 결과물 제외
+✅ permissions.deny의 Read 규칙으로 node_modules, 빌드 결과물, .env 제외
 ```

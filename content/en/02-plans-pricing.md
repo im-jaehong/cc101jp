@@ -22,15 +22,19 @@ Use Claude Code through Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. 
 
 ## Pro vs Max Plan Comparison
 
-> Prices below are based on official 2025 information. Check the latest at [claude.com/pricing](https://claude.com/pricing).
+> Prices below are current as of **August 2026**. Check the latest at [claude.com/pricing](https://claude.com/pricing).
 
 | | **Pro** | **Max (5x)** | **Max (20x)** |
 |---|---|---|---|
-| **Monthly price** | $20 | $100 | $200 |
+| **Monthly price** | $20 ($17 billed annually) | $100 | $200 |
 | **Usage limit** | Standard | 5× Pro | 20× Pro |
 | **Claude Code included** | Yes | Yes | Yes |
 | **Claude.ai web included** | Yes | Yes | Yes |
 | **Best for** | Occasional use, exploration | Regular Claude Code users | Heavy users, large projects |
+
+> **The Free plan does not include Claude Code.** You need a Pro, Max, Team, Enterprise, or Console (API) account.
+>
+> For teams, **Team** ($25/seat monthly, $20 billed annually) and **Enterprise** (custom pricing) also include Claude Code.
 
 ### Recommended for Beginners: Max $100
 
@@ -40,7 +44,7 @@ If you plan to use Claude Code seriously, the **Max $100 plan** is the recommend
 - Direct API usage carries per-token billing, which can lead to unexpected charges.
 - Max $100 is sufficient for most individual developers based on average daily usage.
 
-According to official documentation, average API costs for Claude Code run approximately **$6 per developer per day, or $100–$200 per month** — with significant variation based on usage intensity.
+According to official documentation (as of August 2026), average API costs run approximately **$13 per developer per active day, or $150–$250 per month**, staying under $30 per active day for 90% of users — with significant variation based on usage intensity.
 
 ---
 
@@ -63,7 +67,7 @@ Charged per token consumed (input tokens + output tokens)
 Rate varies by model (Sonnet < Opus)
 ```
 
-- Use the `/cost` command to check current session costs
+- Use the `/usage` command to check current session costs (`/cost` is an alias for `/usage`)
 - Set spending limits in the Console for team or automated usage
 
 ---
@@ -77,7 +81,7 @@ Rate varies by model (Sonnet < Opus)
 ```
 
 - Long working sessions on large projects can drain tokens quickly.
-- The Agent Teams feature (running multiple AI instances simultaneously) uses approximately **7× more tokens** than standard sessions.
+- The Agent Teams feature (running multiple AI instances simultaneously) uses approximately **7× more tokens** than standard sessions. It is currently **experimental and disabled by default** (enable with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`).
 - Background operations such as conversation summarization consume a small amount of tokens even when idle (typically under $0.04 per session).
 
 ### Tips to Reduce Costs
