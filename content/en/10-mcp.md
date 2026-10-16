@@ -71,7 +71,7 @@ With the Slack integration, Claude receives the full thread context from your wo
 
 ### Notion, Asana, Figma, and more
 
-The [MCP registry](https://api.anthropic.com/mcp-registry/docs) lists hundreds of available servers. You can also [build your own](https://modelcontextprotocol.io/quickstart/server) using the open-source MCP SDK.
+Anthropic's reviewed connector directory ([claude.ai/directory](https://claude.ai/directory)) lists hundreds of MCP servers including Notion, Asana, and Figma. You can also [build your own](https://modelcontextprotocol.io/quickstart/server) using the open-source MCP SDK.
 
 ---
 
@@ -90,6 +90,8 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 claude mcp add --transport http secure-api https://api.example.com/mcp \
   --header "Authorization: Bearer your-token"
 ```
+
+> The older SSE transport (`--transport sse`) is no longer recommended. Claude Code tries HTTP first and falls back to SSE automatically (v2.1.265+), so use `--transport http` unless you have a specific reason not to.
 
 ### Option 2: Local stdio server
 
@@ -116,9 +118,14 @@ claude mcp get github
 # Remove a server
 claude mcp remove github
 
-# Check server status inside Claude Code
+# Import servers configured in the Claude Desktop app (macOS / WSL)
+claude mcp add-from-claude-desktop
+
+# Check status, authenticate, and toggle servers inside Claude Code
 /mcp
 ```
+
+> Even with many MCP servers connected, tool definitions **don't enter your context until they're actually used** (only tool names and server descriptions are loaded). That said, CLI tools like `gh` or `aws` use less context than MCP, so prefer the CLI when both are available. Use `/context` to see what's taking up space.
 
 ---
 
@@ -175,13 +182,12 @@ claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
 
 ---
 
-## Official Claude Code connectors
+## Automatic claude.ai connector sync
 
-If you sign into Claude Code with a Claude.ai account, any MCP servers configured at [claude.ai/settings/connectors](https://claude.ai/settings/connectors) are automatically available in Claude Code.
+If you sign into Claude Code with a Claude.ai account, the connectors you've linked at [claude.ai/customize/connectors](https://claude.ai/customize/connectors) (Notion, Slack, Google Drive, Gmail, and so on) are automatically available in Claude Code. They appear in `/mcp` with a claude.ai label; you can disable them individually, or turn them all off by adding `"disableClaudeAiConnectors": true` to your settings.
 
-Officially supported connectors include:
-- **Slack**: read and write channel messages
-- **Google Chrome**: browser automation (Playwright-based)
+- Connectors are not imported if you log in with an API key or use an external platform such as Bedrock.
+- If you've added a server with the same URL locally, the local configuration takes precedence.
 
 ---
 
@@ -234,12 +240,12 @@ Type `@` in your prompt to see all available resources from connected servers.
 
 - MCP servers can access your file system, databases, and external services through Claude
 - Servers that fetch external content are particularly risky — they can expose you to **prompt injection attacks**
-- Anthropic only verifies servers listed in the official MCP registry
-- Always review the source code of third-party servers before installing
+- [claude.ai/directory](https://claude.ai/directory) collects connectors reviewed by Anthropic. For any other server, always review the source code and who operates it before installing
 
 ```bash
-# Project-scoped servers prompt teammates for approval before use
-# (a built-in safety check for shared configurations)
+# Project-scoped (.mcp.json) servers prompt each teammate for approval on first use
+# (a built-in safety check for shared configurations). To reset those choices:
+claude mcp reset-project-choices
 ```
 
 ---

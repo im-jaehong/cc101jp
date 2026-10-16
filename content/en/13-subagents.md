@@ -56,32 +56,33 @@ Each sub-agent runs in an isolated context
 
 ## Built-in sub-agents
 
-Claude Code ships with three built-in sub-agents:
+Claude Code ships with built-in sub-agents that are ready to use:
 
 | Agent | Model | Allowed tools | Purpose |
 |-------|-------|--------------|---------|
-| **Explore** | Haiku (fast) | Read-only | File discovery, code search |
+| **Explore** | Same as main conversation | Read-only (no Write/Edit) | File discovery, code search |
 | **Plan** | Inherits from main | Read-only | Context gathering in plan mode |
 | **general-purpose** | Inherits from main | All tools | Complex multi-step operations |
+| **claude** | Inherits from main | All tools | Catch-all for tasks that don't fit a specific type; default for background sessions |
+| **claude-code-guide** | Haiku | Limited | Answers questions about using Claude Code |
 
 When Claude needs to search through a codebase, it automatically delegates to **Explore**. Thousands of lines of file content stay in Explore's context — only the relevant findings return to your conversation.
+
+> There is also a **fork** sub-agent that inherits the entire conversation. Run something like `/subtask draft unit tests for the parser we've been changing` and a sub-agent that already knows the whole conversation handles the side task in the background and returns only the result.
 
 ---
 
 ## Creating your own sub-agent
 
-### Option 1: Interactive /agents menu (recommended)
+### Option 1: Ask Claude to create it (recommended)
 
 ```
-/agents
+"Create a research-only sub-agent.
+ Its job is to read the sources/ folder and produce a 5-line summary plus 5 follow-up questions,
+ using read-only tools only. Save it in .claude/agents/ so it applies to this project only."
 ```
 
-1. Select **Create new agent**
-2. Choose **User-level** (all projects) or **Project-level** (this project)
-3. Select **Generate with Claude** and describe the agent's role
-4. Select allowed tools
-5. Choose a model (Haiku / Sonnet / Opus)
-6. Save — available immediately, no restart needed
+Claude writes a file in the format shown below for you. (The old interactive `/agents` menu was removed in v2.1.198; typing `/agents` now just prints a reminder to make this kind of request.)
 
 ### Option 2: Write the file directly
 
@@ -125,12 +126,15 @@ name: my-agent              # Lowercase letters and hyphens (required)
 description: When to use    # How Claude decides when to delegate (required)
 tools: Read, Grep, Glob     # Allowed tools (inherits all if omitted)
 disallowedTools: Write      # Tools to explicitly block
-model: haiku                # haiku / sonnet / opus / inherit (default)
-permissionMode: default     # default / acceptEdits / dontAsk / bypassPermissions
+model: haiku                # haiku / sonnet / opus / fable / inherit (default)
+effort: low                 # Effort level: low / medium / high / xhigh / max
+permissionMode: default     # default / acceptEdits / auto / dontAsk / bypassPermissions / plan
 maxTurns: 20                # Maximum agentic turns before the agent stops
 memory: user                # Persistent memory: user / project / local
 background: false           # true = always run as a background task
 isolation: worktree         # worktree = run in an isolated git worktree
+skills:                     # Skills to preload at startup
+  - api-conventions
 ---
 ```
 
@@ -140,10 +144,11 @@ isolation: worktree         # worktree = run in an isolated git worktree
 
 | Location | Path | Priority |
 |----------|------|----------|
-| CLI flag | `--agents '{...}'` | 1 (highest) |
-| Project | `.claude/agents/` | 2 |
-| User | `~/.claude/agents/` | 3 |
-| Plugin | `<plugin>/agents/` | 4 |
+| Organization policy | Managed settings | 1 (highest) |
+| CLI flag | `--agents '{...}'` | 2 |
+| Project | `.claude/agents/` (subfolders allowed) | 3 |
+| User | `~/.claude/agents/` | 4 |
+| Plugin | `<plugin>/agents/` | 5 |
 
 **Project agents** (`.claude/agents/`) are ideal for codebase-specific agents. Commit them to version control so your team can use and improve them collaboratively.
 
@@ -218,17 +223,22 @@ consult your memory before beginning a review.
 ## Foreground vs. background execution
 
 - **Foreground**: blocks until complete; permission prompts are passed through to you
-- **Background**: runs concurrently while you continue working
+- **Background**: runs concurrently while you continue working; permission prompts appear in the main session labeled with the sub-agent's name
+
+In interactive terminal sessions, **sub-agents run in the background by default**. Running sub-agents show in a panel below the prompt, and the result arrives as a message when they finish.
 
 ```
-# Request background execution
-"Run this in the background"
-
-# Switch a running task to background
+# Send a running command or agent to the background
 Ctrl+B
+
+# Stop all background sub-agents (press twice within 3 seconds)
+Ctrl+X then Ctrl+K
+
+# View running and completed background tasks
+/tasks
 ```
 
-> **Note**: Background sub-agents cannot use MCP tools.
+> Background sub-agents can use MCP tools just like foreground ones. (Older docs that said "MCP is unavailable in the background" are no longer accurate.)
 
 If a background sub-agent fails due to missing permissions, you can resume it in the foreground to retry with interactive prompts.
 
@@ -254,6 +264,8 @@ Consider Agent Teams when sub-agent results overflow your context window, or whe
 > ```
 >
 > Without it, no team is set up and Claude neither spawns nor proposes teammates. Known limitations remain around session resumption (`/resume` and `/rewind` don't restore in-process teammates).
+>
+> Teammates run inside your current terminal by default (in-process). In the panel below the prompt, use `↑`/`↓` to select a teammate and press `Enter` to view its conversation and message it directly. With tmux or iTerm2, you can also view each teammate in its own split pane. Run `/list-agents` to see installed agents and teammates.
 
 ---
 
@@ -266,7 +278,7 @@ Each sub-agent is an independent Claude instance. **Every agent consumes tokens 
 - Unnecessary sub-agent spawning compounds costs quickly
 
 **Cost-saving tips**:
-- Use **Haiku** model sub-agents for read-only exploration
+- Use **Haiku 5.5** sub-agents for read-only exploration and simple tasks (`model: haiku`, plus `effort: low` if needed)
 - Explicitly limit how much each sub-agent returns
 - Handle simple tasks in the main conversation
 

@@ -10,9 +10,11 @@ Claude Code (like all AI) has a memory limit for how much it can hold at once. T
 
 ```
 As conversations grow longer:
-  Earlier content starts getting "pushed out"
-  → Claude may forget work done earlier in the session
+  Earlier content starts getting blurred into a summary
+  → Claude may forget the details of work done earlier in the session
   → Response quality starts to drop
+  → It starts repeating the same mistakes
+  → Every request resends the whole conversation, so usage grows too
 ```
 
 > **Analogy**: When your desk gets too full, old documents get pushed off. You need to tidy up occasionally.
@@ -32,6 +34,8 @@ Summarizes the current conversation to free up context space.
 - Important content is preserved in the summary
 - The session continues without interruption
 - **When to use**: When the conversation feels long, or when answers start getting odd
+
+> To summarize only part of the conversation, use **Summarize from here / up to here** in the `/rewind` menu. For example, you can condense a long debugging stretch while keeping your original instructions intact.
 
 ---
 
@@ -59,6 +63,18 @@ Shows a list of previous sessions to choose from.
 - When working on multiple projects in parallel
 - When you want to return to a specific session from days ago
 
+If you start with `claude -n name` or run `/rename name` during a conversation, you can jump straight back with `claude --resume name`. To switch to a different session mid-conversation, type `/resume`.
+
+> **Pro/Max users**: If you resume a session over 100K tokens after an hour or more away, you'll be asked whether to resume from a summary. Unless you really need the details, choosing **Resume from summary** makes every subsequent request far cheaper in usage.
+
+### /branch — Fork from the Current Point
+
+```
+/branch try-another-approach
+```
+
+Copies the conversation so far into a new branch and switches you to it. The original conversation stays intact, and you can return with `/resume original-name`. Use it to create a "fallback point" before attempting a big change. From the terminal, `claude --continue --fork-session` does the same thing.
+
 ---
 
 ## When to Start a New Session
@@ -78,7 +94,8 @@ Shows a list of previous sessions to choose from.
 When you're about to modify many files or make a large change, turn on Plan Mode first.
 
 ```
-Shift + Tab  →  Toggle Plan Mode
+/plan  →  Switch to Plan Mode
+(or press Shift+Tab until the status bar reads "plan mode on")
 ```
 
 In Plan Mode, Claude will:
@@ -126,4 +143,4 @@ Claude remembers the state and can pick up from where it stopped.
 
 ---
 
-> **Connected to cost savings**: Longer context means more tokens used. Using /compact regularly also reduces your bill. → Token costs are covered in detail in Section 18.
+> **Connected to cost savings**: Longer context means more tokens used. Using /compact regularly also reduces your bill. → Token costs are covered in detail in Section 19 (Cost Management).

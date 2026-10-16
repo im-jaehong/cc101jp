@@ -7,6 +7,8 @@
 > 💡 **터미널이 처음이신가요?** 아래 명령어를 그대로 **복사해서 붙여넣기(Cmd+V 또는 Ctrl+V)** 한 후 Enter만 누르면 됩니다. 명령어의 의미를 이해할 필요가 없습니다.
 > - **macOS**: `Cmd+Space` → "terminal" 검색 → Enter
 > - **Windows**: `Win+R` → "powershell" 입력 → Enter
+>
+> 터미널 자체가 부담스럽다면 **Claude 데스크탑 앱**(macOS / Windows / Ubuntu·Debian 베타)을 설치하고 **Code** 탭을 누르면 됩니다. 앱 안에 Claude Code가 들어 있어 CLI를 따로 설치하지 않아도 되고, 변경 내용을 화면에서 바로 확인할 수 있습니다.
 
 ---
 
@@ -48,7 +50,8 @@ curl -fsSL https://claude.ai/install.sh | bash
 또는 Homebrew를 사용한다면:
 
 ```bash
-brew install --cask claude-code
+brew install --cask claude-code          # 안정(stable) 채널: 약 1주 늦지만 큰 회귀는 건너뜀
+brew install --cask claude-code@latest   # 최신(latest) 채널: 새 버전이 나오는 즉시
 ```
 
 ### Windows
@@ -101,9 +104,11 @@ apk add bash curl libgcc libstdc++ ripgrep
 claude
 ```
 
-처음 실행하면 **브라우저가 자동으로 열리면서 OAuth 로그인 화면**이 나타납니다. Claude.ai 계정으로 로그인하면 자동으로 인증이 완료됩니다.
+처음 실행하면 **브라우저가 자동으로 열리면서 OAuth 로그인 화면**이 나타납니다. Claude.ai 계정으로 로그인하면 자동으로 인증이 완료되고, 터미널에 `Login successful`이 표시됩니다.
 
 > ⚠️ **무료(Free) 플랜은 Claude Code를 지원하지 않습니다.** Pro, Max, Team, Enterprise 또는 Console(API) 계정이 필요합니다.
+>
+> 브라우저가 자동으로 열리지 않으면 터미널에서 `c`를 눌러 로그인 URL을 복사해 직접 붙여넣으세요. WSL2, SSH, 컨테이너처럼 브라우저가 터미널로 돌아올 수 없는 환경에서는 브라우저에 **로그인 코드**가 표시되는데, 이 코드를 터미널의 `Paste code here if prompted` 자리에 붙여넣으면 됩니다.
 
 ### 인증 흐름 요약
 
@@ -120,7 +125,9 @@ Claude.ai 계정으로 로그인
 ### 자격 증명 보안
 
 - macOS: API 키와 OAuth 토큰은 **macOS Keychain(암호화 저장소)**에 안전하게 저장됩니다.
-- 재로그인이 필요한 경우: `claude` 실행 후 `/login` 입력
+- Linux / Windows: `~/.claude/.credentials.json` (Windows는 `%USERPROFILE%\.claude\.credentials.json`)에 본인 계정만 읽을 수 있는 권한으로 저장됩니다.
+- 재로그인이 필요한 경우: `claude` 실행 후 `/login` 입력. 계정을 바꾸려면 `/logout` 후 다시 로그인
+- 로그인 만료 3일 전부터 시작 시 `run /login to renew` 경고가 뜹니다. 미리 `/login`을 실행해 갱신하세요.
 
 ---
 
@@ -146,13 +153,25 @@ claude doctor
 
 네이티브 설치는 **자동으로 최신 버전으로 업데이트**됩니다. 시작 시 업데이트를 확인하고 백그라운드에서 다운로드합니다. 다음 실행 시 새 버전이 적용됩니다.
 
-> Homebrew, WinGet, Linux 패키지 매니저로 설치한 경우에는 자동 업데이트되지 않습니다. `brew upgrade claude-code`, `winget upgrade Anthropic.ClaudeCode` 등을 직접 실행하세요.
+> Homebrew, WinGet, Linux 패키지 매니저로 설치한 경우에는 자동 업데이트되지 않습니다. `brew upgrade claude-code`, `winget upgrade Anthropic.ClaudeCode` 등을 직접 실행하세요. (Homebrew·WinGet은 설정에 `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE=1`을 넣으면 Claude Code가 대신 업그레이드 명령을 실행해 줍니다.)
 
 수동으로 업데이트하려면:
 
 ```bash
 claude update
 ```
+
+### 업데이트 채널 고르기
+
+새 기능을 바로 받는 **latest**(기본값)와, 약 1주 늦지만 큰 회귀가 있는 버전은 건너뛰는 **stable** 중에서 고를 수 있습니다. `/config` → **Auto-update channel**에서 바꾸거나 `~/.claude/settings.json`에 적습니다:
+
+```json
+{
+  "autoUpdatesChannel": "stable"
+}
+```
+
+> 막 출시된 모델은 stable 채널보다 새로운 버전을 요구할 수 있습니다. 새 모델을 바로 써보고 싶다면 latest를 유지하세요.
 
 ---
 
@@ -191,11 +210,25 @@ source ~/.zshrc
 
 ---
 
-### 문제 3: Windows에서 Git이 없다는 오류
+### 문제 3: Windows에서 Bash 도구가 없다거나 Git Bash를 못 찾는다는 안내
 
-**원인**: 로컬 세션 실행에 Git이 필요합니다.
+**원인**: Git for Windows가 없으면 Claude Code는 Bash 대신 **PowerShell 도구**로 명령을 실행합니다. 동작에는 문제가 없지만, 일부 셸 스크립트 예제나 플러그인은 Bash를 기대합니다.
 
-**해결법**: [git-scm.com](https://git-scm.com/downloads/win)에서 Git for Windows 설치 후 재시도.
+**해결법**: [git-scm.com](https://git-scm.com/downloads/win)에서 Git for Windows 설치 후 재시작. 설치했는데도 못 찾으면 `~/.claude/settings.json`에 경로를 지정합니다:
+
+```json
+{
+  "env": { "CLAUDE_CODE_GIT_BASH_PATH": "C:\\Program Files\\Git\\bin\\bash.exe" }
+}
+```
+
+---
+
+### 문제 4: `claude --version`이 예전 버전을 보여준다
+
+**원인**: npm, Homebrew, 네이티브 설치가 섞여 있어 다른 설치본이 먼저 잡히는 경우.
+
+**해결법**: `claude doctor`로 설치 타입을 확인하고, 쓰지 않는 설치본은 제거하세요(`npm uninstall -g @anthropic-ai/claude-code`, `brew uninstall --cask claude-code` 등).
 
 ---
 

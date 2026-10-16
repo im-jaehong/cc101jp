@@ -88,10 +88,13 @@ No Python required. Just describe what you want.
 
 | Environment | Description |
 |---|---|
-| **Desktop app** | GUI interface, no terminal needed — **recommended for beginners** |
+| **Desktop app** | GUI interface, no terminal needed (macOS / Windows / Ubuntu·Debian beta) — **recommended for beginners** |
 | **Terminal (CLI)** | The most powerful default environment |
-| **VS Code / Cursor extension** | Use directly inside your editor |
-| **Web browser** | Run at claude.ai/code with no local setup |
+| **VS Code / Cursor extension, JetBrains plugin** | Use directly inside your editor |
+| **Web browser · mobile app** | Run at claude.ai/code with no local setup, and pick up where you left off in the iOS/Android app |
+| **Slack** | Mention `@Claude` in a channel and a bug report comes back as a PR |
+
+Whichever environment you start in, the same engine runs underneath, so your CLAUDE.md, settings, and MCP connections are shared across all of them.
 
 ---
 

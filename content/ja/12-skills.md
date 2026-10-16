@@ -22,7 +22,7 @@
 | **一貫性** | 毎回異なる可能性あり | 常に同じ手順 |
 | **チーム共有** | 不可 | Gitコミットで共有 |
 | **引数の受け渡し** | 説明の中に含める | `$ARGUMENTS`で明確に |
-| **ツール制限** | Claudeの判断 | 明示的に許可されたツールのみ |
+| **ツール権限** | 毎回確認ダイアログ | スキルに事前許可したツールは確認なしで実行 |
 
 ---
 
@@ -104,12 +104,19 @@ my-skill/
 ```yaml
 ---
 name: my-skill           # スキル名（ディレクトリ名がデフォルト）
-description: 説明        # Claudeがいつこのスキルを使うか判断する基準（必須）
+description: 説明        # Claudeがいつこのスキルを使うか判断する基準（推奨）
+when_to_use: 会議の後に整理するとき  # トリガー状況の補足説明（descriptionの後ろに付く）
+argument-hint: [ファイルパス]  # 自動補完に表示する引数のヒント
+arguments: [file, lang]  # 名前付き引数 → 本文で $file, $lang として使用
 disable-model-invocation: true  # trueならユーザーのみ実行可能（Claude自動実行不可）
 user-invocable: false    # falseならメニューに非表示（Claudeのみ自動実行可能）
-allowed-tools: Read, Grep, Glob  # このスキル実行中に許可するツールのみ指定
-context: fork            # 独立したサブエージェントコンテキストで実行
+allowed-tools: Read, Grep, Glob  # このスキルを実行したターンの間、確認なしで使えるツール（制限ではなく事前許可）
+disallowed-tools: Write  # このスキルが有効な間、完全に外すツール
+context: fork            # 独立したサブエージェントコンテキストで実行（デフォルトはバックグラウンド）
 model: sonnet            # このスキルで使用するモデルを指定
+effort: low              # 思考強度（low / medium / high / xhigh / max）
+paths:                   # このパスのファイルを扱うときだけ自動有効化
+  - "src/**/*.ts"
 ---
 ```
 
@@ -254,9 +261,10 @@ GitHubイシュー $ARGUMENTS を処理してください：
 name: translate
 description: ファイルやテキストを翻訳します。
 argument-hint: [ファイルパスまたはテキスト] [対象言語]
+arguments: [source, lang]
 ---
 
-$ARGUMENTS[0]を$ARGUMENTS[1]に翻訳してください。
+$source を $lang に翻訳してください。
 
 - 技術用語は原文のまま維持（コード、コマンド、固有名詞）
 - マークダウン構造を保持
@@ -267,6 +275,8 @@ $ARGUMENTS[0]を$ARGUMENTS[1]に翻訳してください。
 ```
 /translate README.md ko
 ```
+
+> 引数の渡し方は、`$ARGUMENTS`（全体）、`$0`/`$1`（または`$ARGUMENTS[0]`、順序別）、そして上のように`arguments:`で名前を付けて`$source`のように使う、の3通りがあります。スペースを含む値は引用符で囲んでください：`/translate "my notes.md" ko`
 
 ---
 
@@ -295,6 +305,8 @@ Claudeがこのスキルを実行すると：
 2. 実際のデータがプロンプトに挿入される
 3. Claudeが実際のPR内容を見てサマリーを作成
 
+> コマンドが1つでも失敗すると、スキルの実行全体が中断されます。失敗しても構わないコマンドには`|| true`を付けてください：!`gh pr view --comments || true`
+
 ---
 
 ## Skillsの保存場所
@@ -306,7 +318,9 @@ Claudeがこのスキルを実行すると：
 | プロジェクト | `.claude/skills/<名前>/SKILL.md` | このプロジェクトのみ |
 | プラグイン | `<プラグイン>/skills/<名前>/SKILL.md` | プラグイン有効化時 |
 
-同じ名前のスキルが複数の場所にある場合、**エンタープライズ > 個人 > プロジェクト**の順に優先されます。
+同じ名前のスキルが複数の場所にある場合、**エンタープライズ > 個人 > プロジェクト**の順に優先されます。プラグインのスキルは`/プラグイン名:スキル名`で名前空間が分かれているため衝突しません。
+
+セッションの途中でスキルファイルを追加・修正した場合は`/reload-skills`で再読み込みし、`/skills`で今使えるスキルの一覧を確認できます。スキルが増えてきたら`/skill-doctor`で各スキルが占めるコンテキストと実際の使用頻度を見て、使っていないものを整理してください。
 
 ---
 
@@ -405,8 +419,9 @@ description: review tool
 
 | 問題 | 解決策 |
 |------|--------|
-| スキルがトリガーされない | descriptionにユーザーが実際に使う表現を含める |
-| スキルが頻繁に実行されすぎる | descriptionをより具体的に修正 |
+| スキルがトリガーされない | descriptionにユーザーが実際に使う表現を含める、`when_to_use`に例文を追加 |
+| スキルが頻繁に実行されすぎる | descriptionをより具体的に修正、または`paths:`で適用範囲を制限 |
+| 新しく作ったスキルが表示されない | `/reload-skills`を実行 |
 | Claudeがスキルを認識しない | `/context`でコンテキスト上限超過を確認 |
 | 自動実行を止めたい | `disable-model-invocation: true`を追加 |
 

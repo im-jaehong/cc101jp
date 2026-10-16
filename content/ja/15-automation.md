@@ -18,7 +18,7 @@
 
 > **Headless = 人の手を介さず自動実行**
 
-以前は「headless mode」と呼ばれていましたが、公式には**Agent SDK CLI**とも呼ばれています。`-p`フラグとすべてのCLIオプションは同様に動作します。
+以前は「headless mode」と呼ばれていましたが、公式ドキュメントでは**Agent SDKをCLIで使う方式**（非対話型モード）と説明されています。`-p`フラグとすべてのCLIオプションは同様に動作します。
 
 ---
 
@@ -61,6 +61,27 @@ Claudeがファイルを読み書きできるようにツールを許可しま�
 
 ```bash
 claude -p "~/DownloadsのPDFをすべて読んで要約集.mdにまとめて" --allowedTools "Read,Write,Bash"
+```
+
+ツールを一つずつ列挙する代わりに、権限モードで基準線を決めることもできます：
+
+```bash
+# 分類器が検討しながら進行（対話型セッションと同じAutoモード）
+claude -p "依存関係のバージョンを上げてテストを実行して" --permission-mode auto
+
+# 確認が必要な行動はすべて拒否（ロックされたCI環境用）
+claude -p "..." --permission-mode dontAsk
+
+# 誰も確認ダイアログに答えられない無人実行：確認が必要になる行動は拒否して続行
+claude -p "..." --permission-mode auto --permission-prompts none
+```
+
+### スクリプト・CIでは`--bare`
+
+`--bare`を付けると、フック、プラグイン、MCPサーバー、自動メモリ、CLAUDE.mdの自動探索をすべてスキップするので起動が速く、**どのコンピュータで実行しても同じ結果**になります。公式ドキュメントがスクリプトとCIに推奨している方式で、今後`-p`のデフォルトになる予定です。サブスクリプションのログインは読まないため、`ANTHROPIC_API_KEY`が必要です。
+
+```bash
+claude --bare -p "README.mdを要約して" --allowedTools "Read"
 ```
 
 ### JSON出力を受け取る
@@ -140,15 +161,15 @@ Claude Codeターミナルで以下のコマンドを実行すると、設定を
 /install-github-app
 ```
 
-> リポジトリの管理者権限が必要です。
+> リポジトリの管理者権限とGitHub CLI（`gh auth login`済み）が必要で、github.comのリポジトリでのみ動作します。APIキーの代わりに**サブスクリプションアカウントで認証**することもできます：ローカルで`claude setup-token`を実行して1年間有効なトークンを作成し、`CLAUDE_CODE_OAUTH_TOKEN`シークレットとして登録すると、Actionsの実行がサブスクリプションの使用量から差し引かれます。
 
 ### 手動設定方法
 
 1. **Claude GitHubアプリのインストール**：[github.com/apps/claude](https://github.com/apps/claude)からリポジトリにアプリをインストールします。
 
-2. **APIキーの登録**：リポジトリのSettings → Secretsに`ANTHROPIC_API_KEY`を追加します。
+2. **認証シークレットの登録**：リポジトリのSettings → Secretsに`ANTHROPIC_API_KEY`（APIキー）または`CLAUDE_CODE_OAUTH_TOKEN`（サブスクリプショントークン）を追加します。
 
-3. **ワークフローファイルの追加**：`.github/workflows/`フォルダにYAMLファイルを作成します。
+3. **ワークフローファイルの追加**：`.github/workflows/`フォルダにYAMLファイルを作成します。公式の例（[examples/claude.yml](https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml)）をそのままコピーしても構いません。
 
 ---
 
@@ -166,12 +187,24 @@ on:
 
 jobs:
   claude:
+    if: contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # @claudeメンションに自動で応答
+          # サブスクリプショントークンを使うなら上の行の代わりに：
+          # claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # promptを指定しなければ@claudeメンションに自動で応答
 ```
 
 使用例：
@@ -189,18 +222,30 @@ jobs:
 name: コードレビュー
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review, reopened]
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: "/review"
-          claude_args: "--max-turns 5"
+          plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
+          plugins: "code-review@claude-code-plugins"
+          prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
 ```
+
+> `--comment`があって初めてレビュー結果がPRにインラインコメントとして付きます。なければワークフローのログにしか残りません。ワークフローファイルなしですべてのPRに自動レビューを受けたいなら、公式ドキュメントの**Code Review**機能を参照してください。
 
 ---
 
@@ -215,13 +260,21 @@ on:
 jobs:
   report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      id-token: write
     steps:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: "昨日のコミットとオープンIssueを要約して"
-          claude_args: "--model sonnet"
+          claude_args: |
+            --model claude-sonnet-5-5
+            --allowedTools "mcp__github__list_commits,mcp__github__list_issues"
 ```
+
+> プレーンテキストのpromptで実行するときは、`claude_args`の`--allowedTools`で許可したツールしか使えません。上の例はGitHub APIツールを2つだけ許可しているので、checkoutステップは不要です。
 
 ---
 
@@ -237,18 +290,20 @@ jobs:
 
 | パラメータ | 説明 | 必須かどうか |
 |---------|------|----------|
-| `anthropic_api_key` | Anthropic APIキー | 必須 |
-| `prompt` | Claudeに渡す指示内容 | オプション |
-| `claude_args` | 追加CLI引数（`--max-turns`、`--model`など） | オプション |
+| `anthropic_api_key` | Anthropic APIキー | どちらか一方が必須 |
+| `claude_code_oauth_token` | サブスクリプションアカウントのトークン（`claude setup-token`で生成） | どちらか一方が必須 |
+| `prompt` | Claudeに渡す指示内容（なければ`@claude`メンションを待機） | オプション |
+| `claude_args` | 追加CLI引数（`--max-turns`、`--model`、`--allowedTools`など） | オプション |
+| `plugins` / `plugin_marketplaces` | 実行前にインストールするプラグイン | オプション |
 | `trigger_phrase` | トリガーフレーズ（デフォルト：`@claude`） | オプション |
+
+> 実行を開始した人はリポジトリの**書き込み権限**を持っている必要があり、ボットアカウントは`allowed_bots`に記載しない限り無視されます（無限ループ防止）。
 
 ---
 
 ## GitLab CI/CD連携（概要）
 
-GitLabを使用している場合は、`.gitlab-ci.yml`にClaude Codeタスクを追加できます。
-
-> GitLab連携は現在ベータ段階です。
+GitLabを使用している場合は、`.gitlab-ci.yml`にClaude Codeタスクを追加できます。詳しい手順は[公式GitLab CI/CDドキュメント](https://code.claude.com/docs/en/gitlab-ci-cd)を参照してください。
 
 ```yaml
 stages:
@@ -279,12 +334,12 @@ GitLab CI/CD変数に`ANTHROPIC_API_KEY`を登録することを忘れないで�
 自動化は**トークン消費が非常に大きくなります**。
 
 - CI/CDパイプラインは人の監視なしに実行されるため、コストが予想以上に早く膨らむ可能性があります。
-- `--max-turns`オプションで最大繰り返し回数を制限してください。
-- ワークフローにタイムアウトを設定してください。
+- `--max-turns`オプションで最大繰り返し回数を、`--max-budget-usd`で1回の実行のドル上限を制限してください。
+- ワークフローにタイムアウトを設定し、同時実行（concurrency）を制限してください。
 - 不要なトリガーを減らしてください。
 
 ```yaml
-claude_args: "--max-turns 5 --model sonnet"
+claude_args: "--max-turns 5 --model claude-sonnet-5-5"
 ```
 
 **API費用に加えて、GitHub Actionsの実行時間コストも発生します**（GitHub Actionsの無料枠を超過した場合）。
@@ -322,8 +377,11 @@ HeadlessモードとGitHub Actions連携は、Claude Codeをある程度使い�
 
 ```
 Headlessモード: claude -p "タスク内容" --output-format json
-GitHub Actions: anthropics/claude-code-action@v1
+スクリプト/CI:   --bare で環境の影響を排除、--permission-prompts none で無人実行
+GitHub Actions: anthropics/claude-code-action@v1（APIキーまたはサブスクリプショントークン）
 トリガー: @claudeメンションまたは自動プロンプト
-コスト制御: --max-turns、タイムアウト、モデル選択
-セキュリティ: APIキーは必ずSecretsを使用
+コスト制御: --max-turns、--max-budget-usd、タイムアウト、モデル選択
+セキュリティ: キー・トークンは必ずSecretsを使用
 ```
+
+> ターミナルの中で簡単に繰り返すだけでよければ、`/loop 30m 新しいIssueがないか確認して要約して`のように**`/loop`** で同じプロンプトを定期的に実行でき、コンピュータを閉じていても動かす必要があるなら`/schedule`でクラウドルーチンを作成できます。

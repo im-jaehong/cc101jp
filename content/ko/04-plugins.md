@@ -17,7 +17,10 @@ Claude Code는 기본 기능만으로도 충분히 강력하지만, **플러그�
 | **Skills (스킬)** | `/플러그인명:명령어` 형태의 커스텀 명령어 |
 | **Agents (에이전트)** | 특정 역할을 수행하는 AI 에이전트 |
 | **Hooks (훅)** | 파일 저장, 명령 실행 시 자동으로 동작하는 이벤트 핸들러 |
+| **Mods (모드)** | 화면에 패널을 띄우거나 동작을 바꾸는 JavaScript 훅 모듈 (예: playmaker의 실시간 목표 보드) |
 | **MCP 서버** | GitHub, Figma 등 외부 서비스 연동 |
+
+> 켜져 있는 플러그인은 쓰지 않는 세션에서도 스킬·에이전트 이름과 설명이 컨텍스트에 올라가 토큰을 조금씩 씁니다. `/plugin`의 마켓플레이스 목록에서 **Context cost**를 확인하고, 안 쓰는 플러그인은 비활성화하세요. `/skill-doctor`로 어떤 스킬이 얼마나 자리를 차지하는지도 볼 수 있습니다.
 
 ---
 
@@ -65,19 +68,19 @@ Claude Code 안에서 `/plugin` 을 입력하면 **Discover 탭**에서 바로 �
 
 ### 포함된 플러그인
 
-> 2026년 8월 기준 **총 15개** 플러그인이 등록되어 있습니다.
+> 2026년 10월 기준 **총 19개** 플러그인이 등록되어 있습니다.
 
 #### 입문자에게 먼저 추천
 
 | 플러그인 이름 | 역할 | 사용 예시 |
 |------------|------|---------|
-| **docs-guide** | 라이브러리 공식 문서(llms.txt) 기반으로 정확한 답변 제공. 할루시네이션 없이 최신 문서를 참고 | `/docs-guide:explain React hooks` |
+| **docs-guide** | 라이브러리 공식 문서(llms.txt, 68개 라이브러리) 기반으로 정확한 답변 제공. 할루시네이션 없이 최신 문서를 참고 | `/docs-guide:explain React hooks` |
 | **바르다 깃선생** (git-teacher) | 비개발자를 위한 Git 온보딩. 클라우드 폴더 비유로 5단계 안내 | `/git-teacher:what-is-commit` |
 | **바선생** (vibe-sunsang) | Claude Code 대화를 분석해 성장 코칭 제공. 4종 워크스페이스 타입 지원 | `/vibe-sunsang 시작` |
-| **쇼미더피알디** (show-me-the-prd) | 초안 우선 PRD 생성기. 4종 설계 문서(PRD, 데이터 모델, Phase 분리, 프로젝트 스펙)를 바로 작성하고 가정을 한 번에 확인 | `/show-me-the-prd 사진 정리 앱 만들고 싶어` |
-| **insane-research** | 멀티에이전트 딥리서치. 7단계 파이프라인으로 출처를 교차검증한 뒤 구조화된 보고서 생성 | `/insane-research [주제]` |
+| **쇼미더피알디** (show-me-the-prd) | 한 문장을 4종 설계 문서(PRD, 데이터 모델, Phase 분리, 프로젝트 스펙) 초안으로 바로 바꾸고, 가정만 한 번에 확인 | `/show-me-the-prd 사진 정리 앱 만들고 싶어` |
+| **insane-research** | 멀티에이전트 딥리서치. 7단계 파이프라인으로 출처를 교차검증한 뒤 출처가 달린 보고서 생성 | `/insane-research [주제]` |
 | **끼리끼리** (kkirikkiri) | 자연어 한마디로 AI 팀 또는 결정형 에이전트 파이프라인을 구성 | `/kkirikkiri 리서치 팀 만들어줘` |
-| **품앗이** (pumasi) | 병렬 코딩 오케스트레이션 + Codex 이미지 생성(`/pumasi:image`) | `/pumasi [작업 설명]` |
+| **품앗이** (pumasi) | Claude가 PM, Codex CLI가 병렬 개발자. Codex CLI 설치 필요 | `/pumasi [작업 설명]` |
 | **스킬러들의 수다** (skillers-suda) | 4개 페르소나 에이전트가 분석·토론해 동작하는 스킬을 만들고 자동 평가까지 수행 | `/skillers-suda 번역 스킬 만들어줘` |
 
 > ⚠️ **`deep-research-kit`는 더 이상 제공되지 않습니다.** 후속인 **`insane-research`**를 사용하세요.
@@ -86,13 +89,17 @@ Claude Code 안에서 `/plugin` 을 입력하면 **Discover 탭**에서 바로 �
 
 | 플러그인 | 설명 |
 |---------|------|
-| **goaljaby** | PRD를 `/goal` 워크플로 실행 계약서로 변환. 검토 문서 자동 생성 + 승인 게이트 관리 |
-| **insane-search** | API 키 없이 차단된 사이트에 적응적으로 접근하는 전략 제공 |
-| **insane-design** | 디자인 시스템 추출·적용·생성. 임의의 URL을 분석해 내 프로젝트에 적용 |
-| **insane-review** | repomix + 브라우저 자동화로 Claude Code 안에서 ChatGPT Pro 수준의 코드 분석 활용 |
-| **nopal** | Google Workspace를 자연어로 조작 (Opal 불필요) |
+| **goaljaby** (골잡이) | PRD를 `/goal` 워크플로 실행 계약서로 변환. 검토 문서 자동 생성 + 승인 게이트 관리 |
+| **playmaker** | 골잡이용 실시간 목표 보드. 사이드 패널 또는 웹 보드(Paseo)로 진행 상황 확인 |
+| **insane-search** | API 키 없이 WAF·403·CAPTCHA·로그인 벽에 막힌 사이트에 단계적으로 접근 |
+| **insane-design** | 임의의 URL에서 디자인 시스템(색·타이포·간격)을 토큰과 `design.md`로 추출 |
+| **insane-review** | 코드를 묶어 GPT-5.5 Pro에게 리뷰받기 (로그인된 ChatGPT 웹 세션 필요) |
+| **nopal** (노팔) | Google Workspace 9개 서비스를 자연어로 조작 (Google 계정 로그인 필요) |
 | **dd** | 클립보드의 텍스트·이미지를 붙여넣기 없이 바로 투입 (`/dd`, `/ㅇㅇ`) |
-| **gaseo** | 현재 Claude Code 세션을 Paseo 앱에 등록해 앱에서 이어서 작업 |
+| **gaseo** (가서) | 현재 Claude Code 세션을 Paseo 앱에 보내 앱에서 이어서 작업 (`/gaseo`) |
+| **tikeytaka** (티키타카) | 여기저기 `.env`에 흩어진 API 키를 암호화된 중앙 금고에 모아 동기화 |
+| **ddiring** (띠링) | 여러 세션의 작업 완료 알림 + 클릭으로 해당 세션 이동 (macOS, Windows Git Bash는 실험 지원) |
+| **sangse** (상세) | 제품 정보만 주면 한국 이커머스 상세페이지를 생성, 규정 필터와 3단계 QA 포함 (`/sangse`) |
 
 ---
 
@@ -138,7 +145,7 @@ Claude Code 안에서 다음 명령어를 입력하세요:
 /plugin update
 ```
 
-> **중요**: 플러그인 설치 또는 업데이트 후에는 Claude Code를 재시작하세요.
+> `/plugin` 메뉴에서 바꾼 내용은 메뉴를 닫으면 바로 적용됩니다. 명령어로 설치·업데이트했는데 새 스킬이 보이지 않으면 `/reload-plugins`를 실행하세요. Claude Code를 재시작할 필요는 없습니다.
 
 ### 5단계: 플러그인 사용해보기
 
@@ -175,6 +182,9 @@ Claude Code 안에서 다음 명령어를 입력하세요:
 | `/plugin disable 플러그인명` | 플러그인 임시 비활성화 |
 | `/plugin enable 플러그인명` | 비활성화된 플러그인 다시 활성화 |
 | `/plugin uninstall 플러그인명` | 플러그인 완전 삭제 |
+| `/reload-plugins` | 재시작 없이 플러그인 변경 사항 적용 |
+
+> 설치할 때 범위를 고릅니다. **User**(내 컴퓨터의 모든 프로젝트), **Project**(이 저장소에서 함께 일하는 모두 — `.claude/settings.json`에 기록), **Local**(이 저장소에서 나만). 터미널에서 설치한 플러그인은 같은 컴퓨터의 데스크탑 앱과 VS Code 확장에서도 그대로 쓸 수 있습니다.
 
 ---
 

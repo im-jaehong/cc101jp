@@ -53,7 +53,7 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 
 **멀티 세션 & 병렬 작업**
 - 여러 터미널에서 Claude Code를 동시에 실행해 작업 분담
-- **품앗이**로 작업 분담 병렬 개발 체험 (Codex 없어도 Claude만으로 동작)
+- **품앗이**로 작업 분담 병렬 개발 체험 (Codex CLI 설치 필요)
 
 ---
 
@@ -96,7 +96,10 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 | **공식 문서 (영어)** | [code.claude.com/docs](https://code.claude.com/docs) |
 | **GitHub 저장소** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
 | **공식 플러그인** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
+| **Claude Academy (무료 강의)** | [academy.claude.com](https://academy.claude.com/) — "Claude Code 101", "Claude Code in Action" 등 |
 | **Anthropic 콘솔** | [platform.claude.com](https://platform.claude.com) |
+
+> Claude Code 안에서도 배울 수 있습니다. `/powerup`은 애니메이션 데모가 있는 짧은 강의를, `/release-notes`는 버전별 새 기능을 보여줍니다. 모르는 게 생기면 `/btw 이 기능이 뭐야?`처럼 대화에 흔적을 남기지 않고 물어볼 수도 있습니다.
 
 ---
 
@@ -105,7 +108,7 @@ CC101에서 배운 기초를 조합해 실제 업무에 적용해보세요.
 | 리소스 | URL | 설명 |
 |--------|-----|------|
 | **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | 이 가이드 저장소. 오타·내용 추가 기여 환영 |
-| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 바이브코더를 위한 15개 플러그인 모음: 기획(show-me-the-prd), Git(깃선생), 멘토(바선생), 리서치(insane-research), 병렬개발(품앗이), 팀 구성(끼리끼리), 스킬 생성(스킬러들의 수다), 공식문서(docs-guide) 외 |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 바이브코더를 위한 19개 플러그인 모음: 기획(show-me-the-prd), Git(깃선생), 멘토(바선생), 리서치(insane-research), 병렬개발(품앗이), 팀 구성(끼리끼리), 스킬 생성(스킬러들의 수다), 공식문서(docs-guide), 목표 관리(골잡이·playmaker), 상세페이지(상세) 외 |
 
 이 가이드가 도움이 됐다면 **Star** 를 눌러주세요! 업데이트와 발전에 큰 힘이 됩니다.
 

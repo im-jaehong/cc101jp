@@ -156,7 +156,7 @@ Ask yourself:
 
 ### Step 2: Write Your CLAUDE.md
 
-Minimum template (copy and start):
+Minimum template (copy and start). If it grows long, split it by topic into `.claude/rules/` files and move recurring procedures into Skills. Preferences Claude picks up while working are written to its **auto memory** on its own, so you don't have to put everything in CLAUDE.md.
 
 ```markdown
 # [Workspace Name]
@@ -188,7 +188,7 @@ mkdir -p 01-inbox 02-work 03-output 04-archive
 ### Step 4: Turn Repetitive Tasks into Skills
 
 If you're doing the same task 3+ times, make it a Skill.
-→ Creating Skills is covered in Section 15
+→ Creating Skills is covered in Section 16
 
 ---
 
@@ -203,7 +203,7 @@ Connecting MCP to your workspace makes it dramatically more powerful:
 | Slack | Team communication integration |
 | Google Sheets | Automatic data aggregation |
 
-→ MCP connections are covered in Section 13
+→ MCP connections are covered in Section 14
 
 ---
 

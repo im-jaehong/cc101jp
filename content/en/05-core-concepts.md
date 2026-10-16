@@ -41,7 +41,7 @@ All of this happens **automatically**.
 
 **Context** is everything Claude Code is currently "holding in mind": conversation history, file contents it has read, command outputs, CLAUDE.md instructions, and more.
 
-Context has a **token limit**. If a conversation gets very long or you load many large files, context can fill up. Claude Code handles this automatically by summarizing older content.
+Context has a **token limit** (1 million tokens on all current models). If a conversation gets very long or you load many large files, context can fill up. As you approach the limit, Claude Code automatically summarizes older content (auto-compaction).
 
 ```
 # See what's using context space
@@ -69,6 +69,7 @@ Claude Code doesn't just talk — it uses **tools** to take real actions.
 | **Execution** | Run shell commands, start servers, run tests, use git |
 | **Web** | Search the web, fetch documentation, look up error messages |
 | **Code intelligence** | Detect type errors after edits, jump to definitions, find references |
+| **Delegation** | Hand side tasks like exploration or verification to a subagent (another Claude) and get just the result back |
 
 ---
 
@@ -105,9 +106,12 @@ Think of CLAUDE.md as a **standing instruction sheet** for Claude.
 |---------------|-------|
 | `./CLAUDE.md` | Current project only (shareable with team via git) |
 | `~/.claude/CLAUDE.md` | All your projects (global preferences) |
-| `./CLAUDE.local.md` | Personal project-specific settings (not committed to git) |
+| `./CLAUDE.local.md` | Personal project-specific settings (add it to `.gitignore` so it isn't committed) |
+| `.claude/rules/*.md` | Rules split into per-topic files (can be limited to specific file paths) |
 
-> CLAUDE.md is covered in depth in **[06. Mastering CLAUDE.md](./06-claude-md.md)**.
+On top of this there is **auto memory**: Claude writes its own notes about corrections and preferences you've given it and reads them back in the next session. It's on by default; use `/memory` to view the notes or turn it off.
+
+> CLAUDE.md is covered in depth in **[08. Mastering CLAUDE.md](./06-claude-md.md)**.
 
 ---
 
@@ -125,9 +129,14 @@ claude --continue
 # Choose from recent sessions to resume
 claude --resume
 
+# Start with a name from the beginning (resume later with claude --resume name)
+claude -n competitor-research
+
 # Fork a session to try a different approach
 claude --continue --fork-session
 ```
+
+Mid-conversation, use `/rename name` to name the session and `/branch` to branch the conversation from the current point.
 
 ---
 
@@ -139,46 +148,59 @@ Before modifying files or running commands, it checks that the action is what yo
 
 ---
 
-## 3 Permission Modes Every Beginner Should Know
+## 4 Permission Modes Every Beginner Should Know
 
-Press `Shift+Tab` to cycle through permission modes.
+Press `Shift+Tab` to cycle through permission modes. The status bar below the prompt shows the current mode, such as `auto mode on` or `manual mode on`.
 
-| Mode | Behavior | Best For |
-|------|----------|----------|
-| **Default** | Asks before file edits and shell commands | When you're new or working on critical tasks |
-| **Auto-Accept** | Automatically accepts file edits; still asks for shell commands | When you want to move faster on coding tasks |
-| **Plan Mode** | Read-only — analyzes but never modifies anything | When you want to review the plan before committing |
+| Mode | On-screen label | Behavior | Best For |
+|------|-----------------|----------|----------|
+| **Auto** | `⏵⏵ auto mode on` | A separate checker model (classifier) reviews each action in the background and runs it without asking when it's not risky. **The default starting mode for new sessions** | Long tasks, reducing prompt fatigue |
+| **Manual** | `⏸ manual mode on` | Asks before every file edit and shell command (config value is `default`) | When you want to see exactly what Claude does, sensitive work |
+| **Accept Edits** | `⏵⏵ accept edits on` | Automatically allows file edits and basic file commands like `mkdir` and `mv`; still asks for other shell commands | Quickly fixing code you're reviewing |
+| **Plan Mode** | `⏸ plan mode on` | Read-only — analyzes but never modifies anything | When you want to review the plan before committing |
 
-> **Note (as of August 2026)**: From Claude Code v2.1.200, Default mode is labeled **Manual** in the UI. Its config value is still `default`.
+> **Note (as of October 2026)**: Starting with Claude Code **v2.1.283, terminal sessions start in Auto mode on every plan**. Auto mode is not a "never ask" mode — it's a mode where a classifier reviews actions instead of you. It blocks actions that go beyond what you asked for, access to unfamiliar servers, and actions driven by external content Claude has read, and it still asks you when it can't decide. It is not a safety guarantee, so switch to Manual mode and check things yourself for sensitive work.
 >
-> If your account qualifies, an **Auto mode** is also available: it removes most permission prompts while running background safety checks, which helps on long tasks. When enabled, it joins the `Shift+Tab` cycle.
+> If your model doesn't support Auto mode or your organization has disabled it, sessions start in Manual mode instead.
 
 ### How to Switch Modes
 
 ```
 # Press Shift+Tab in the terminal to cycle through modes:
-# Default → Auto-Accept → Plan Mode → Default → ...
+# Auto → Manual → Accept Edits → Plan Mode → Auto → ...
 
-# Or enter Plan Mode directly
+# Or enter Plan Mode directly (add a description to start planning that task right away)
 /plan
+/plan plan the migration of our auth system to OAuth2
+
+# Start in a specific mode from the beginning
+claude --permission-mode plan
+claude --permission-mode manual
 ```
+
+> If a shell-command prompt offers **"Yes, and switch to auto mode"**, choosing it allows that command and switches you to Auto mode at the same time.
 
 ### Mode Comparison Example
 
 ```
 "Delete all console.log statements from every JavaScript file"
 
-Default mode:
+Auto mode:
+  → Edits files and runs tests right away; blocks or asks about actions like `git push --force`
+
+Manual mode:
   → Asks "Can I modify this file?" before each file edit
 
-Auto-Accept mode:
+Accept Edits mode:
   → Edits files automatically; still asks before running git commit
 
 Plan mode:
   → Shows "I plan to remove line 42 in src/utils.js" — but makes no actual changes
 ```
 
-> **Recommendation**: Start with **Default mode** to observe what Claude does. Switch to **Auto-Accept** once you're comfortable with how it works.
+> **Recommendation**: For the first few days, press `Shift+Tab` to switch to **Manual mode** and watch what Claude Code does as you learn. Once the flow feels familiar, go back to the default **Auto mode**, and switch to Manual only for hard-to-reverse work like payments, deployments, or deletions.
+>
+> In every mode, edits to protected paths like `.git` and `.claude` and destructive commands like `rm -rf` on your home folder or root are never auto-approved.
 
 ---
 
@@ -187,8 +209,10 @@ Plan mode:
 Before editing any file, Claude Code **automatically takes a snapshot** of the current state.
 
 If something goes wrong:
-- Press `Esc` twice in a row to rewind to a previous state
+- With the input box empty, press `Esc` twice in a row or type `/rewind` to open the rewind menu. You can roll back just the code, just the conversation, or both to an earlier point.
 - Or just tell Claude: "undo what you just did"
+
+> Rewind only tracks files Claude changed through its edit tools. Files changed by shell commands like `rm` or `mv` can't be restored, so make a git commit before big jobs as well.
 
 ---
 
@@ -196,4 +220,4 @@ If something goes wrong:
 
 Now let's master CLAUDE.md — Claude Code's long-term memory system.
 
-→ **[06. Mastering CLAUDE.md](./06-claude-md.md)**
+→ **[08. Mastering CLAUDE.md](./06-claude-md.md)**

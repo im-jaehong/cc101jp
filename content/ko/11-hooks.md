@@ -19,7 +19,7 @@ Claude Code는 강력합니다. 파일을 만들고, 수정하고, 삭제하고,
 
 ## Hooks란?
 
-**Hooks**는 Claude Code의 특정 이벤트가 발생할 때 자동으로 실행되는 셸 커맨드입니다.
+**Hooks**는 Claude Code의 특정 이벤트가 발생할 때 자동으로 실행되는 셸 커맨드입니다. 이벤트는 30여 개가 있지만, 입문자가 알아둘 것은 아래 정도입니다.
 
 | 이벤트 | 발생 시점 | 주요 용도 |
 |--------|----------|----------|
@@ -29,9 +29,13 @@ Claude Code는 강력합니다. 파일을 만들고, 수정하고, 삭제하고,
 | `Notification` | Claude가 알림 보낼 때 | 데스크탑 알림 |
 | `SessionStart` | 세션 시작/재개 시 | 컨텍스트 주입 |
 | `UserPromptSubmit` | 프롬프트 제출 시 | 입력 전처리 |
-| `PreCompact` | 컨텍스트 압축 전 | 중요 정보 보존 |
+| `PreCompact` / `PostCompact` | 컨텍스트 압축 전/후 | 중요 정보 보존 |
+| `SubagentStart` / `SubagentStop` | 서브에이전트 시작/종료 | 위임 작업 추적 |
+| `SessionEnd` | 세션 종료 시 | 기록 백업 |
 
-> 핵심: `exit 0` = 허용, `exit 2` = **차단** (stderr 메시지가 Claude에게 전달됨)
+> 핵심: `exit 2` = **차단** (stderr 메시지가 Claude에게 전달됨), `exit 0` = 정상 종료 후 평소 흐름대로 진행. `exit 1` 같은 다른 코드는 "차단"이 아니라 훅 오류로만 표시되고 작업은 계속되니, 막으려면 반드시 `exit 2`를 쓰세요.
+>
+> 셸 커맨드(`command`) 외에도 웹훅으로 보내는 `http`, MCP 도구를 부르는 `mcp_tool`, 모델에게 판단을 맡기는 `prompt`, 파일을 읽어보고 판단하는 `agent`(실험) 타입이 있습니다.
 
 ---
 
@@ -43,7 +47,9 @@ Claude Code는 강력합니다. 파일을 만들고, 수정하고, 삭제하고,
 | `.claude/settings.json` | 현재 프로젝트 | 예 (Git 커밋) |
 | `.claude/settings.local.json` | 현재 프로젝트 | 아니오 |
 
-> `/hooks` 커맨드로 인터랙티브하게 설정할 수도 있지만, 아래 예시를 복사-붙여넣기 하는 게 더 빠릅니다.
+> `/hooks` 커맨드는 현재 등록된 훅을 **보는** 메뉴입니다(읽기 전용). 설정은 아래 예시를 `settings.json`에 복사-붙여넣기 하거나, Claude에게 "이런 훅 추가해줘"라고 요청하면(`/update-config`) 대신 써줍니다.
+>
+> 💡 Claude Code 자체에도 기본 안전장치가 있습니다. 홈 폴더나 루트처럼 치명적인 경로를 지우는 `rm -rf`는 어떤 권한 모드에서도 자동 승인되지 않고, Auto 모드의 분류기도 요청 범위를 벗어난 파괴적 행동을 막습니다. 아래 Safety Hook은 그 위에 **내 기준**(예: 프로젝트 안의 `rm`도 금지)을 코드로 못 박는 용도입니다.
 
 ---
 
@@ -339,7 +345,9 @@ Safety Hook + 완료 알림을 하나의 `settings.json`에 합치면 이렇습�
 | JSON 파싱 오류 | `~/.zshrc`의 echo 구문을 인터랙티브 셸 조건부로 감싸기 |
 | 모든 파일 수정이 차단됨 | `PreToolUse` Hook의 `exit 2` 조건 확인 |
 
-디버그: `claude --debug` 또는 `Ctrl+O`로 Hook 실행 로그 확인
+디버그: `/debug`(또는 `claude --debug`)로 디버그 로그를 켜고, `Ctrl+O`의 상세 기록 화면에서 훅이 실행된 흐름을 확인
+
+> Windows에서 `python3` 명령이 없다면 `python`으로 바꾸고, Git for Windows(Git Bash)를 설치해 두면 셸 기반 훅 예제가 그대로 동작합니다.
 
 ---
 

@@ -13,9 +13,11 @@ Claude Code has two main pricing models:
 | **Claude.ai Pro / Max** | Flat-rate subscription | Fixed monthly fee, no separate API costs |
 | **Anthropic API** | Pay-as-you-go | Charges based on tokens consumed |
 
-**Claude.ai Pro/Max subscribers** have Claude Code usage included in their subscription — no additional API charges. The dollar figure shown by `/usage` (formerly `/cost`) is intended for API users, so subscribers can treat it as informational only; the same screen shows plan usage bars.
+**Claude.ai Pro/Max subscribers** have Claude Code usage included in their subscription — no additional API charges. The dollar figure shown by `/usage` (`/cost` is an alias) is intended for API users, so subscribers can treat it as informational only; the same screen shows plan usage bars.
 
-**API users** are charged based on usage. According to official documentation (as of August 2026), the average cost is approximately **$13 per developer per active day and $150–$250 per month**, staying under $30 per active day for 90% of users.
+**API users** are charged based on usage. According to official documentation (as of October 2026), the average cost is approximately **$13 per developer per active day and $150–$250 per month**, staying under $30 per active day for 90% of users.
+
+Subscribers who exhaust their plan limits can turn on **extra usage (usage credits)** to keep working on a pay-as-you-go basis. `/usage-credits` opens the settings page, where you can set a monthly spend cap.
 
 ---
 
@@ -40,9 +42,9 @@ Every time Claude reads a file, it consumes tokens. Reading a 10,000-line log fi
 
 As a conversation grows, all prior content stays in context. Continuing unrelated tasks in the same session causes irrelevant information to accumulate, driving up costs unnecessarily.
 
-### 3. Using High-Power Models for Simple Tasks
+### 3. Using High-Power Models or High Effort Levels
 
-Opus is more capable than Sonnet, but it also costs more per token. Using Opus for routine tasks is inefficient.
+Opus is more capable than Sonnet, but it also costs more per token. Using Opus for routine tasks is inefficient. Raising the effort level (`/effort`) to `xhigh` or `max` likewise increases the thinking tokens (billed as output tokens).
 
 ### 4. Uncontrolled Automation (CI/CD)
 
@@ -93,9 +95,10 @@ Not every task needs the most powerful model.
 
 | Model | Best For | Cost |
 |-------|----------|------|
-| **Haiku** | Quick questions, summaries, simple tasks | Lowest |
-| **Sonnet** | General coding tasks (recommended default) | Medium |
-| **Opus** | Complex architecture, difficult reasoning | Highest |
+| **Haiku 5.5** | Quick questions, summaries, simple tasks, sub-agents | Very low (1/40 of Opus) |
+| **Sonnet 5.5** | General coding and document work | Medium (1/2 of Opus) |
+| **Opus 5.5** | Complex design, difficult reasoning — default model on every plan | High |
+| **Fable 5.1** | The hardest, longest-running autonomous work (separate access required) | Very high |
 
 Switch models during a session:
 
@@ -115,19 +118,21 @@ claude --model haiku
 /model opusplan
 ```
 
+**Lower the effort level**: Without switching models, `/effort low` or `/effort medium` reduces how much Claude thinks. The default on Opus 5.5 / Sonnet 5.5 / Haiku 5.5 is `medium`, and `low` is often enough for simple repetitive work. (These models can't turn extended thinking off entirely — you only adjust the level.)
+
 ---
 
 ### Tip 4: Use Fast Mode Wisely
 
-The `/fast` command enables Fast Mode, making Opus respond approximately 2.5x faster. It is supported on **Opus 5 and Opus 4.8** (Opus 5 is the default from Claude Code v2.1.219).
+The `/fast` command enables Fast Mode, making Opus respond up to 2.5x faster. It is supported on **Opus 5.5, Opus 5, and Opus 4.8** (Opus 5.5 is the default from Claude Code v2.1.280). It is not available on Sonnet or Haiku.
 
 ```
 /fast
 ```
 
-However, Fast Mode has **higher per-token pricing** ($10 input / $50 output per MTok on Opus 5 — twice the standard Opus 5 rate). Use it when speed matters (rapid iteration, live debugging) and turn it off for long autonomous tasks where latency is less critical. Run `/fast` again at any time to check whether it's on or off.
+However, Fast Mode has **higher per-token pricing** ($8 input / $40 output per MTok on Opus 5.5 — twice the standard Opus 5.5 rate). Use it when speed matters (rapid iteration, live debugging) and turn it off for long autonomous tasks where latency is less critical. While it's on, a `↯` icon appears next to the prompt, and running `/fast` again shows whether it's on or off. Turning it on mid-conversation re-reads the entire context up to that point at Fast Mode rates, so if you're going to use it, enabling it at the start of a session is cheaper.
 
-> **Note**: Fast Mode is billed as extra usage and is not included in your subscription's standard rate limits.
+> **Note**: Fast Mode is not included in your subscription's standard usage — it draws from **extra usage (usage credits)**. If you haven't enabled extra usage, `/fast` reports "Fast mode requires usage credits." Fast Mode is still a research preview, so pricing and conditions may change.
 
 ---
 
@@ -147,25 +152,27 @@ Total duration (wall): 6h 33m 10.2s
 Total code changes:    0 lines added, 0 lines removed
 ```
 
-Subscribers also see plan usage bars and an attribution breakdown (skills, subagents, plugins, MCP servers) on the same screen; `/stats` shows session statistics.
+Subscribers also see plan usage bars and an attribution breakdown (skills, subagents, plugins, MCP servers, plus usage-inflating habits such as long context or cache misses) on the same screen. `/stats` jumps straight to the Stats tab of that screen.
 
-You can also configure the status line to display context usage in real time.
+You can also configure the status line to display context usage in real time (`/statusline`). If you're curious about *how* you're working rather than raw token counts, `/insights` generates an analysis report of your recent sessions.
+
+> **Long sessions get expensive quietly.** Even a one-line question resends the entire conversation on every request. If you step away for more than an hour, the cache expires and the full context is reprocessed — which is why Pro/Max users resuming a large session are asked whether to "resume from summary." When a task is done, `/clear`; if you're continuing it, `/compact`.
 
 ---
 
 ## Model Cost Comparison (Summary)
 
-(List API pricing as of August 2026, per million tokens, input / output)
+(List API pricing as of October 2026, per million tokens, input / output)
 
 | Model | Characteristics | Context | Input / Output |
 |-------|----------------|---------|----------------|
-| Haiku 4.5 | Fastest and cheapest, simple tasks | 200K | $1 / $5 |
-| Sonnet 5 | Best speed-to-intelligence balance, everyday coding | 1M | $3 / $15 |
-| Opus 5 | Complex agentic coding and reasoning | 1M | $5 / $25 |
-| Fable 5 | Hardest, longest-running autonomous work | 1M | $10 / $50 |
-| Opus 5 (Fast Mode) | 2.5x faster Opus 5 | 1M | $10 / $50 |
+| Haiku 5.5 | Fastest and cheapest, simple tasks and sub-agents | 1M | $0.10 / $0.50 (prompts over 100K tokens: $0.50 / $2.50) |
+| Sonnet 5.5 | Best speed-to-intelligence balance, everyday coding | 1M | $2 / $10 |
+| Opus 5.5 | Complex agentic coding and reasoning (default model) | 1M | $4 / $20 |
+| Fable 5.1 | Hardest, longest-running autonomous work | 1M | $10 / $50 |
+| Opus 5.5 (Fast Mode) | Up to 2.5x faster Opus 5.5 | 1M | $8 / $40 |
 
-> Sonnet 5 has **introductory pricing of $2 / $10 through August 31, 2026**.
+> The previous generation (Opus 5 $5/$25, Sonnet 5 $2/$10, Haiku 4.5 $1/$5, 200K) is still available, but the aliases (`opus`, `sonnet`, `haiku`) all point to the 5.5 generation.
 > For current pricing, see the [Anthropic pricing page](https://claude.com/pricing) and the [API pricing docs](https://platform.claude.com/docs/en/about-claude/pricing).
 
 ---
@@ -179,7 +186,7 @@ Claude.ai Pro and Max subscribers can use Claude Code **without pay-as-you-go AP
 - Freedom to experiment without watching per-token costs
 - Max plan includes higher usage limits
 
-> **Note**: Fast Mode and usage beyond your plan's limit may be billed as extra usage (usage credits) even on subscription plans.
+> **Note: Fast Mode draws from extra usage (usage credits), separate from your subscription limits.** If you hit your plan limit (which resets on a 5-hour and a weekly cycle), you can wait for the reset or enable extra usage with `/usage-credits` to keep going.
 
 ---
 
@@ -199,8 +206,8 @@ For teams using the API:
 ✅ Run /clear between unrelated tasks
 ✅ Start a new session when switching topics
 ✅ Specify exact file names and function names in prompts
-✅ Use Haiku for simple tasks
-✅ Enable Fast Mode only when speed is critical
+✅ Use Haiku for simple tasks, or lower the effort level with /effort low or medium
+✅ Enable Fast Mode only when speed is critical (draws from usage credits)
 ✅ Check /usage (= /cost) regularly
 ✅ Set compact instructions in CLAUDE.md
 ```

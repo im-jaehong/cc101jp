@@ -7,6 +7,8 @@
 > 💡 **ターミナルが初めての方へ** 以下のコマンドをそのまま**コピー＆ペースト（Cmd+VまたはCtrl+V）**してEnterを押すだけです。コマンドの意味を理解する必要はありません。
 > - **macOS**: `Cmd+Space` → 「terminal」と検索 → Enter
 > - **Windows**: `Win+R` → 「powershell」と入力 → Enter
+>
+> ターミナル自体に抵抗がある場合は、**Claudeデスクトップアプリ**（macOS / Windows / Ubuntu・Debianはベータ）をインストールして**Code**タブを押すだけで使えます。アプリの中にClaude Codeが組み込まれているのでCLIを別途インストールする必要がなく、変更内容を画面上ですぐ確認できます。
 
 ---
 
@@ -48,7 +50,8 @@ curl -fsSL https://claude.ai/install.sh | bash
 Homebrewを使っている場合：
 
 ```bash
-brew install --cask claude-code
+brew install --cask claude-code          # 安定（stable）チャンネル: 約1週間遅れるが、大きなリグレッションのある版はスキップ
+brew install --cask claude-code@latest   # 最新（latest）チャンネル: 新バージョンが出たらすぐ
 ```
 
 ### Windows
@@ -89,9 +92,11 @@ apk add bash curl libgcc libstdc++ ripgrep
 claude
 ```
 
-初回起動時に**ブラウザが自動的に開き、OAuthログイン画面**が表示されます。Claude.aiアカウントでログインすると、自動的に認証が完了します。
+初回起動時に**ブラウザが自動的に開き、OAuthログイン画面**が表示されます。Claude.aiアカウントでログインすると自動的に認証が完了し、ターミナルに `Login successful` と表示されます。
 
 > ⚠️ **無料（Free）プランではClaude Codeを利用できません。** Pro、Max、Team、EnterpriseまたはConsole（API）アカウントが必要です。
+>
+> ブラウザが自動的に開かない場合は、ターミナルで `c` を押してログインURLをコピーし、ブラウザに直接貼り付けてください。WSL2、SSH、コンテナのように、ブラウザからターミナルへ戻れない環境ではブラウザに**ログインコード**が表示されるので、そのコードをターミナルの `Paste code here if prompted` の欄に貼り付けてください。
 
 ### 認証フローの概要
 
@@ -108,7 +113,9 @@ Claude.aiアカウントでログイン
 ### 資格情報のセキュリティ
 
 - macOS: APIキーとOAuthトークンは**macOS Keychain（暗号化ストレージ）**に安全に保存されます。
-- 再ログインが必要な場合: `claude` を実行後、`/login` と入力
+- Linux / Windows: `~/.claude/.credentials.json`（Windowsは `%USERPROFILE%\.claude\.credentials.json`）に、自分のアカウントだけが読める権限で保存されます。
+- 再ログインが必要な場合: `claude` を実行後、`/login` と入力。アカウントを切り替えるには `/logout` の後に再ログイン
+- ログインの期限切れ3日前から、起動時に `run /login to renew` という警告が表示されます。事前に `/login` を実行して更新してください。
 
 ---
 
@@ -134,11 +141,25 @@ claude doctor
 
 Claude Codeは**自動的に最新バージョンへアップデート**されます。起動時にアップデートを確認し、バックグラウンドでダウンロードします。次回起動時に新しいバージョンが適用されます。
 
+> Homebrew、WinGet、Linuxのパッケージマネージャーでインストールした場合は自動アップデートされません。`brew upgrade claude-code`、`winget upgrade Anthropic.ClaudeCode` などを自分で実行してください。（Homebrew・WinGetは、設定に `CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE=1` を入れておくと、Claude Codeが代わりにアップグレードコマンドを実行してくれます。）
+
 手動でアップデートする場合：
 
 ```bash
 claude update
 ```
+
+### アップデートチャンネルを選ぶ
+
+新機能をすぐ受け取れる**latest**（デフォルト）と、約1週間遅れるものの大きなリグレッションのあるバージョンはスキップする**stable**から選べます。`/config` → **Auto-update channel**で変更するか、`~/.claude/settings.json`に書きます：
+
+```json
+{
+  "autoUpdatesChannel": "stable"
+}
+```
+
+> リリース直後のモデルは、stableチャンネルより新しいバージョンを要求することがあります。新しいモデルをすぐ試したい場合はlatestのままにしてください。
 
 ---
 
@@ -177,11 +198,25 @@ source ~/.zshrc
 
 ---
 
-### 問題3: WindowsでGitが見つからないエラー
+### 問題3: WindowsでBashツールがない、またはGit Bashが見つからないという案内が出る
 
-**原因**: ローカルセッションの実行にGitが必要です。
+**原因**: Git for Windowsがないと、Claude CodeはBashの代わりに**PowerShellツール**でコマンドを実行します。動作自体に問題はありませんが、一部のシェルスクリプトの例やプラグインはBashを前提にしています。
 
-**解決法**: [git-scm.com](https://git-scm.com/downloads/win)からGit for Windowsをインストール後、再試行してください。
+**解決法**: [git-scm.com](https://git-scm.com/downloads/win)からGit for Windowsをインストール後、再起動してください。インストールしても見つからない場合は、`~/.claude/settings.json`にパスを指定します：
+
+```json
+{
+  "env": { "CLAUDE_CODE_GIT_BASH_PATH": "C:\\Program Files\\Git\\bin\\bash.exe" }
+}
+```
+
+---
+
+### 問題4: `claude --version` が古いバージョンを表示する
+
+**原因**: npm、Homebrew、ネイティブインストールが混在していて、別のインストール版が先に参照されている場合。
+
+**解決法**: `claude doctor` でインストールタイプを確認し、使っていないインストール版は削除してください（`npm uninstall -g @anthropic-ai/claude-code`、`brew uninstall --cask claude-code` など）。
 
 ---
 

@@ -42,14 +42,14 @@ Git always requires two steps:
 
 You don't need to memorize any Git commands. The **git-teacher** plugin (바르다 깃선생) handles everything through natural language.
 
-If you installed gptaku_plugins in Section 04, you're already ready. Otherwise:
+If you installed gptaku_plugins in Section 06 (Plugins), you're already ready. Otherwise:
 
 ```shell
 /plugin marketplace add https://github.com/fivetaku/gptaku_plugins.git
-/plugin install git-teacher
+/plugin install git-teacher@gptaku-plugins
 ```
 
-Fully restart Claude Code after installation.
+If the new commands don't show up after installation, run `/reload-plugins`.
 
 ### One-time Setup
 

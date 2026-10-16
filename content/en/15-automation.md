@@ -12,7 +12,7 @@ Normally, Claude Code runs interactively in a terminal — you ask a question, C
 
 > **Headless = automated execution without human interaction**
 
-The feature was previously called "headless mode," but is now officially part of the **Agent SDK CLI**. The `-p` flag and all CLI options work exactly the same way.
+The feature was previously called "headless mode"; the official docs now describe it as **using the Agent SDK via the CLI** (non-interactive mode). The `-p` flag and all CLI options work exactly the same way.
 
 ---
 
@@ -43,6 +43,27 @@ Let Claude read and edit files by specifying allowed tools:
 
 ```bash
 claude -p "Find and fix the bug in auth.py" --allowedTools "Read,Edit,Bash"
+```
+
+Instead of listing tools one by one, you can set a baseline with a permission mode:
+
+```bash
+# Proceed with a classifier reviewing actions (same Auto mode as interactive sessions)
+claude -p "Bump dependency versions and run the tests" --permission-mode auto
+
+# Deny every action that would need confirmation (for locked-down CI environments)
+claude -p "..." --permission-mode dontAsk
+
+# Unattended runs where nobody can answer prompts: deny anything that would ask, and keep going
+claude -p "..." --permission-mode auto --permission-prompts none
+```
+
+### Use `--bare` for scripts and CI
+
+Adding `--bare` skips hooks, plugins, MCP servers, auto memory, and CLAUDE.md auto-discovery, so startup is faster and **you get the same result on any machine**. It's the approach the official docs recommend for scripts and CI, and it's slated to become the default for `-p`. It doesn't read your subscription login, so `ANTHROPIC_API_KEY` is required.
+
+```bash
+claude --bare -p "Summarize README.md" --allowedTools "Read"
 ```
 
 ### Get structured JSON output
@@ -96,15 +117,15 @@ Run this command inside Claude Code to be guided through setup automatically:
 /install-github-app
 ```
 
-> Repository admin access is required.
+> Requires repository admin access and the GitHub CLI (with `gh auth login` completed), and only works with github.com repositories. You can also **authenticate with your subscription account** instead of an API key: run `claude setup-token` locally to create a one-year token and register it as the `CLAUDE_CODE_OAUTH_TOKEN` secret, and Actions runs will draw from your subscription usage.
 
 ### Manual Setup
 
 1. **Install the Claude GitHub App**: Visit [github.com/apps/claude](https://github.com/apps/claude) and install it on your repository.
 
-2. **Add your API key**: Go to repository Settings → Secrets and add `ANTHROPIC_API_KEY`.
+2. **Add an authentication secret**: Go to repository Settings → Secrets and add `ANTHROPIC_API_KEY` (API key) or `CLAUDE_CODE_OAUTH_TOKEN` (subscription token).
 
-3. **Create a workflow file**: Add a YAML file inside `.github/workflows/`.
+3. **Create a workflow file**: Add a YAML file inside `.github/workflows/`. You can copy the official example ([examples/claude.yml](https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml)) as-is.
 
 ---
 
@@ -122,12 +143,24 @@ on:
 
 jobs:
   claude:
+    if: contains(github.event.comment.body, '@claude')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          # Responds to @claude mentions in comments
+          # If you use a subscription token, replace the line above with:
+          # claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # With no prompt given, responds to @claude mentions automatically
 ```
 
 Usage in comments:
@@ -145,18 +178,30 @@ Usage in comments:
 name: Code Review
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, ready_for_review, reopened]
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
     steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: "/review"
-          claude_args: "--max-turns 5"
+          plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
+          plugins: "code-review@claude-code-plugins"
+          prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+          claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
 ```
+
+> `--comment` is what makes the review findings appear as inline comments on the PR. Without it, they only show up in the workflow log. If you want automatic reviews on every PR without maintaining a workflow file, see the **Code Review** feature in the official docs.
 
 ---
 
@@ -171,13 +216,21 @@ on:
 jobs:
   report:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      id-token: write
     steps:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: "Generate a summary of yesterday's commits and open issues"
-          claude_args: "--model sonnet"
+          claude_args: |
+            --model claude-sonnet-5-5
+            --allowedTools "mcp__github__list_commits,mcp__github__list_issues"
 ```
+
+> When running with a plain-text prompt, Claude can only use the tools allowed via `--allowedTools` in `claude_args`. The example above allows just two GitHub API tools, so no checkout step is needed.
 
 ---
 
@@ -193,18 +246,20 @@ jobs:
 
 | Parameter | Description | Required |
 |-----------|-------------|----------|
-| `anthropic_api_key` | Your Anthropic API key | Yes |
-| `prompt` | Instructions for Claude | No |
-| `claude_args` | Additional CLI arguments (`--max-turns`, `--model`, etc.) | No |
+| `anthropic_api_key` | Your Anthropic API key | One of the two |
+| `claude_code_oauth_token` | Subscription account token (created with `claude setup-token`) | One of the two |
+| `prompt` | Instructions for Claude (without one, waits for an `@claude` mention) | No |
+| `claude_args` | Additional CLI arguments (`--max-turns`, `--model`, `--allowedTools`, etc.) | No |
+| `plugins` / `plugin_marketplaces` | Plugins to install before running | No |
 | `trigger_phrase` | Custom trigger phrase (default: `@claude`) | No |
+
+> The person who triggers a run must have **write access** to the repository, and bot accounts are ignored unless listed in `allowed_bots` (prevents infinite loops).
 
 ---
 
 ## GitLab CI/CD Integration (Brief Overview)
 
-If you use GitLab, you can add a Claude Code job to `.gitlab-ci.yml`.
-
-> GitLab integration is currently in beta.
+If you use GitLab, you can add a Claude Code job to `.gitlab-ci.yml`. For the full procedure, see the [official GitLab CI/CD docs](https://code.claude.com/docs/en/gitlab-ci-cd).
 
 ```yaml
 stages:
@@ -233,12 +288,12 @@ Don't forget to add `ANTHROPIC_API_KEY` as a masked CI/CD variable in your GitLa
 Automation **consumes a large number of tokens**.
 
 - CI/CD pipelines run without human oversight, so costs can accumulate faster than expected.
-- Use `--max-turns` to cap the number of conversation turns.
-- Set workflow-level timeouts to prevent runaway jobs.
+- Use `--max-turns` to cap the number of conversation turns, and `--max-budget-usd` to cap the dollar spend of a single run.
+- Set workflow-level timeouts to prevent runaway jobs, and limit concurrency.
 - Avoid triggering workflows unnecessarily.
 
 ```yaml
-claude_args: "--max-turns 5 --model sonnet"
+claude_args: "--max-turns 5 --model claude-sonnet-5-5"
 ```
 
 **In addition to API token costs, you'll also incur GitHub Actions compute minutes** if you exceed your plan's free tier.
@@ -276,8 +331,11 @@ For now, it's enough to know this capability exists and bookmark it for later.
 
 ```
 Headless mode:    claude -p "task description" --output-format json
-GitHub Actions:   anthropics/claude-code-action@v1
+Scripts/CI:       --bare to remove environment effects, --permission-prompts none for unattended runs
+GitHub Actions:   anthropics/claude-code-action@v1 (API key or subscription token)
 Trigger:          @claude mention or automatic prompt
-Cost control:     --max-turns, timeout, model selection
-Security:         Always use Secrets for API keys
+Cost control:     --max-turns, --max-budget-usd, timeout, model selection
+Security:         Always use Secrets for keys and tokens
 ```
+
+> If you just want simple repetition inside the terminal, **`/loop`** runs the same prompt on an interval — for example `/loop 30m check for new issues and summarize them` — and if it needs to keep running while your computer is off, `/schedule` creates a cloud routine.

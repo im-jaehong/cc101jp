@@ -19,7 +19,7 @@ Claude Code is powerful. It creates, edits, deletes files, and runs Git commands
 
 ## What are Hooks?
 
-**Hooks** are shell commands that execute automatically when specific events occur in Claude Code.
+**Hooks** are shell commands that execute automatically when specific events occur in Claude Code. There are 30-odd events, but these are the ones a beginner should know:
 
 | Event | When it fires | Common use |
 |-------|--------------|------------|
@@ -29,9 +29,13 @@ Claude Code is powerful. It creates, edits, deletes files, and runs Git commands
 | `Notification` | When Claude sends a notification | Desktop alerts |
 | `SessionStart` | When a session starts or resumes | Inject context |
 | `UserPromptSubmit` | When you submit a prompt | Pre-process input |
-| `PreCompact` | Before context compaction | Preserve critical info |
+| `PreCompact` / `PostCompact` | Before / after context compaction | Preserve critical info |
+| `SubagentStart` / `SubagentStop` | When a sub-agent starts / finishes | Track delegated work |
+| `SessionEnd` | When a session ends | Back up records |
 
-> Key: `exit 0` = allow, `exit 2` = **block** (stderr message is sent to Claude)
+> Key: `exit 2` = **block** (stderr message is sent to Claude); `exit 0` = exit normally and continue as usual. Any other code such as `exit 1` is **not** a block — it only shows up as a hook error and the action proceeds — so always use `exit 2` when you mean to block.
+>
+> Besides shell commands (`command`), there are other hook types: `http` sends a webhook, `mcp_tool` calls an MCP tool, `prompt` asks the model to decide, and `agent` (experimental) reads files before deciding.
 
 ---
 
@@ -43,7 +47,9 @@ Claude Code is powerful. It creates, edits, deletes files, and runs Git commands
 | `.claude/settings.json` | Current project | Yes (commit to Git) |
 | `.claude/settings.local.json` | Current project | No |
 
-> You can also use the `/hooks` command for interactive setup, but copy-pasting the examples below is faster.
+> The `/hooks` command is a menu for **viewing** currently registered hooks (read-only). To configure hooks, copy-paste the examples below into `settings.json`, or ask Claude to "add a hook that does X" (`/update-config`) and it will write it for you.
+>
+> 💡 Claude Code also has built-in safeguards. An `rm -rf` on a critical path such as your home folder or root is never auto-approved in any permission mode, and Auto mode's classifier blocks destructive actions outside the scope of your request. The Safety Hook below is for hard-coding **your own rules** on top of that (for example, banning `rm` even inside the project).
 
 ---
 
@@ -339,7 +345,9 @@ For decisions requiring judgment, use `type: "prompt"`:
 | JSON parse error | Wrap `echo` in `~/.zshrc` with an interactive shell check |
 | All file edits blocked | Check the `exit 2` condition in your `PreToolUse` hook |
 
-Debug: `claude --debug` or `Ctrl+O` to see hook execution logs.
+Debug: turn on debug logging with `/debug` (or `claude --debug`), then open the detailed transcript view with `Ctrl+O` to trace how the hook ran.
+
+> On Windows, if the `python3` command isn't available, replace it with `python`. With Git for Windows (Git Bash) installed, the shell-based hook examples work as written.
 
 ---
 

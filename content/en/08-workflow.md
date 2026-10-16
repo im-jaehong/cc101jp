@@ -169,9 +169,11 @@ Asking for too many things at once causes Claude to lose track.
 ### How to Enable Plan Mode
 
 ```
-Press Shift+Tab twice
-or type:
 > /plan
+(or press Shift+Tab until the status bar shows "plan mode on")
+
+# Add a description to start planning that task right away
+> /plan design the data structure for a photo organizer app
 ```
 
 ### When to Use Plan Mode
@@ -181,19 +183,21 @@ or type:
 - When exploring an unfamiliar codebase before making changes
 - For large architectural changes where you want to agree on direction first
 
+> 💡 When planning a project from scratch, the **show-me-the-prd** plugin can draft 4 planning documents from a single sentence.
+
 ### Plan Mode Example
 
 ```bash
 # Start directly in Plan Mode
 claude --permission-mode plan
 
-# Or toggle during a session
-> Shift+Tab (twice)
+# Or switch during a session
+> /plan
 
 # Ask Claude to plan
 > Create a detailed migration plan for moving our auth system from JWT to OAuth2
 
-# Review the plan, then switch back to normal mode to execute
+# Review the plan; when you approve it, Claude asks which mode to execute in (Auto mode / accept edits / confirm manually)
 ```
 
 ---
@@ -214,7 +218,7 @@ git diff          # See what changed
 git checkout .    # Discard all changes (careful!)
 ```
 
-Alternatively, press `Esc` + `Esc` inside Claude Code to rewind the conversation and code to the last checkpoint.
+Alternatively, inside Claude Code, use `/diff` to see everything that changed at a glance, and `/rewind` (or `Esc` + `Esc` with the input box empty) to roll back to an earlier state.
 
 ---
 
@@ -241,7 +245,7 @@ When Claude asks for `sudo` or wants to modify system files, ask why first.
 
 ### Be Careful with `--dangerously-skip-permissions`
 
-This flag bypasses all permission checks. Only use it in a fully isolated environment like a container or VM — never on your main machine.
+This flag bypasses all permission checks. Only use it in a fully isolated environment like a container or VM — never on your main machine. If the prompts feel tedious, the default **Auto mode** (where a classifier reviews actions) is all you need.
 
 ### Always Backup Before Major Work
 
@@ -256,6 +260,8 @@ Before large-scale refactoring or database migrations, always run `git commit` o
 ```
 > /rename auth-refactor
 ```
+
+You can also name it from the start: `claude -n auth-refactor`
 
 Resume it later with:
 

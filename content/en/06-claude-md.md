@@ -32,8 +32,12 @@ The location of CLAUDE.md determines its scope.
 |---------------|-------|-------------------|
 | `./CLAUDE.md` | Current project | ✅ Committable to git |
 | `./.claude/CLAUDE.md` | Current project (hidden folder) | ✅ Committable to git |
-| `./CLAUDE.local.md` | Current project (you only) | ❌ Auto-added to .gitignore |
+| `./.claude/rules/*.md` | Current project, per-topic rule files (can be path-scoped) | ✅ Committable to git |
+| `./CLAUDE.local.md` | Current project (you only) | ❌ Add it to `.gitignore` yourself |
 | `~/.claude/CLAUDE.md` | All your projects (global) | ❌ Personal only |
+| `~/.claude/rules/*.md` | All your projects, per-topic rule files | ❌ Personal only |
+
+> If your repository already has an `AGENTS.md` (an instruction file for other coding agents) and no CLAUDE.md, Claude Code reads `AGENTS.md` instead (v2.1.277+). A CLAUDE.md in a subfolder is loaded on demand, when Claude works with files in that folder.
 
 **Most common location**: `CLAUDE.md` at your project root.
 
@@ -230,19 +234,28 @@ Good things to put in your global CLAUDE.md:
 
 ---
 
-## Memory Priority
+## How Multiple Files Are Loaded Together
 
-When multiple CLAUDE.md files exist, more specific files take priority.
+When multiple CLAUDE.md files exist, they **don't override each other — they are all concatenated** into context. They are loaded in this order:
 
 ```
-Priority (high → low):
-1. CLAUDE.local.md (your personal project overrides)
-2. ./CLAUDE.md (project-level settings)
-3. ~/.claude/CLAUDE.md (global settings)
-4. Organization-managed CLAUDE.md (company-wide policy)
+Loading order:
+1. Organization-managed CLAUDE.md (company-wide policy, cannot be turned off)
+2. ~/.claude/CLAUDE.md (global settings)
+3. ./CLAUDE.md, .claude/rules/, CLAUDE.local.md — from parent folders down to the current folder
 ```
 
-For example, if your global settings say "2-space indent" but your project's CLAUDE.md says "4-space indent," the project setting wins.
+Claude generally follows the more specific (project-level) instruction, but if two files contradict each other, **there is no guarantee which one wins**. Avoid conflicts like "2-space indent" in your global settings and "use tabs" in your project, and run `/doctor prompt-audit` periodically to clean up stale or contradictory instructions.
+
+---
+
+## Auto Memory: Notes Claude Writes for Itself
+
+If CLAUDE.md is the instruction sheet you write, **auto memory** is the set of notes Claude writes for itself as it works. It records the corrections and patterns you've given it per repository — things like "this project uses pnpm" or "this person prefers commit messages in Korean" — and reads them back at the start of every session (the first 200 lines of `MEMORY.md`).
+
+- It's on by default; use `/memory` to turn it on or off and to view what's been saved.
+- Storage location: `~/.claude/projects/<project>/memory/`
+- For anything you want **enforced** as a rule, don't rely on auto memory — write it directly in CLAUDE.md. Both are "reference material," not enforcement mechanisms, so block actions that must never happen with Hooks.
 
 ---
 
@@ -255,7 +268,22 @@ To edit CLAUDE.md during a session:
 /memory
 ```
 
-A file picker opens so you can edit your CLAUDE.md directly.
+A file picker opens so you can edit your CLAUDE.md directly. The same screen lets you toggle auto memory on or off and view its contents.
+
+### Split by Topic: `.claude/rules/`
+
+When CLAUDE.md gets long, split it into per-topic files in the `.claude/rules/` folder (`testing.md`, `writing-style.md`, and so on). Add `paths:` at the top of a file to have it loaded only when Claude works with matching files, which saves context the rest of the time.
+
+```markdown
+---
+paths:
+  - "drafts/**/*.md"
+---
+# Drafting Rules
+- Propose 3 title options; body should have 4–6 subheadings
+```
+
+> Aim to keep CLAUDE.md **under 200 lines**. The longer it gets, the more tokens it uses and the less closely its instructions are followed. Move detailed procedures that only matter for specific tasks into Skills, so they're read only when that task comes up.
 
 ### File Imports
 You can reference other files from within CLAUDE.md:
@@ -297,9 +325,12 @@ Or just ask Claude directly:
 | **Role** | Claude's long-term memory / standing instruction sheet |
 | **Location** | `CLAUDE.md` at project root |
 | **Global settings** | `~/.claude/CLAUDE.md` |
+| **Split by topic** | `.claude/rules/*.md` (can be path-scoped) |
 | **Auto-generate** | Use the `/init` command |
 | **Edit mid-session** | Use `/memory` or any text editor |
-| **Format** | Free-form Markdown |
+| **Audit** | `/doctor prompt-audit` (finds stale or contradictory instructions) |
+| **Format** | Free-form Markdown, under 200 lines recommended |
+| **Auto memory** | Notes Claude writes for itself, managed via `/memory` |
 
 **One CLAUDE.md eliminates the need to re-explain your project every session. Make Claude Code feel like a real team member.**
 

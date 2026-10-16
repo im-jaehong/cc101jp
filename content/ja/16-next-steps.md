@@ -95,7 +95,10 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 | **公式ドキュメント（英語）** | [code.claude.com/docs](https://code.claude.com/docs) |
 | **GitHubリポジトリ** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
 | **公式プラグイン** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
+| **Claude Academy（無料講座）** | [academy.claude.com](https://academy.claude.com/) — 「Claude Code 101」「Claude Code in Action」など |
 | **Anthropicコンソール** | [platform.claude.com](https://platform.claude.com) |
+
+> Claude Codeの中でも学べます。`/powerup`はアニメーションデモ付きの短い講座を、`/release-notes`はバージョンごとの新機能を表示します。分からないことがあれば`/btw この機能は何？`のように、会話に痕跡を残さずに質問することもできます。
 
 ---
 
@@ -104,7 +107,7 @@ CC101で学んだ基礎を組み合わせて、実際の業務に適用します
 | リソース | URL | 説明 |
 |--------|-----|------|
 | **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | このガイドのリポジトリ。誤字・内容追加の貢献を歓迎します |
-| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | バイブコーダー向け15個のプラグインコレクション：企画(show-me-the-prd)、Git管理、メンタリング、リサーチ(insane-research)、並列開発、チーム構成、スキル生成、公式ドキュメント(docs-guide)ほか |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | バイブコーダー向け19個のプラグインコレクション：企画(show-me-the-prd)、Git管理、メンタリング、リサーチ(insane-research)、並列開発、チーム構成、スキル生成、公式ドキュメント(docs-guide)、目標管理(goaljaby・playmaker)、商品詳細ページ(sangse)ほか |
 
 このガイドが役に立ったら**Star**を押してください！更新と改善の大きな励みになります。
 

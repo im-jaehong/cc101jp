@@ -62,32 +62,33 @@
 
 ## 내장 서브에이전트
 
-Claude Code는 기본적으로 3개의 서브에이전트를 포함합니다:
+Claude Code에는 바로 쓸 수 있는 서브에이전트가 내장되어 있습니다:
 
 | 에이전트 | 모델 | 허용 도구 | 용도 |
 |---------|------|----------|------|
-| **Explore** | Haiku (빠름) | 읽기 전용 | 파일 탐색, 코드 검색 |
+| **Explore** | 메인 대화와 동일 | 읽기 전용 (Write/Edit 불가) | 파일 탐색, 코드 검색 |
 | **Plan** | 메인 상속 | 읽기 전용 | Plan 모드에서 컨텍스트 수집 |
 | **general-purpose** | 메인 상속 | 모든 도구 | 복잡한 다단계 작업 |
+| **claude** | 메인 상속 | 모든 도구 | 특정 유형에 맞지 않는 작업 전반, 백그라운드 세션 기본값 |
+| **claude-code-guide** | Haiku | 제한적 | Claude Code 사용법 질문에 답변 |
 
 Claude가 코드를 탐색해야 할 때는 자동으로 **Explore** 서브에이전트를 씁니다. 탐색 결과(수천 줄의 파일 내용)가 메인 대화를 오염시키지 않고, 요약만 메인으로 돌아옵니다.
+
+> 대화 전체를 물려받는 **포크(fork)** 서브에이전트도 있습니다. `/subtask 지금까지 바꾼 파서에 대한 단위 테스트 초안 작성해줘`처럼 쓰면, 지금까지의 대화를 그대로 아는 서브에이전트가 백그라운드에서 곁가지 작업을 처리하고 결과만 돌려줍니다.
 
 ---
 
 ## 나만의 서브에이전트 만들기
 
-### 방법 1: /agents 인터랙티브 메뉴 (권장)
+### 방법 1: Claude에게 만들어 달라고 요청 (권장)
 
 ```
-/agents
+"리서치 전용 서브에이전트를 만들어줘.
+ sources/ 폴더를 읽고 5줄 요약과 다음 질문 5개를 정리하는 역할이고,
+ 읽기 전용 도구만 쓰게 해줘. 이 프로젝트에만 적용되게 .claude/agents/에 저장해줘"
 ```
 
-1. **Create new agent** 선택
-2. **User-level** (모든 프로젝트) 또는 **Project-level** (현재 프로젝트) 선택
-3. **Generate with Claude** 선택 후 역할 설명
-4. 허용 도구 선택
-5. 모델 선택 (Haiku/Sonnet/Opus)
-6. 저장
+Claude가 아래 형식에 맞는 파일을 대신 작성해 줍니다. (예전의 `/agents` 인터랙티브 메뉴는 v2.1.198부터 사라졌고, 지금 `/agents`를 입력하면 이렇게 요청하라는 안내만 나옵니다.)
 
 ### 방법 2: 파일 직접 작성
 
@@ -186,12 +187,15 @@ name: my-agent           # 소문자 + 하이픈 (필수)
 description: 설명        # Claude가 언제 위임할지 판단 기준 (필수)
 tools: Read, Grep, Glob  # 허용 도구 목록 (생략 시 모든 도구 상속)
 disallowedTools: Write   # 제외할 도구
-model: haiku             # haiku / sonnet / opus / inherit(기본값)
-permissionMode: default  # default / acceptEdits / dontAsk / bypassPermissions
+model: haiku             # haiku / sonnet / opus / fable / inherit(기본값)
+effort: low              # 사고 강도: low / medium / high / xhigh / max
+permissionMode: default  # default / acceptEdits / auto / dontAsk / bypassPermissions / plan
 maxTurns: 20             # 최대 실행 턴 수
 memory: user             # 영구 메모리: user / project / local
 background: false        # true면 항상 백그라운드 실행
 isolation: worktree      # worktree면 격리된 Git 워크트리에서 실행
+skills:                  # 시작할 때 미리 읽어둘 스킬
+  - api-conventions
 ---
 ```
 
@@ -201,10 +205,11 @@ isolation: worktree      # worktree면 격리된 Git 워크트리에서 실행
 
 | 위치 | 경로 | 우선순위 |
 |------|------|----------|
-| CLI 플래그 | `--agents '{...}'` | 1 (최고) |
-| 프로젝트 | `.claude/agents/` | 2 |
-| 유저 | `~/.claude/agents/` | 3 |
-| 플러그인 | `<plugin>/agents/` | 4 |
+| 조직 관리 설정 | 관리형(managed) 설정 | 1 (최고) |
+| CLI 플래그 | `--agents '{...}'` | 2 |
+| 프로젝트 | `.claude/agents/` (하위 폴더도 가능) | 3 |
+| 유저 | `~/.claude/agents/` | 4 |
+| 플러그인 | `<plugin>/agents/` | 5 |
 
 ---
 
@@ -299,17 +304,22 @@ memory: user
 ## 포그라운드 vs 백그라운드 실행
 
 - **포그라운드**: 완료될 때까지 대기. 권한 요청이 사용자에게 전달됨
-- **백그라운드**: 백그라운드에서 동시 실행. 계속 다른 작업 가능
+- **백그라운드**: 백그라운드에서 동시 실행. 계속 다른 작업 가능. 권한 요청은 메인 세션에 서브에이전트 이름과 함께 표시됨
+
+터미널 대화형 세션에서는 **서브에이전트가 기본적으로 백그라운드에서 실행**됩니다. 프롬프트 아래 패널에 실행 중인 서브에이전트가 표시되고, 결과는 완료되면 메시지로 도착합니다.
 
 ```
-# 백그라운드 실행 요청
-"이걸 백그라운드에서 실행해줘"
-
-# 실행 중 백그라운드로 전환
+# 실행 중인 명령어·에이전트를 백그라운드로 전환
 Ctrl+B
+
+# 백그라운드 서브에이전트 모두 중지 (3초 안에 두 번)
+Ctrl+X 다음 Ctrl+K
+
+# 실행 중·완료된 백그라운드 작업 보기
+/tasks
 ```
 
-> **주의**: 백그라운드 서브에이전트는 MCP 도구를 사용할 수 없습니다.
+> 백그라운드 서브에이전트도 MCP 도구를 그대로 쓸 수 있습니다. (예전 문서에 "백그라운드에서는 MCP 사용 불가"라고 된 설명은 더 이상 맞지 않습니다.)
 
 ---
 
@@ -333,6 +343,8 @@ Ctrl+B
 > ```
 >
 > 켜지 않으면 팀이 구성되지 않고, Claude가 팀원을 만들거나 제안하지도 않습니다. 세션 재개(`/resume`, `/rewind`)로 팀원이 복원되지 않는 등 알려진 제약도 있습니다.
+>
+> 팀원은 기본적으로 현재 터미널 안에서 실행됩니다(in-process). 프롬프트 아래 패널에서 `↑`/`↓`로 팀원을 고르고 `Enter`를 누르면 그 팀원의 대화를 보며 직접 지시할 수 있습니다. tmux나 iTerm2를 쓰면 팀원마다 분할 창으로 볼 수도 있습니다. 설치된 에이전트·팀원 목록은 `/list-agents`로 확인합니다.
 
 ### 플러그인으로 쉽게 시작하기: 끼리끼리
 
@@ -372,7 +384,7 @@ Agent Teams를 직접 설정하는 게 어렵다면, **끼리끼리(kkirikkiri)*
 - 불필요한 서브에이전트 남용은 비용 증가로 이어짐
 
 **비용 절약 팁**:
-- 읽기 전용 탐색에는 **Haiku 모델** 서브에이전트 사용
+- 읽기 전용 탐색이나 단순 작업에는 **Haiku 5.5** 서브에이전트 사용 (`model: haiku`, 필요하면 `effort: low`)
 - 서브에이전트가 반환하는 결과의 양을 명확히 지정
 - 단순 작업은 메인 대화에서 처리
 

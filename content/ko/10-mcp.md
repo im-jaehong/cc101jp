@@ -88,7 +88,7 @@ Slack 연동을 통해 슬랙 채널의 맥락을 그대로 Claude에게 전달�
 
 ### Notion, Asana, Figma 등
 
-MCP 레지스트리([api.anthropic.com/mcp-registry/docs](https://api.anthropic.com/mcp-registry/docs))에서 수백 가지 MCP 서버를 찾을 수 있습니다.
+Anthropic이 검토한 커넥터 디렉터리([claude.ai/directory](https://claude.ai/directory))에서 Notion, Asana, Figma 등 수백 가지 MCP 서버를 찾을 수 있습니다.
 
 ---
 
@@ -107,6 +107,8 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 claude mcp add --transport http secure-api https://api.example.com/mcp \
   --header "Authorization: Bearer your-token"
 ```
+
+> 예전 방식인 SSE 전송(`--transport sse`)은 더 이상 권장되지 않습니다. HTTP를 먼저 시도하고 안 되면 자동으로 SSE로 넘어가므로(v2.1.265+), 특별한 이유가 없으면 `--transport http`를 쓰세요.
 
 ### 방법 2: 로컬 stdio 서버
 
@@ -133,9 +135,14 @@ claude mcp get github
 # 서버 제거
 claude mcp remove github
 
-# Claude Code 내에서 상태 확인
+# Claude Desktop 앱에 설정해둔 서버 가져오기 (macOS / WSL)
+claude mcp add-from-claude-desktop
+
+# Claude Code 내에서 상태 확인·인증·켜고 끄기
 /mcp
 ```
+
+> MCP 서버를 많이 연결해도 도구 정의는 **실제로 쓰기 전까지 컨텍스트에 올라오지 않습니다**(도구 이름과 서버 설명만 올라옴). 그래도 `gh`, `aws` 같은 CLI 도구가 있다면 MCP보다 컨텍스트를 덜 쓰므로, 둘 다 가능하면 CLI를 우선하세요. 무엇이 컨텍스트를 차지하는지는 `/context`로 확인합니다.
 
 ---
 
@@ -179,18 +186,18 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 
 ### 2. Slack MCP
 
-claude.ai 계정 연결 후 [claude.ai/settings/connectors](https://claude.ai/settings/connectors)에서 바로 설정 가능
+claude.ai 계정으로 로그인했다면 [claude.ai/customize/connectors](https://claude.ai/customize/connectors)에서 연결한 커넥터가 Claude Code에도 자동으로 나타납니다 (`/mcp`에서 claude.ai 표시가 붙음)
 
 **없어지는 노가다**: 채널 스레드 수동 읽기, 요약 요청을 위한 복붙, 공지 초안 직접 작성
 
 **활용 예시**:
 - "#마케팅 채널의 오늘 스레드를 읽고, 쟁점 3개와 합의된 다음 액션을 정리해서 슬랙 공지 초안을 만들어줘"
 
-### 3. Google Chrome (웹 리서치)
+### 3. Claude in Chrome (웹 리서치)
 
-claude.ai 계정 연결 후 [claude.ai/settings/connectors](https://claude.ai/settings/connectors)에서 바로 설정 가능
+MCP 서버가 아니라 **Chrome 확장 프로그램**입니다. 확장을 설치한 뒤 `claude --chrome`으로 시작하거나 `/chrome`에서 설정하면, Claude가 내 브라우저(로그인 상태 그대로)에서 페이지를 열고 읽고 클릭합니다
 
-**없어지는 노가다**: 웹사이트 방문해서 정보 수동 복사, 여러 사이트 비교를 위한 반복 탭 전환
+**없어지는 노가다**: 웹사이트 방문해서 정보 수동 복사, 여러 사이트 비교를 위한 반복 탭 전환, 로그인이 필요한 페이지 확인
 
 **활용 예시**:
 - "지정한 5개 경쟁사 사이트를 훑고, 오늘의 주요 변화·새 기능·가격 변경만 표로 정리해줘"
@@ -229,13 +236,12 @@ claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
 
 ---
 
-## Claude Code 공식 커넥터
+## claude.ai 커넥터 자동 연동
 
-Claude.ai 계정으로 Claude Code에 로그인한 경우, [claude.ai/settings/connectors](https://claude.ai/settings/connectors)에서 설정한 MCP 서버가 Claude Code에 자동으로 연결됩니다.
+Claude.ai 계정으로 Claude Code에 로그인한 경우, [claude.ai/customize/connectors](https://claude.ai/customize/connectors)에서 연결해둔 커넥터(Notion, Slack, Google Drive, Gmail 등)가 Claude Code에 자동으로 연결됩니다. `/mcp`에서 claude.ai 표시가 붙은 항목이 그것이며, 개별로 끄거나 설정에 `"disableClaudeAiConnectors": true`를 넣어 전부 끌 수 있습니다.
 
-공식적으로 지원되는 커넥터:
-- **Slack**: 채널 메시지 읽기/쓰기
-- **Google Chrome**: 브라우저 자동화 (Playwright 기반)
+- API 키로 로그인했거나 Bedrock 같은 외부 플랫폼을 쓰는 경우에는 가져오지 않습니다.
+- 같은 URL의 서버를 로컬에서 직접 추가했다면 로컬 설정이 우선합니다.
 
 ---
 
@@ -275,12 +281,12 @@ MCP 서버가 프롬프트를 제공하는 경우, Claude Code에서 `/mcp__서�
 
 - MCP 서버는 Claude를 통해 내 파일 시스템, DB, 외부 서비스에 접근할 수 있습니다
 - 특히 **외부 콘텐츠를 가져오는 MCP 서버**는 프롬프트 인젝션 위험이 있습니다
-- Anthropic이 직접 검증한 서버만 공식 MCP 레지스트리에 등록되어 있습니다
-- 출처가 불명확한 서버는 설치 전 소스 코드를 반드시 확인하세요
+- [claude.ai/directory](https://claude.ai/directory)에는 Anthropic이 검토한 커넥터가 모여 있습니다. 그 밖의 서버는 설치 전 소스 코드와 운영 주체를 반드시 확인하세요
 
 ```bash
-# 프로젝트 스코프 서버는 팀원들에게 확인 요청이 표시됩니다
-# (보안 검토를 위한 안전장치)
+# 프로젝트 스코프(.mcp.json) 서버는 처음 쓸 때 팀원 각자에게 승인 창이 뜹니다
+# (보안 검토를 위한 안전장치). 선택을 되돌리려면:
+claude mcp reset-project-choices
 ```
 
 ---
@@ -292,7 +298,7 @@ MCP 서버가 프롬프트를 제공하는 경우, Claude Code에서 `/mcp__서�
 | 플러그인 | 사용하는 MCP | 역할 |
 |---------|-------------|------|
 | **docs-guide** | Context7 MCP | 공식 문서를 실시간으로 조회해 정확한 답변 제공 |
-| **품앗이** | Codex MCP (선택) | Claude가 PM 역할, Codex가 있으면 병렬 개발 / 없으면 Claude만으로 동작 |
+| **품앗이** | Codex CLI | Claude가 PM 역할, Codex CLI가 병렬 개발자 역할 (Codex CLI 설치 필요) |
 | **insane-research** | 리서치 플러그인 | 멀티에이전트가 여러 소스를 동시에 조사하고 교차검증 |
 
 > 💡 플러그인을 설치하면 MCP 설정이 자동으로 추가됩니다. 별도로 MCP를 설정할 필요 없이, 플러그인이 알아서 처리합니다.

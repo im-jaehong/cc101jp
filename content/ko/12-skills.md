@@ -22,7 +22,7 @@
 | **일관성** | 매번 다를 수 있음 | 항상 동일한 절차 |
 | **팀 공유** | 불가 | Git 커밋으로 공유 |
 | **인자 전달** | 설명 속에 포함 | `$ARGUMENTS`로 명확하게 |
-| **도구 제한** | Claude 판단 | 명시적으로 허용된 도구만 |
+| **도구 권한** | 매번 확인 창 | 스킬에 미리 허용한 도구는 묻지 않고 실행 |
 
 ---
 
@@ -104,12 +104,19 @@ my-skill/
 ```yaml
 ---
 name: my-skill           # 스킬 이름 (디렉터리명 기본값)
-description: 설명        # Claude가 언제 이 스킬을 쓸지 판단하는 기준 (필수)
+description: 설명        # Claude가 언제 이 스킬을 쓸지 판단하는 기준 (권장)
+when_to_use: 회의 끝나고 정리할 때  # 트리거 상황 추가 설명 (description 뒤에 붙음)
+argument-hint: [파일경로]  # 자동완성에 보여줄 인자 힌트
+arguments: [file, lang]  # 이름 붙인 인자 → 본문에서 $file, $lang 으로 사용
 disable-model-invocation: true  # true면 사용자만 실행 가능 (Claude 자동 실행 불가)
 user-invocable: false    # false면 메뉴에 안 보임 (Claude만 자동 실행 가능)
-allowed-tools: Read, Grep, Glob  # 이 스킬 실행 중 허용할 도구만 지정
-context: fork            # 독립된 서브에이전트 컨텍스트에서 실행
+allowed-tools: Read, Grep, Glob  # 이 스킬을 실행한 턴 동안 확인 없이 쓸 수 있는 도구 (제한이 아니라 사전 허용)
+disallowed-tools: Write  # 이 스킬이 활성인 동안 아예 빼버릴 도구
+context: fork            # 독립된 서브에이전트 컨텍스트에서 실행 (기본 백그라운드)
 model: sonnet            # 이 스킬에서 사용할 모델 지정
+effort: low              # 사고 강도 (low / medium / high / xhigh / max)
+paths:                   # 이 경로의 파일을 다룰 때만 자동 활성화
+  - "src/**/*.ts"
 ---
 ```
 
@@ -254,9 +261,10 @@ GitHub 이슈 $ARGUMENTS를 처리하세요:
 name: translate
 description: 파일이나 텍스트를 번역합니다.
 argument-hint: [파일경로 또는 텍스트] [대상언어]
+arguments: [source, lang]
 ---
 
-$ARGUMENTS[0]을 $ARGUMENTS[1]로 번역하세요.
+$source 를 $lang 으로 번역하세요.
 
 - 기술 용어는 원문 유지 (코드, 명령어, 고유명사)
 - 마크다운 구조 보존
@@ -267,6 +275,8 @@ $ARGUMENTS[0]을 $ARGUMENTS[1]로 번역하세요.
 ```
 /translate README.md ko
 ```
+
+> 인자는 `$ARGUMENTS`(전체), `$0`/`$1`(또는 `$ARGUMENTS[0]`, 순서별), 그리고 위처럼 `arguments:`에 이름을 붙여 `$source`처럼 쓰는 세 가지 방식이 있습니다. 띄어쓰기가 있는 값은 따옴표로 감싸세요: `/translate "my notes.md" ko`
 
 ---
 
@@ -295,6 +305,8 @@ Claude가 이 스킬을 실행하면:
 2. 실제 데이터가 프롬프트에 삽입됨
 3. Claude가 실제 PR 내용을 보고 요약 작성
 
+> 명령어 하나라도 실패하면 스킬 실행 전체가 중단됩니다. 실패해도 괜찮은 명령에는 `|| true`를 붙이세요: !`gh pr view --comments || true`
+
 ---
 
 ## Skills가 저장되는 위치
@@ -306,7 +318,9 @@ Claude가 이 스킬을 실행하면:
 | 프로젝트 | `.claude/skills/<이름>/SKILL.md` | 이 프로젝트만 |
 | 플러그인 | `<플러그인>/skills/<이름>/SKILL.md` | 플러그인 활성화 시 |
 
-같은 이름의 스킬이 여러 위치에 있으면 **엔터프라이즈 > 개인 > 프로젝트** 순으로 우선순위가 적용됩니다.
+같은 이름의 스킬이 여러 위치에 있으면 **엔터프라이즈 > 개인 > 프로젝트** 순으로 우선순위가 적용됩니다. 플러그인 스킬은 `/플러그인명:스킬명`으로 이름 공간이 분리되어 충돌하지 않습니다.
+
+세션 도중에 스킬 파일을 추가·수정했다면 `/reload-skills`로 다시 읽어들이고, `/skills`로 지금 쓸 수 있는 스킬 목록을 확인할 수 있습니다. 스킬이 늘어나면 `/skill-doctor`로 각 스킬이 차지하는 컨텍스트와 실제 사용 빈도를 보고 안 쓰는 것을 정리하세요.
 
 ---
 
@@ -405,8 +419,9 @@ description: review tool
 
 | 문제 | 해결책 |
 |------|--------|
-| 스킬이 트리거 안 됨 | description에 사용자가 실제로 쓸 표현 포함 |
-| 스킬이 너무 자주 실행됨 | description을 더 구체적으로 수정 |
+| 스킬이 트리거 안 됨 | description에 사용자가 실제로 쓸 표현 포함, `when_to_use`에 예시 문장 추가 |
+| 스킬이 너무 자주 실행됨 | description을 더 구체적으로 수정, 또는 `paths:`로 적용 범위 제한 |
+| 새로 만든 스킬이 안 보임 | `/reload-skills` 실행 |
 | Claude가 스킬을 못 봄 | `/context`에서 컨텍스트 한도 초과 여부 확인 |
 | 자동 실행 막고 싶음 | `disable-model-invocation: true` 추가 |
 

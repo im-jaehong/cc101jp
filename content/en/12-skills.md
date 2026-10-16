@@ -22,7 +22,7 @@ In short: document a procedure you use repeatedly, and from that point on you ca
 | **Consistency** | May vary each time | Same procedure every time |
 | **Team sharing** | Not possible | Git commit to share |
 | **Argument passing** | Embedded in prose | Explicit via `$ARGUMENTS` |
-| **Tool restrictions** | Claude's judgment | Only explicitly allowed tools |
+| **Tool permissions** | Prompted every time | Tools pre-approved in the skill run without asking |
 
 ---
 
@@ -104,11 +104,18 @@ my-skill/
 ---
 name: my-skill                    # Skill name (directory name is the default)
 description: What it does         # How Claude decides when to use this (recommended)
+when_to_use: After a meeting wraps up  # Extra trigger context (appended to description)
+argument-hint: [file-path]        # Argument hint shown in autocomplete
+arguments: [file, lang]           # Named arguments → use as $file, $lang in the body
 disable-model-invocation: true    # true = only you can run it, Claude won't auto-trigger
 user-invocable: false             # false = hidden from / menu, Claude-only auto-trigger
-allowed-tools: Read, Grep, Glob   # Restrict to only these tools while the skill runs
-context: fork                     # Run in an isolated subagent context
+allowed-tools: Read, Grep, Glob   # Tools usable without prompts during the skill's turn (pre-approval, not a restriction)
+disallowed-tools: Write           # Tools removed entirely while this skill is active
+context: fork                     # Run in an isolated subagent context (background by default)
 model: sonnet                     # Model to use for this skill
+effort: low                       # Effort level (low / medium / high / xhigh / max)
+paths:                            # Auto-activate only when working on files matching these paths
+  - "src/**/*.ts"
 ---
 ```
 
@@ -187,9 +194,10 @@ Run:
 name: translate
 description: Translates a file or text into the target language.
 argument-hint: [file-path or text] [target-language]
+arguments: [source, lang]
 ---
 
-Translate $ARGUMENTS[0] into $ARGUMENTS[1].
+Translate $source into $lang.
 
 - Preserve technical terms as-is (code, commands, proper nouns)
 - Keep Markdown structure intact
@@ -200,6 +208,8 @@ Run:
 ```
 /translate README.md ko
 ```
+
+> There are three ways to reference arguments: `$ARGUMENTS` (everything), `$0`/`$1` (or `$ARGUMENTS[0]`, by position), and named arguments declared under `arguments:` and used as `$source`, as above. Wrap values containing spaces in quotes: `/translate "my notes.md" ko`
 
 ---
 
@@ -228,6 +238,8 @@ When this skill runs:
 2. The real output replaces the placeholder
 3. Claude writes the summary with actual PR data in context
 
+> If any single command fails, the entire skill run is aborted. Append `|| true` to commands that are allowed to fail: !`gh pr view --comments || true`
+
 ---
 
 ## Where skills are stored
@@ -239,7 +251,9 @@ When this skill runs:
 | Project | `.claude/skills/<name>/SKILL.md` | This project only |
 | Plugin | `<plugin>/skills/<name>/SKILL.md` | When plugin is enabled |
 
-When the same skill name exists in multiple locations, priority is: **enterprise > personal > project**.
+When the same skill name exists in multiple locations, priority is: **enterprise > personal > project**. Plugin skills are namespaced as `/plugin-name:skill-name`, so they never collide.
+
+If you add or edit skill files mid-session, run `/reload-skills` to pick them up, and `/skills` to list the skills currently available. As your skills grow, run `/skill-doctor` to see how much context each one takes and how often it's actually used, then prune the ones you don't use.
 
 ---
 
@@ -340,8 +354,9 @@ Shorthand: `$0`, `$1`, `$2` instead of `$ARGUMENTS[0]`, etc.
 
 | Problem | Fix |
 |---------|-----|
-| Skill doesn't trigger | Add phrases users naturally say to the description |
-| Skill triggers too often | Make the description more specific |
+| Skill doesn't trigger | Add phrases users naturally say to the description; add example sentences to `when_to_use` |
+| Skill triggers too often | Make the description more specific, or limit its scope with `paths:` |
+| Newly created skill doesn't show up | Run `/reload-skills` |
 | Claude can't see the skill | Run `/context` — check for context budget warnings |
 | Want to prevent auto-trigger | Add `disable-model-invocation: true` |
 

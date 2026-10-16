@@ -12,7 +12,7 @@
 |------|------|
 | **ドキュメントのバージョン記録** | Google Docs・Notionの「バージョン履歴」機能 — いつでも以前のバージョンに復元可能 |
 | **作業前のスナップショット** | `「reports/フォルダをreports_backup_今日の日付でコピーして」`（Claude Codeに言えばOK） |
-| **直前の作業を取り消し** | `Esc Esc` — Claude Codeセッション中、直前の作業を即座に元に戻します |
+| **直前の作業を取り消し** | `/rewind`（または入力欄が空の状態で`Esc Esc`）— Claudeが修正したファイルを以前の地点に戻します |
 
 > **Gitに興味が出てきましたか？** Gitはコード以外にも、あらゆるファイルのバージョン管理が可能です。リサーチファイル、レポート、企画書もGitで安全に管理できます。興味があれば、このセクションを読み進めてください。
 
@@ -56,14 +56,14 @@ Gitには常に2つのステップがあります：
 
 Gitコマンドを覚える必要はありません。**git-teacher**プラグインが自然言語ですべて処理してくれます。
 
-gptaku_pluginsをセクション04でインストール済みであれば、すでに準備完了です。まだの場合は：
+gptaku_pluginsをセクション06（プラグイン）でインストール済みであれば、すでに準備完了です。まだの場合は：
 
 ```shell
 /plugin marketplace add https://github.com/fivetaku/gptaku_plugins.git
-/plugin install git-teacher
+/plugin install git-teacher@gptaku-plugins
 ```
 
-インストール後、Claude Codeを完全に終了してから再起動してください。
+インストール後に新しいコマンドが表示されない場合は、`/reload-plugins`を実行してください。
 
 ### 初回のみ：セットアップ
 

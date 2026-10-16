@@ -1,6 +1,6 @@
 # 13. Common Mistakes & How to Fix Them
 
-> Ten problems beginners run into most often, in Q&A format — with clear solutions for each.
+> Eleven problems beginners run into most often, in Q&A format — with clear solutions for each.
 
 ---
 
@@ -68,16 +68,23 @@ This diagnoses common installation problems automatically.
 
 When prompted during `claude` startup, press `c` to copy the OAuth URL to your clipboard, then paste it into your browser manually.
 
+**Browser only shows a login code (WSL2, SSH, containers)**
+
+In these environments the browser can't redirect back to your terminal. Copy the code shown on screen and paste it into the terminal at the `Paste code here if prompted` prompt.
+
 **Log out and re-authenticate**
 
 ```
 # Inside Claude Code
 > /logout
+> /login
 
-# Or delete the auth file directly
-rm -rf ~/.config/claude-code/auth.json
+# Or delete the stored credentials directly (Linux/Windows)
+rm ~/.claude/.credentials.json
 claude
 ```
+
+On macOS, credentials live in the Keychain, so use `/logout`. If you have a subscription account but the `ANTHROPIC_API_KEY` environment variable is set, the API key takes precedence and can cause auth errors. Run `/status` to see which login method is active, and clear the variable with `unset ANTHROPIC_API_KEY` if needed.
 
 **Full reset (last resort)**
 
@@ -115,15 +122,16 @@ If you don't need to continue the current conversation:
 > /clear
 ```
 
-**Option 3: Switch to a faster model**
+**Option 3: Switch to a faster model or a lower effort level**
 
 Haiku and Sonnet are significantly faster than Opus for most tasks.
 
 ```
 > /model
+> /effort low
 ```
 
-Select a faster model from the picker.
+Select a faster model from the picker — or keep the model and just reduce how much it thinks with `/effort low`, which noticeably speeds things up. If you need Opus itself to respond faster, you can turn on `/fast` (billed extra).
 
 **Option 4: Disable unused MCP servers**
 
@@ -272,21 +280,22 @@ Claude asks for approval every time it tries to edit a file or run a command.
 
 In the permissions UI, set specific tools to Always Allow.
 
-**Option 2: Enable Auto-Accept Edits for the session**
+**Option 2: Check that you're in Auto mode**
 
 ```
-Press Shift+Tab to cycle to Auto-Accept Edit Mode
+Press Shift+Tab until the status bar reads "auto mode on"
 ```
 
-File edits are automatically approved for the duration of the session.
+Since v2.1.283, new sessions start in Auto mode by default. A classifier reviews actions on your behalf, so most confirmation prompts disappear. If a shell command prompt offers **"Yes, and switch to auto mode"**, you can pick that too. If your session started in Manual mode, either the model doesn't support Auto mode (older generation) or your organization has disabled it.
 
 **Option 3: Understand the permission modes**
 
 | Mode | Description | When to use |
 |------|-------------|-------------|
-| Default | Prompts on first use of each tool | Everyday use |
+| Auto | Classifier reviews actions, rarely asks (default starting mode) | Long tasks, everyday use |
+| Manual (`default`) | Asks before every edit or command | When you want to check each step, sensitive work |
+| Accept Edits | File edits auto-approved, commands still confirmed | Code you're actively reviewing |
 | Plan Mode | Read-only — no file edits | Safe exploration |
-| Auto-Accept | File edits auto-approved | Trusted workflows |
 | bypassPermissions | Skips all checks | Isolated containers only |
 
 **About `--dangerously-skip-permissions`**
@@ -422,7 +431,7 @@ git checkout .
 **Option 4: Use Plan Mode before big tasks (prevention)**
 
 ```
-Shift+Tab (twice to enter Plan Mode)
+> /plan
 ```
 
 Or start a session in Plan Mode:
@@ -442,6 +451,24 @@ Review Claude's plan before allowing it to make any changes.
 # Exclude certain actions explicitly
 > Fix the bug only — don't refactor or clean up anything else
 ```
+
+---
+
+## Q11. "You've hit your session limit" — I Ran Into the Usage Limit
+
+### Situation
+
+You've used up your subscription plan's 5-hour or weekly limit and requests are blocked. Switching models doesn't help — every model shares the same limit.
+
+### Fixes
+
+```
+> /rate-limit-options
+```
+
+- **Wait and auto-continue**: Once the limit resets, Claude Code automatically picks up the task where it left off (v2.1.234+). The message shows the reset time.
+- **Turn on extra usage**: Run `/usage-credits` to open the settings page and enable pay-as-you-go usage credits. Setting a monthly spend cap keeps it safe.
+- **Prevention**: Check `/usage` for your plan usage bars and the breakdown of "what consumed the most usage." The most common cause is keeping a long session going without ever running `/clear`.
 
 ---
 
@@ -467,4 +494,4 @@ After the session:
 
 ---
 
-> If your problem isn't covered here, run `/doctor` inside Claude Code to check installation health, or type `/bug` to report the issue directly to Anthropic.
+> If your problem isn't covered here, run `/doctor` inside Claude Code to check installation health, or type `/bug` to report the issue directly to Anthropic. If you suspect a plugin or hook configuration is causing trouble, start with `claude --safe-mode` to disable all customizations and narrow down the cause.

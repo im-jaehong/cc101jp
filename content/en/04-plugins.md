@@ -17,7 +17,10 @@ A single plugin can include:
 | **Skills** | Custom commands in the format `/plugin-name:command` |
 | **Agents** | AI agents that handle specific roles or tasks |
 | **Hooks** | Event handlers that run automatically on file saves or commands |
+| **Mods** | JavaScript hook modules that add panels to the screen or change behavior (e.g., playmaker's live goal board) |
 | **MCP Servers** | Connections to external services like GitHub, Figma, and more |
+
+> Enabled plugins put their skill and agent names and descriptions into context even in sessions where you don't use them, so they consume a few tokens each. Check the **Context cost** column in the `/plugin` marketplace listing and disable the plugins you aren't using. `/skill-doctor` also shows which skills take up how much space.
 
 ---
 
@@ -52,19 +55,19 @@ Type `/plugin` inside Claude Code and go to the **Discover tab** to browse offic
 
 ### Included Plugins
 
-> As of August 2026 the marketplace lists **15 plugins**.
+> As of October 2026 the marketplace lists **19 plugins**.
 
 #### Recommended for beginners
 
 | Plugin Name | Role | Example Usage |
 |-------------|------|---------------|
-| **docs-guide** | Answers grounded in official library documentation (llms.txt pattern) — no hallucinations | `/docs-guide:explain React hooks` |
+| **docs-guide** | Answers grounded in official library documentation (llms.txt, 68 libraries) — no hallucinations, always the latest docs | `/docs-guide:explain React hooks` |
 | **git-teacher** | Git/GitHub onboarding for non-developers using a cloud-folder analogy, in 5 phases | `/git-teacher:what-is-commit` |
 | **vibe-sunsang** | AI mentor that analyzes your Claude Code conversations and provides growth coaching | `/vibe-sunsang start` |
-| **show-me-the-prd** | Draft-first PRD generator — drafts 4 design documents (PRD, data model, phases, project spec) and confirms assumptions in one batch | `/show-me-the-prd I want to build a photo organizer app` |
-| **insane-research** | Multi-agent deep research with source verification, a 7-phase pipeline, and structured report generation | `/insane-research [topic]` |
+| **show-me-the-prd** | Turns one sentence straight into drafts of 4 design documents (PRD, data model, phases, project spec), then confirms only the assumptions in one batch | `/show-me-the-prd I want to build a photo organizer app` |
+| **insane-research** | Multi-agent deep research — a 7-phase pipeline cross-verifies sources, then produces a cited report | `/insane-research [topic]` |
 | **kkirikkiri** | Turns one sentence into an AI team or a deterministic agent pipeline | `/kkirikkiri create a research team` |
-| **pumasi** | Parallel coding orchestration plus Codex image generation (`/pumasi:image`) | `/pumasi [task description]` |
+| **pumasi** | Claude acts as PM, Codex CLI as parallel developers. Requires Codex CLI | `/pumasi [task description]` |
 | **skillers-suda** | 4 persona agents analyze and debate your idea, then build a working skill with auto eval | `/skillers-suda create a translation skill` |
 
 > ⚠️ **`deep-research-kit` is no longer available.** Use its successor, **`insane-research`**.
@@ -73,13 +76,17 @@ Type `/plugin` inside Claude Code and go to the **Discover tab** to browse offic
 
 | Plugin | Description |
 |--------|-------------|
-| **goaljaby** | Bridges a PRD to `/goal` — auto-generates review documentation and manages approval gates |
-| **insane-search** | Adaptively reaches blocked sites without API keys |
-| **insane-design** | Design system extractor, applier, and builder — analyze any URL or build from scratch |
-| **insane-review** | Uses repomix and browser automation to bring ChatGPT Pro-grade code analysis into Claude Code |
-| **nopal** | Google Workspace orchestration through natural language |
+| **goaljaby** | Turns a PRD into a `/goal` workflow execution contract — auto-generates review documentation and manages approval gates |
+| **playmaker** | Live goal board for goaljaby — track progress in a side panel or on a web board (Paseo) |
+| **insane-search** | Reaches sites blocked by WAFs, 403s, CAPTCHAs, or login walls through escalating strategies, no API keys needed |
+| **insane-design** | Extracts a design system (colors, typography, spacing) from any URL into tokens and a `design.md` |
+| **insane-review** | Bundles your code and has GPT-5.5 Pro review it (requires a logged-in ChatGPT web session) |
+| **nopal** | Operates 9 Google Workspace services through natural language (requires a Google account login) |
 | **dd** | Drops your clipboard (text or image) into Claude Code without pasting (`/dd`, `/ㅇㅇ`) |
-| **gaseo** | Registers the current Claude Code session with Paseo so you can continue it in the app |
+| **gaseo** | Sends the current Claude Code session to the Paseo app so you can continue it there (`/gaseo`) |
+| **tikeytaka** | Gathers API keys scattered across `.env` files into one encrypted central vault and keeps them in sync |
+| **ddiring** | Completion alerts across multiple sessions, with click-to-jump to the session (macOS; Windows Git Bash is experimental) |
+| **sangse** | Generates Korean e-commerce product detail pages from product info alone, with a compliance filter and 3-stage QA (`/sangse`) |
 
 ---
 
@@ -125,7 +132,7 @@ When new versions are available, update with:
 /plugin update
 ```
 
-> **Important**: Restart Claude Code after installation or update.
+> Changes made in the `/plugin` menu take effect as soon as you close the menu. If you installed or updated via command and the new skills don't show up, run `/reload-plugins`. There's no need to restart Claude Code.
 
 ### Step 5: Try a Plugin
 
@@ -153,6 +160,9 @@ Once installed, plugins are ready to use immediately:
 | `/plugin disable plugin-name` | Temporarily disable a plugin |
 | `/plugin enable plugin-name` | Re-enable a disabled plugin |
 | `/plugin uninstall plugin-name` | Completely remove a plugin |
+| `/reload-plugins` | Apply plugin changes without restarting |
+
+> You choose a scope when installing: **User** (every project on this computer), **Project** (everyone working in this repository — recorded in `.claude/settings.json`), or **Local** (just you, in this repository). Plugins installed from the terminal are also available in the desktop app and the VS Code extension on the same computer.
 
 ---
 

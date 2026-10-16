@@ -52,7 +52,7 @@ In vibe coding, the most important skill isn't programming ability — it's **"t
 ### 1. Planning is half the battle
 "Make me an app" gives far worse results than "Make me a web app that organizes photos by date — drag and drop to upload, then auto-sort using EXIF data."
 
-→ **show-me-the-prd** plugin: Automatically generates a product spec through 5–6 interview questions.
+→ **show-me-the-prd** plugin: Give it a single sentence and it drafts four planning documents first, then asks about only the assumptions that need confirming — all at once.
 
 ### 2. Start small, then grow
 Don't ask for a finished product all at once. Build incrementally: "Login screen first" → "Then the list view" → "Now add search" — this approach is far more stable.
@@ -73,14 +73,15 @@ Install these into Claude Code to make vibe coding much easier:
 
 | Plugin | Role | One-line description |
 |--------|------|----------------------|
-| **show-me-the-prd** | Planning | "I want to build an app" → interview → auto-generates 4 types of planning docs |
+| **show-me-the-prd** | Planning | One sentence: "I want to build an app" → drafts of 4 planning docs → confirm assumptions |
 | **바르다 깃선생** (Git Teacher) | Version control | No Git knowledge needed — just say "save" or "push" |
 | **바선생** (Ba Teacher) | Growth | Analyzes your AI usage patterns and coaches you on getting better results |
 | **docs-guide** | Accuracy | Answers based on official docs to prevent hallucinations |
 | **insane-research** | Research | Multi-agent tech research and market analysis |
 | **끼리끼리** (Team Builder) | Team setup | "Make me a research team" → AI team auto-assembled |
-| **품앗이** (Parallel Dev) | Parallel development | Claude (PM) distributes tasks for parallel processing. Uses Codex if installed, otherwise works with Claude alone |
+| **품앗이** (Parallel Dev) | Parallel development | Claude (PM) splits up the work and Codex CLI develops in parallel (requires Codex CLI) |
 | **스킬러들의 수다** (Skill Creators) | Skill creation | "Make a translation skill" → designed and built by 4 specialists |
+| **골잡이 + playmaker** (Goaljaby + playmaker) | Goal tracking | Turns your planning docs into a `/goal` execution contract and tracks progress on a live board |
 
 Installation is covered in the **Plugin Installation** section.
 
@@ -93,7 +94,7 @@ Installation is covered in the **Plugin Installation** section.
 ```
 Step 1: Planning
 /show-me-the-prd I want to build a to-do management app
-→ 5 interview questions → PRD + data model + phase breakdown + project spec
+→ Drafts of PRD + data model + phase breakdown + project spec → confirm a few assumptions
 
 Step 2: Implementation
 "Build Phase 1"

@@ -88,7 +88,7 @@ Slack連携により、SlackチャンネルのコンテキストをそのままC
 
 ### Notion、Asana、Figmaなど
 
-MCPレジストリ（[api.anthropic.com/mcp-registry/docs](https://api.anthropic.com/mcp-registry/docs)）で数百種類のMCPサーバーを見つけることができます。
+Anthropicが審査したコネクターディレクトリ（[claude.ai/directory](https://claude.ai/directory)）で、Notion、Asana、Figmaなど数百種類のMCPサーバーを見つけることができます。
 
 ---
 
@@ -107,6 +107,8 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 claude mcp add --transport http secure-api https://api.example.com/mcp \
   --header "Authorization: Bearer your-token"
 ```
+
+> 従来のSSEトランスポート（`--transport sse`）はもう推奨されていません。HTTPを先に試し、ダメなら自動的にSSEにフォールバックするので（v2.1.265+）、特別な理由がなければ `--transport http` を使ってください。
 
 ### 方法2: ローカルstdioサーバー
 
@@ -133,9 +135,14 @@ claude mcp get github
 # サーバーの削除
 claude mcp remove github
 
-# Claude Code内でステータス確認
+# Claude Desktopアプリに設定済みのサーバーを取り込む（macOS / WSL）
+claude mcp add-from-claude-desktop
+
+# Claude Code内でステータス確認・認証・オン/オフ
 /mcp
 ```
+
+> MCPサーバーを多く接続しても、ツール定義は**実際に使うまでコンテキストに読み込まれません**（ツール名とサーバーの説明だけが読み込まれます）。それでも `gh` や `aws` のようなCLIツールがあるなら、MCPよりコンテキストの消費が少ないので、どちらも使えるならCLIを優先してください。何がコンテキストを占めているかは `/context` で確認できます。
 
 ---
 
@@ -179,18 +186,18 @@ claude mcp add --transport http notion https://mcp.notion.com/mcp
 
 ### 2. Slack MCP
 
-claude.aiアカウント接続後、[claude.ai/settings/connectors](https://claude.ai/settings/connectors)からすぐに設定可能
+claude.aiアカウントでログインしていれば、[claude.ai/customize/connectors](https://claude.ai/customize/connectors)で接続したコネクターがClaude Codeにも自動的に表示されます（`/mcp` でclaude.aiの表示が付きます）
 
 **なくなる手間**: チャンネルスレッドの手動閲覧、要約依頼のためのコピペ、お知らせ草案の手動作成
 
 **活用例**:
 - 「#マーケティングチャンネルの今日のスレッドを読んで、論点3つと合意された次のアクションを整理してSlackお知らせ草案を作って」
 
-### 3. Google Chrome（Webリサーチ）
+### 3. Claude in Chrome（Webリサーチ）
 
-claude.aiアカウント接続後、[claude.ai/settings/connectors](https://claude.ai/settings/connectors)からすぐに設定可能
+MCPサーバーではなく**Chrome拡張機能**です。拡張機能をインストールした後、`claude --chrome` で起動するか `/chrome` で設定すると、Claudeが自分のブラウザ（ログイン状態のまま）でページを開き、読み、クリックします
 
-**なくなる手間**: Webサイトを訪問しての手動情報収集、複数サイト比較のための繰り返しタブ切り替え
+**なくなる手間**: Webサイトを訪問しての手動情報収集、複数サイト比較のための繰り返しタブ切り替え、ログインが必要なページの確認
 
 **活用例**:
 - 「指定した5社の競合サイトを巡回して、今日の主な変更・新機能・価格変更だけを表にまとめて」
@@ -229,13 +236,12 @@ claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
 
 ---
 
-## Claude Code公式コネクター
+## claude.aiコネクターの自動連携
 
-Claude.aiアカウントでClaude Codeにログインしている場合、[claude.ai/settings/connectors](https://claude.ai/settings/connectors)で設定したMCPサーバーがClaude Codeに自動的に接続されます。
+Claude.aiアカウントでClaude Codeにログインしている場合、[claude.ai/customize/connectors](https://claude.ai/customize/connectors)で接続しておいたコネクター（Notion、Slack、Google Drive、Gmailなど）がClaude Codeに自動的に接続されます。`/mcp` でclaude.aiの表示が付いている項目がそれで、個別にオフにしたり、設定に `"disableClaudeAiConnectors": true` を入れてすべてオフにしたりできます。
 
-公式にサポートされているコネクター：
-- **Slack**: チャンネルメッセージの読み書き
-- **Google Chrome**: ブラウザ自動化（Playwrightベース）
+- APIキーでログインしている場合や、Bedrockのような外部プラットフォームを使っている場合は取り込まれません。
+- 同じURLのサーバーをローカルで直接追加している場合は、ローカル設定が優先されます。
 
 ---
 
@@ -275,12 +281,12 @@ MCPサーバーがプロンプトを提供している場合、Claude Codeで`/m
 
 - MCPサーバーはClaudeを通じてファイルシステム、DB、外部サービスにアクセスできます
 - 特に**外部コンテンツを取得するMCPサーバー**はプロンプトインジェクションのリスクがあります
-- Anthropicが直接検証したサーバーのみが公式MCPレジストリに登録されています
-- 出所が不明なサーバーはインストール前にソースコードを必ず確認してください
+- [claude.ai/directory](https://claude.ai/directory)にはAnthropicが審査したコネクターが集まっています。それ以外のサーバーはインストール前にソースコードと運営主体を必ず確認してください
 
 ```bash
-# プロジェクトスコープのサーバーはチームメンバーに確認リクエストが表示されます
-# （セキュリティレビューのための安全装置）
+# プロジェクトスコープ（.mcp.json）のサーバーは、初めて使うときにチームメンバー各自に承認ダイアログが表示されます
+# （セキュリティレビューのための安全装置）。選択をリセットするには：
+claude mcp reset-project-choices
 ```
 
 ---
@@ -292,7 +298,7 @@ MCPサーバーがプロンプトを提供している場合、Claude Codeで`/m
 | プラグイン | 使用するMCP | 役割 |
 |---------|-------------|------|
 | **docs-guide** | Context7 MCP | 公式ドキュメントをリアルタイムで参照し正確な回答を提供 |
-| **品あい** | Codex MCP（オプション） | ClaudeがPM役、Codexがあれば並列開発 / なければClaudeだけで動作 |
+| **品あい** | Codex CLI | ClaudeがPM役、Codex CLIが並列開発者役（Codex CLIのインストールが必要） |
 | **insane-research** | リサーチプラグイン | マルチエージェントが複数ソースを同時に調査しクロス検証 |
 
 > 💡 プラグインをインストールすると、MCP設定が自動的に追加されます。別途MCPを設定する必要はなく、プラグインが自動で処理します。

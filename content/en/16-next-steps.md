@@ -47,7 +47,7 @@ This isn't just learning a new tool. You've picked up a new way of developing so
 
 **Multi-session & Parallel Work**
 - Run Claude Code in multiple terminals to divide and conquer
-- Try parallel development with **pumasi** (works with Claude alone, no Codex needed)
+- Try parallel development with **pumasi** (requires the Codex CLI)
 
 **MCP (Model Context Protocol) Setup**
 
@@ -145,7 +145,7 @@ CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 claude
 
 **Full CI/CD Automation**
 
-Apply what you learned in Section 15 to real projects.
+Apply what you learned in Section 20 to real projects.
 
 ```yaml
 # Example: automatic code review on every PR
@@ -165,7 +165,10 @@ on:
 | **Official Docs** | [code.claude.com/docs](https://code.claude.com/docs) |
 | **GitHub Repository** | [github.com/anthropics/claude-code](https://github.com/anthropics/claude-code) |
 | **Official Plugins** | [github.com/anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
+| **Claude Academy (free courses)** | [academy.claude.com](https://academy.claude.com/) — "Claude Code 101", "Claude Code in Action", and more |
 | **Anthropic Console** | [platform.claude.com](https://platform.claude.com) |
+
+> You can also learn from inside Claude Code. `/powerup` offers short lessons with animated demos, and `/release-notes` shows what's new in each version. When a question comes up, `/btw what does this feature do?` lets you ask without leaving a trace in the conversation.
 
 ---
 
@@ -174,7 +177,7 @@ on:
 | Resource | URL | Description |
 |----------|-----|-------------|
 | **CC101 GitHub** | [github.com/im-jaehong/cc101jp](https://github.com/im-jaehong/cc101jp) | This guide's repository. Typo fixes and content contributions welcome |
-| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 15 plugins for vibe coders: planning (show-me-the-prd), Git (git-teacher), mentor (vibe-sunsang), research (insane-research), parallel dev (pumasi), team setup (kkirikkiri), skill creation (skillers-suda), official docs (docs-guide), and more |
+| **gptaku_plugins** | [github.com/fivetaku/gptaku_plugins](https://github.com/fivetaku/gptaku_plugins) | 19 plugins for vibe coders: planning (show-me-the-prd), Git (git-teacher), mentor (vibe-sunsang), research (insane-research), parallel dev (pumasi), team setup (kkirikkiri), skill creation (skillers-suda), official docs (docs-guide), goal tracking (goaljaby / playmaker), product detail pages (sangse), and more |
 
 If this has been helpful, please give it a **Star**. It helps the community grow.
 

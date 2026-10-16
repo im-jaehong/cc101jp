@@ -22,7 +22,7 @@ Use Claude Code through Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. 
 
 ## Pro vs Max Plan Comparison
 
-> Prices below are current as of **August 2026**. Check the latest at [claude.com/pricing](https://claude.com/pricing).
+> Prices below are current as of **October 2026**. Check the latest at [claude.com/pricing](https://claude.com/pricing).
 
 | | **Pro** | **Max (5x)** | **Max (20x)** |
 |---|---|---|---|
@@ -30,11 +30,14 @@ Use Claude Code through Amazon Bedrock, Google Vertex AI, or Microsoft Foundry. 
 | **Usage limit** | Standard | 5× Pro | 20× Pro |
 | **Claude Code included** | Yes | Yes | Yes |
 | **Claude.ai web included** | Yes | Yes | Yes |
+| **Default model** | Opus 5.5 | Opus 5.5 | Opus 5.5 |
 | **Best for** | Occasional use, exploration | Regular Claude Code users | Heavy users, large projects |
 
 > **The Free plan does not include Claude Code.** You need a Pro, Max, Team, Enterprise, or Console (API) account.
 >
-> For teams, **Team** ($25/seat monthly, $20 billed annually) and **Enterprise** (custom pricing) also include Claude Code.
+> For teams, **Team** (Standard seat $25/month, $20 billed annually / Premium seat $125/month, $100 annually, with 5× usage) and **Enterprise** (from $20/seat/month billed annually, 20-seat minimum, plus usage at API rates) also include Claude Code.
+>
+> Plan limits reset on a 5-hour and a weekly cycle. If you want to keep working past your limit, turn on **extra usage (usage credits)** and pay only for what you use beyond it (`/usage-credits`).
 
 ### Recommended for Beginners: Max $100
 
@@ -44,7 +47,7 @@ If you plan to use Claude Code seriously, the **Max $100 plan** is the recommend
 - Direct API usage carries per-token billing, which can lead to unexpected charges.
 - Max $100 is sufficient for most individual developers based on average daily usage.
 
-According to official documentation (as of August 2026), average API costs run approximately **$13 per developer per active day, or $150–$250 per month**, staying under $30 per active day for 90% of users — with significant variation based on usage intensity.
+According to official documentation (as of October 2026), average API costs run approximately **$13 per developer per active day, or $150–$250 per month**, staying under $30 per active day for 90% of users — with significant variation based on usage intensity.
 
 ---
 
@@ -69,6 +72,7 @@ Rate varies by model (Sonnet < Opus)
 
 - Use the `/usage` command to check current session costs (`/cost` is an alias for `/usage`)
 - Set spending limits in the Console for team or automated usage
+- Per-model rates (input/output per million tokens): Haiku 5.5 $0.10/$0.50, Sonnet 5.5 $2/$10, Opus 5.5 $4/$20, Fable 5.1 $10/$50
 
 ---
 
@@ -89,7 +93,7 @@ Rate varies by model (Sonnet < Opus)
 | Method | Description |
 |---|---|
 | Run `/clear` between tasks | Clears conversation context to save tokens |
-| Use Sonnet model first | Cheaper than Opus and sufficient for most tasks |
+| Use Sonnet or Haiku for simple tasks | Cheaper than Opus and sufficient for most tasks. Lowering the thinking effort with `/effort low` also helps |
 | Write specific requests | Specify the exact file or function instead of "improve the entire codebase" |
 | Minimize MCP servers | Disable connections you are not actively using |
 

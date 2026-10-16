@@ -51,7 +51,7 @@ Write code, fix bugs, refactor, test, review
 
 ### Personal AI Workspace
 Define roles and rules in CLAUDE.md, and you have **your own AI agent system** — not just a chat tool.
-→ Covered in detail in Advanced Section 17
+→ Covered in detail in Advanced Section 18 (Designing Your Personal AI Workspace)
 
 ---
 
