@@ -1,0 +1,23 @@
+{
+  "ko": {
+    "font": "NotoSansKR",
+    "title": "Claude Code 한국어 입문 가이드",
+    "subtitle": "설치부터 CLAUDE.md · MCP · Skills · Hooks까지",
+    "badges": ["{n} 섹션", "공식 문서 기반", "한 / EN / 日"],
+    "credit": "Based on CC101 by fivetaku · CC BY-NC 4.0"
+  },
+  "en": {
+    "font": "NotoSansJP",
+    "title": "Claude Code Beginner Guide",
+    "subtitle": "From install to CLAUDE.md · MCP · Skills · Hooks",
+    "badges": ["{n} sections", "Based on official docs", "EN / KO / JA"],
+    "credit": "Based on CC101 by fivetaku · CC BY-NC 4.0"
+  },
+  "ja": {
+    "font": "NotoSansJP",
+    "title": "Claude Code 日本語入門ガイド",
+    "subtitle": "インストールから CLAUDE.md · MCP · Skills · Hooks まで",
+    "badges": ["{n} セクション", "公式ドキュメント準拠", "日 / 韓 / EN"],
+    "credit": "Based on CC101 by fivetaku · CC BY-NC 4.0"
+  }
+}

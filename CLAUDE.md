@@ -5,7 +5,7 @@
 Next.js 16 (App Router) 기반의 Claude Code 한국어/영어/일본어 입문 가이드 사이트.
 콘텐츠는 마크다운 파일 + `sections.json`으로 관리되며, 코드 수정 없이 콘텐츠 추가/수정 가능.
 
-- **URL**: https://cc101.axwith.com
+- **URL**: https://cc101jp.vercel.app/ja (원작: https://cc101.axwith.com, 출처 표기는 ATTRIBUTION.md 참고)
 - **Routing**: `/ko`, `/en`, `/ja` (path-based i18n, SSG). `/`는 `/ja`로 리다이렉트
 
 ## Tech Stack

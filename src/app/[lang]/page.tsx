@@ -32,14 +32,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: 'CC101 — Claude Code Beginner Guide',
         description:
           'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
-        images: [{ url: '/og.png' }],
       },
       twitter: {
         card: 'summary_large_image',
         title: 'CC101 — Claude Code Beginner Guide',
         description:
           'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
-        images: ['/og.png'],
       },
     }
   }
@@ -54,14 +52,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: 'CC101 — Claude Code 日本語入門ガイド',
         description:
           'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
-        images: [{ url: '/og.png' }],
       },
       twitter: {
         card: 'summary_large_image',
         title: 'CC101 — Claude Code 日本語入門ガイド',
         description:
           'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
-        images: ['/og.png'],
       },
     }
   }
@@ -75,14 +71,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: 'CC101 — Claude Code 한국어 입문 가이드',
       description:
         'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',
-      images: [{ url: '/og.png' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: 'CC101 — Claude Code 한국어 입문 가이드',
       description:
         'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',
-      images: ['/og.png'],
     },
   }
 }
