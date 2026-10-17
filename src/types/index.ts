@@ -31,6 +31,10 @@ export interface SectionsConfig {
   site: {
     name: string
     url: string
+    original_name?: string
+    original_author?: string
+    original_url?: string
+    license?: string
     description: string
     description_en: string
     description_ja?: string

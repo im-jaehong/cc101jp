@@ -1,19 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+
+// Reads the current theme from <html class="dark">, which public/theme-init.js
+// sets before hydration. Subscribing to the class attribute keeps the icon in
+// sync without a setState-in-effect round trip.
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  return () => observer.disconnect()
+}
+
+const getSnapshot = () => document.documentElement.classList.contains('dark')
+const getServerSnapshot = () => true // default theme is dark
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(true)
-
-  useEffect(() => {
-    const saved = localStorage.getItem('theme')
-    const dark = saved ? saved === 'dark' : true
-    setIsDark(dark)
-  }, [])
+  const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   const toggle = () => {
     const next = !isDark
-    setIsDark(next)
     localStorage.setItem('theme', next ? 'dark' : 'light')
     document.documentElement.classList.toggle('dark', next)
   }

@@ -28,17 +28,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description:
         'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
       openGraph: {
+        url: 'https://cc101jp.vercel.app/en',
         title: 'CC101 — Claude Code Beginner Guide',
         description:
           'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
-        images: [{ url: 'https://cc101.axwith.com/og.png' }],
+        images: [{ url: '/og.png' }],
       },
       twitter: {
         card: 'summary_large_image',
         title: 'CC101 — Claude Code Beginner Guide',
         description:
           'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
-        images: ['https://cc101.axwith.com/og.png'],
+        images: ['/og.png'],
       },
     }
   }
@@ -49,17 +50,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description:
         'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
       openGraph: {
+        url: 'https://cc101jp.vercel.app/ja',
         title: 'CC101 — Claude Code 日本語入門ガイド',
         description:
           'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
-        images: [{ url: 'https://cc101.axwith.com/og.png' }],
+        images: [{ url: '/og.png' }],
       },
       twitter: {
         card: 'summary_large_image',
         title: 'CC101 — Claude Code 日本語入門ガイド',
         description:
           'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
-        images: ['https://cc101.axwith.com/og.png'],
+        images: ['/og.png'],
       },
     }
   }
@@ -69,17 +71,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description:
       'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',
     openGraph: {
+      url: 'https://cc101jp.vercel.app/ko',
       title: 'CC101 — Claude Code 한국어 입문 가이드',
       description:
         'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',
-      images: [{ url: 'https://cc101.axwith.com/og.png' }],
+      images: [{ url: '/og.png' }],
     },
     twitter: {
       card: 'summary_large_image',
       title: 'CC101 — Claude Code 한국어 입문 가이드',
       description:
         'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',
-      images: ['https://cc101.axwith.com/og.png'],
+      images: ['/og.png'],
     },
   }
 }

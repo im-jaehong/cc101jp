@@ -1,26 +1,77 @@
 Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
+This repository contains two layers of copyrighted material. Both layers are
+made available here under CC BY-NC 4.0.
+
+Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by-nc/4.0/
+
+------------------------------------------------------------------------------
+1. Original work: CC101
+------------------------------------------------------------------------------
+
 Copyright (c) 2025 fivetaku (cc101.axwith.com)
+
+Original repository: https://github.com/fivetaku/cc101
+Original site:       https://cc101.axwith.com
+
+The original work is licensed under CC BY-NC 4.0 as published in the original
+repository's LICENSE file. The original author's copyright is retained in full
+and is not transferred or claimed by the adapter of this repository.
+
+Required attribution for the original work:
+  "CC101 by fivetaku (cc101.axwith.com)"
+
+Note: at the time of writing, the original repository's README mentions the
+MIT License while its LICENSE file states CC BY-NC 4.0. Until the original
+author clarifies this discrepancy, this repository treats the original work
+under the more restrictive CC BY-NC 4.0 terms.
+
+------------------------------------------------------------------------------
+2. Adaptation: cc101jp (Japanese adaptation, 2026 updates, additions)
+------------------------------------------------------------------------------
+
+Copyright (c) 2026 im-jaehong, for the Japanese translation, the content
+updates to 2026-era Claude Code, and the modified or added explanations,
+examples and troubleshooting material in this repository.
+
+Adaptation repository: https://github.com/im-jaehong/cc101jp
+Adaptation site:       https://cc101jp.vercel.app/ja
+
+This adaptation is a derivative work of CC101. Changes were made to the
+original (see ATTRIBUTION.md for a description of the changes). The adapter
+claims copyright only in the translation, modifications and additions, not in
+the original work. The adapter's contributions are likewise made available
+under CC BY-NC 4.0.
+
+This adaptation is not endorsed, approved or certified by the original author.
+
+------------------------------------------------------------------------------
+3. Terms (summary, applies to both layers)
+------------------------------------------------------------------------------
 
 You are free to:
   Share — copy and redistribute the material in any medium or format
   Adapt — remix, transform, and build upon the material
 
 Under the following terms:
-  Attribution — You must give appropriate credit, provide a link to the license,
-                and indicate if changes were made. You may do so in any reasonable
-                manner, but not in any way that suggests the licensor endorses you
-                or your use.
-
-                Required attribution format:
-                "CC101 by fivetaku (cc101.axwith.com)"
+  Attribution — You must give appropriate credit to both the original work
+                ("CC101 by fivetaku (cc101.axwith.com)") and this adaptation
+                ("cc101jp, Japanese adaptation and updates by im-jaehong"),
+                provide a link to the license, and indicate if changes were
+                made. You may do so in any reasonable manner, but not in any
+                way that suggests the licensors endorse you or your use.
 
   NonCommercial — You may not use the material for commercial purposes.
-                  Selling, reselling, or monetizing this content in any form
-                  is strictly prohibited without written permission.
+                  Whether a specific use (for example, internal use inside a
+                  for-profit company) counts as commercial depends on the
+                  circumstances and on the CC BY-NC 4.0 legal code. If in
+                  doubt, obtain permission from the original author before
+                  such use.
 
   No additional restrictions — You may not apply legal terms or technological
                                measures that legally restrict others from doing
                                anything the license permits.
 
-Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+This summary is not a substitute for the license. The legal code linked above
+governs.

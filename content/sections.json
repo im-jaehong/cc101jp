@@ -1,7 +1,11 @@
 {
   "site": {
     "name": "CC101",
-    "url": "cc101.axwith.com",
+    "url": "cc101jp.vercel.app",
+    "original_name": "CC101",
+    "original_author": "fivetaku",
+    "original_url": "cc101.axwith.com",
+    "license": "CC BY-NC 4.0",
     "description": "Claude Code 한국어 입문 가이드",
     "description_en": "Claude Code Korean Beginner's Guide",
     "description_ja": "Claude Code 日本語入門ガイド",
