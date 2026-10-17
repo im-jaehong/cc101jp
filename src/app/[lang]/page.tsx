@@ -32,6 +32,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
       openGraph: {
         url: 'https://cc101jp.vercel.app/en',
+        siteName: 'CC101',
+        locale: 'en_US',
+        type: 'website',
         title: 'CC101 — Claude Code Beginner Guide',
         description:
           'The easiest guide to get started with Claude Code — from installation to CLAUDE.md, MCP, Skills, and Hooks',
@@ -52,6 +55,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
       openGraph: {
         url: 'https://cc101jp.vercel.app/ja',
+        siteName: 'CC101',
+        locale: 'ja_JP',
+        type: 'website',
         title: 'CC101 — Claude Code 日本語入門ガイド',
         description:
           'Claude Codeのインストールから CLAUDE.md、MCP、Skills、Hooksまで — 公式ドキュメントをもとにわかりやすくまとめた日本語入門ガイド',
@@ -71,6 +77,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',
     openGraph: {
       url: 'https://cc101jp.vercel.app/ko',
+      siteName: 'CC101',
+      locale: 'ko_KR',
+      type: 'website',
       title: 'CC101 — Claude Code 한국어 입문 가이드',
       description:
         'Claude Code 설치부터 CLAUDE.md, MCP, Skills, Hooks까지 — 공식 문서 기반으로 쉽게 정리한 한국어 입문 가이드',

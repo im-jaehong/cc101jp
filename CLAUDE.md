@@ -46,15 +46,22 @@ src/
 │   └── [lang]/
 │       ├── layout.tsx     # LangSetter 렌더링
 │       ├── page.tsx       # 서버 컴포넌트: 섹션 로딩 + MDX 렌더링
-│       └── LangSetter.tsx # document.documentElement.lang 동기화
+│       ├── LangSetter.tsx # document.documentElement.lang 동기화
+│       ├── opengraph-image.tsx  # 언어별 OG 이미지 (빌드 타임 생성, 1200x630)
+│       └── twitter-image.tsx    # OG 이미지 재사용
+├── assets/
+│   └── og-fonts/          # OG 이미지용 Noto Sans JP/KR 서브셋 (SIL OFL 1.1, OFL.txt 동봉)
 ├── components/            # UI 컴포넌트 (모두 named export)
 ├── lib/
 │   ├── content.ts         # 서버: sections.json + 마크다운 파일 읽기
-│   └── analytics.ts       # GA4 이벤트 래퍼
+│   ├── analytics.ts       # GA4 이벤트 래퍼
+│   └── og-text.json       # OG 이미지 문구 (언어별 제목·설명·배지·크레딧)
 ├── hooks/
 │   └── useLang.ts         # 클라이언트 lang 상태
 └── types/
     └── index.ts           # Lang, SectionMeta, SectionsConfig 등
+scripts/
+└── og-fonts.mjs           # og-text.json 기준으로 폰트 서브셋 재생성
 ```
 
 ## Architecture
@@ -82,6 +89,20 @@ sections.json → lib/content.ts → [lang]/page.tsx → SectionBlock + MDXRemot
 - 다크 variant: `@variant dark (&:where(.dark, .dark *))`
 - 색상: zinc(neutral) + orange-500(브랜드 액센트)
 - 타이포: `prose prose-zinc dark:prose-invert`
+
+## OG 이미지 문구 바꾸는 법
+
+OG 이미지(`[lang]/opengraph-image.tsx`)는 `src/lib/og-text.json`의 문구와
+`src/assets/og-fonts/`의 **서브셋 폰트**로 빌드 타임에 생성된다. 폰트는 og-text.json에 쓰인
+글자만 포함하므로, **문구를 바꾸면 반드시 폰트를 재생성**해야 한다 (안 하면 새 글자가 빈칸으로 렌더링됨).
+
+```bash
+node scripts/og-fonts.mjs   # Google Fonts에서 서브셋 다시 받기 (네트워크 필요)
+pnpm build                  # .next/server/app/{lang}/opengraph-image.body 로 결과 확인
+```
+
+섹션 수는 `sections.json`의 `sections.length`에서 자동 계산되므로 손댈 필요 없음.
+`dynamicParams = false`라서 ko/en/ja 이외 경로는 정적 404 (온디맨드 렌더링 없음).
 
 ## Content 추가하는 법
 
