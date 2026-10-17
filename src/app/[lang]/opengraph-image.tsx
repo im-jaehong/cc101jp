@@ -12,6 +12,8 @@ import type { Lang } from '@/types'
 export const alt = 'CC101 — Claude Code Guide (cc101jp.vercel.app)'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+// Only ko/en/ja are generated; other values 404 instead of rendering on demand.
+export const dynamicParams = false
 
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }, { lang: 'ja' }]

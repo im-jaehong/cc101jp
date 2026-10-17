@@ -10,6 +10,9 @@ import type { Lang } from '@/types'
 
 const SUPPORTED_LANGS = ['ko', 'en', 'ja'] as const
 
+// Only the pre-generated languages exist; anything else is a static 404 (no on-demand render).
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return [{ lang: 'ko' }, { lang: 'en' }, { lang: 'ja' }]
 }
