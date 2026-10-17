@@ -45,6 +45,21 @@ provenance of the material and the credit that must accompany it.
 The adapter claims rights only in these translations, modifications and
 additions. All rights in the original work remain with the original author.
 
+## Third-party material (not under CC BY-NC 4.0)
+
+| | |
+|---|---|
+| Files | `src/assets/og-fonts/NotoSansJP-{400,700}.woff`, `NotoSansKR-{400,700}.woff` |
+| Fonts | Noto Sans JP, Noto Sans KR |
+| Copyright | Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source' |
+| License | [SIL Open Font License 1.1](https://openfontlicense.org/) — full text in `src/assets/og-fonts/OFL.txt` |
+| Source | [google/fonts: ofl/notosansjp](https://github.com/google/fonts/tree/main/ofl/notosansjp), [ofl/notosanskr](https://github.com/google/fonts/tree/main/ofl/notosanskr) |
+| Modification | Subsetted to the glyphs used in the OG images via the Google Fonts API (`scripts/og-fonts.mjs`); a "Modified Version" in OFL terms. The Reserved Font Name 'Source' is not used. |
+
+These files are used only to render the generated Open Graph images
+(`src/app/[lang]/opengraph-image.tsx`) and are distributed solely under the
+OFL, as its section 1, condition 5 requires.
+
 ## No endorsement
 
 This adaptation is **not** endorsed, approved or certified by the original

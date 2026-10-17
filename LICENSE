@@ -1,7 +1,8 @@
 Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
 
 This repository contains two layers of copyrighted material. Both layers are
-made available here under CC BY-NC 4.0.
+made available here under CC BY-NC 4.0, with the exception of the third-party
+font files listed in section 4, which keep their own license.
 
 Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
 Human-readable summary: https://creativecommons.org/licenses/by-nc/4.0/
@@ -75,3 +76,21 @@ Under the following terms:
 
 This summary is not a substitute for the license. The legal code linked above
 governs.
+
+------------------------------------------------------------------------------
+4. Exception: third-party fonts (src/assets/og-fonts/)
+------------------------------------------------------------------------------
+
+The font files in src/assets/og-fonts/ (Noto Sans JP and Noto Sans KR,
+subsetted via the Google Fonts API for the generated Open Graph images) are
+NOT covered by CC BY-NC 4.0. They are licensed under the SIL Open Font
+License, Version 1.1, and are redistributed here unchanged in license:
+
+  Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name
+  'Source'. Licensed under the SIL Open Font License, Version 1.1.
+  Full license text: src/assets/og-fonts/OFL.txt
+  https://openfontlicense.org/
+
+The subsetted files are "Modified Versions" in OFL terms. Per OFL section 1,
+condition 5, they may only be distributed under the OFL itself; nothing in
+this file applies CC BY-NC 4.0 to them.
