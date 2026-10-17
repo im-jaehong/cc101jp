@@ -211,9 +211,10 @@ $ claude --resume 경쟁사-리서치-2월
 
 | 단축키 | 설명 |
 |--------|------|
-| `Shift+Enter` | 줄바꿈 (긴 지시사항 여러 줄로 입력할 때. 안 되면 `/terminal-setup` 실행) |
-| `Option+Enter` (macOS) | 줄바꿈 (macOS 기본) |
-| `\` + `Enter` | 줄바꿈 (모든 터미널에서 작동) |
+| `Ctrl+J` | 줄바꿈 (모든 터미널에서 설정 없이 작동) |
+| `\` + `Enter` | 줄바꿈 (모든 터미널에서 설정 없이 작동) |
+| `Shift+Enter` | 줄바꿈. iTerm2, WezTerm, Ghostty, Kitty, Warp, macOS 기본 터미널, Windows Terminal은 바로 작동. VS Code, Cursor, Zed는 `/terminal-setup`을 한 번 실행. gnome-terminal, JetBrains IDE 터미널은 지원하지 않음 (`Ctrl+J` 사용) |
+| `Option+Enter` (macOS) | 줄바꿈 (터미널에서 Option 키를 Meta 키로 설정한 뒤) |
 | `↑` / `↓` 화살표 | 이전/다음 명령어 탐색 |
 | `Esc` + `Esc` (두 번) | 입력창이 비어 있으면 되감기 메뉴, 글자가 있으면 입력 지우기 |
 | `@` | 파일 경로 자동완성 (`@파일명`으로 파일을 대화에 넘김) |
@@ -259,7 +260,7 @@ Claude가 엉뚱한 방향으로 가고 있을 때, 또는 실수로 위험한 �
 
 ### 4. `Shift+Enter` — 긴 지시사항 입력
 
-한 줄로 다 쓰기 어려운 긴 요청은 `Shift+Enter`로 줄바꿈하면서 입력하세요.
+한 줄로 다 쓰기 어려운 긴 요청은 `Shift+Enter`로 줄바꿈하면서 입력하세요. `Shift+Enter`가 안 되는 터미널에서는 `Ctrl+J`를 누르면 됩니다 (모든 터미널에서 작동).
 
 ```
 (Shift+Enter로 여러 줄 입력 예시)
@@ -370,7 +371,7 @@ Alias (설정 후):
   Ctrl+D              → 종료
   Ctrl+B              → 실행 중인 작업을 백그라운드로
   Shift+Tab           → 권한 모드 순환
-  Shift+Enter         → 줄바꿈
+  Shift+Enter, Ctrl+J → 줄바꿈
   ↑↓ 화살표           → 이전 명령어 탐색
   Esc Esc             → 되감기 메뉴 (입력창이 비어 있을 때)
 ```

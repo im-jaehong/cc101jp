@@ -211,9 +211,10 @@ Control Claude Code quickly without leaving the keyboard.
 
 | Shortcut | Description |
 |----------|-------------|
-| `Shift+Enter` | Insert a newline (for multi-line prompts; if it doesn't work, run `/terminal-setup`) |
-| `Option+Enter` (macOS) | Insert a newline (macOS default) |
-| `\` + `Enter` | Insert a newline (works in all terminals) |
+| `Ctrl+J` | Insert a newline (works in every terminal, no setup needed) |
+| `\` + `Enter` | Insert a newline (works in every terminal, no setup needed) |
+| `Shift+Enter` | Insert a newline. Works out of the box in iTerm2, WezTerm, Ghostty, Kitty, Warp, Apple Terminal, and Windows Terminal. In VS Code, Cursor, and Zed, run `/terminal-setup` once. Not available in gnome-terminal or JetBrains IDE terminals (use `Ctrl+J`) |
+| `Option+Enter` (macOS) | Insert a newline (after setting Option as Meta in your terminal) |
 | `↑` / `↓` arrow keys | Navigate command history |
 | `Esc` + `Esc` (double) | Opens the rewind menu when the input box is empty; clears the input when there's text |
 | `@` | File path autocomplete (`@filename` passes the file into the conversation) |
@@ -259,7 +260,7 @@ Use this when switching to a completely different task. All previous conversatio
 
 ### 4. `Shift+Enter` — Write Multi-Line Prompts
 
-For detailed instructions that don't fit on one line, use `Shift+Enter` to add new lines.
+For detailed instructions that don't fit on one line, use `Shift+Enter` to add new lines. If `Shift+Enter` doesn't work in your terminal, press `Ctrl+J` instead (it works everywhere).
 
 ```
 (Example of multi-line input with Shift+Enter)
@@ -364,7 +365,7 @@ Keyboard shortcuts:
   Ctrl+D              → Exit
   Ctrl+B              → Send running task to background
   Shift+Tab           → Cycle permission modes
-  Shift+Enter         → New line in prompt
+  Shift+Enter, Ctrl+J → New line in prompt
   ↑↓ arrows           → Navigate history
   Esc Esc             → Rewind menu (when input box is empty)
 ```

@@ -211,9 +211,10 @@ $ claude --resume 競合調査-2月
 
 | ショートカット | 説明 |
 |--------|------|
-| `Shift+Enter` | 改行（長い指示を複数行で入力するとき。効かない場合は `/terminal-setup` を実行） |
-| `Option+Enter`（macOS） | 改行（macOSデフォルト） |
-| `\` + `Enter` | 改行（すべてのターミナルで動作） |
+| `Ctrl+J` | 改行（すべてのターミナルで設定なしで動作） |
+| `\` + `Enter` | 改行（すべてのターミナルで設定なしで動作） |
+| `Shift+Enter` | 改行。iTerm2、WezTerm、Ghostty、Kitty、Warp、macOS標準ターミナル、Windows Terminalではそのまま動作。VS Code、Cursor、Zedでは `/terminal-setup` を一度実行。gnome-terminal、JetBrains IDEのターミナルでは非対応（`Ctrl+J` を使用） |
+| `Option+Enter`（macOS） | 改行（ターミナルでOptionキーをMetaキーに設定した後） |
 | `↑` / `↓` 矢印キー | 前/次のコマンドを参照 |
 | `Esc` + `Esc`（2回） | 入力欄が空なら巻き戻しメニュー、文字があれば入力をクリア |
 | `@` | ファイルパスのオートコンプリート（`@ファイル名`でファイルを会話に渡す） |
@@ -259,7 +260,7 @@ Claudeが見当違いの方向に進んでいるとき、または誤って危�
 
 ### 4. `Shift+Enter` — 長い指示の入力
 
-1行で書ききれない長いリクエストは `Shift+Enter` で改行しながら入力してください。
+1行で書ききれない長いリクエストは `Shift+Enter` で改行しながら入力してください。`Shift+Enter` が効かないターミナルでは、代わりに `Ctrl+J` を押せば改行できます（すべてのターミナルで動作）。
 
 ```
 （Shift+Enterで複数行入力の例）
@@ -370,7 +371,7 @@ Alias（設定後）：
   Ctrl+D              → 終了
   Ctrl+B              → 実行中の作業をバックグラウンドへ
   Shift+Tab           → 権限モードの切り替え
-  Shift+Enter         → 改行
+  Shift+Enter, Ctrl+J → 改行
   ↑↓ 矢印キー         → 前のコマンドを参照
   Esc Esc             → 巻き戻しメニュー（入力欄が空のとき）
 ```
